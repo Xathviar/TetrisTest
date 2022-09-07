@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<installation version="5.0">
+    <variables>
+        <variable name="RESOURCEROOT" value="@basedir@"/>
+    </variables>
+    <info>
+        <appname>@appname@</appname>
+        <appversion>@version@</appversion>
+        <authors>
+            <author email="" name="xathviar"/>
+        </authors>
+        <uninstaller name="uninstall-@appname@.jar" write="yes"/>
+        <requiresjdk>yes</requiresjdk>
+        <writeinstallationinformation>no</writeinstallationinformation>
+        <pack200/>
+    </info>
+    <guiprefs height="600" resizable="no" width="900">
+        <modifier key="useFlags" value="yes"/>
+        <modifier key="langDisplayType" value="default"/>
+    </guiprefs>
+    <locale>
+        <langpack iso3="eng"/>
+    </locale>
+    <panels>
+        <panel classname="CheckedHelloPanel"/>
+        <panel classname="TargetPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="SimpleFinishPanel"/>
+    </panels>
+    <packs>
+        <pack name="def" preselected="yes" required="yes">
+            <description/>
+            <fileset override="update" dir="." targetdir="$INSTALL_PATH/"/>
+            <executable targetfile="$INSTALL_PATH/bin/@exename@" type="bin" stage="never" keep="true" />
+        </pack>
+    </packs>
+</installation>
