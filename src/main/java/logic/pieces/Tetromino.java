@@ -137,4 +137,8 @@ public abstract class Tetromino {
         this.currentRotation = 0;
         updateGrids();
     }
+
+    public Grid[] getGrid() {
+        return grid;
+    }
 }

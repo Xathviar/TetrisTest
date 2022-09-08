@@ -35,7 +35,6 @@ public class PlayScreen implements Screen {
             initScreen = false;
         }
         field.printTetrisField(terminal);
-        field.printHold(terminal);
     }
 
     @Override
@@ -44,6 +43,7 @@ public class PlayScreen implements Screen {
             case KeyEvent.VK_LEFT -> field.moveLeft();
             case KeyEvent.VK_RIGHT -> field.moveRight();
             case KeyEvent.VK_UP -> field.rotateClockwise();
+            case KeyEvent.VK_DOWN -> field.softDrop();
             case KeyEvent.VK_CONTROL -> field.rotateCClockwise();
             case KeyEvent.VK_SPACE -> field.hardDrop();
             case KeyEvent.VK_SHIFT -> field.swapHold();
@@ -62,26 +62,34 @@ public class PlayScreen implements Screen {
         char rightDown = 188;
         char straightHorizontally = 205;
         char straightVertically = 186;
-        StringBuilder firstline = new StringBuilder();
-        firstline.append(leftUp);
-        firstline.append(String.valueOf(straightHorizontally).repeat(10));
-        firstline.append(rightUp);
-
+        String firstline = leftUp +
+                String.valueOf(straightHorizontally).repeat(10) +
+                rightUp;
         StringBuilder middleLines = new StringBuilder();
         middleLines.append(straightVertically);
         middleLines.append("          ");
         middleLines.append(straightVertically);
+        String bottomLine = leftDown +
+                String.valueOf(straightHorizontally).repeat(10) +
+                rightDown;
 
-        StringBuilder bottomLine = new StringBuilder();
-        bottomLine.append(leftDown);
-        bottomLine.append(String.valueOf(straightHorizontally).repeat(10));
-        bottomLine.append(rightDown);
-
-        terminal.write(firstline.toString(), width, height++);
+        terminal.write(firstline, width, height++);
         for (int i = 0; i < 20; i++) {
             terminal.write(middleLines.toString(), width, height++);
         }
-        terminal.write(bottomLine.toString(), width, height);
+        terminal.write(bottomLine, width, height);
+
+        String holdBoxFirstLine = leftUp + String.valueOf(straightHorizontally).repeat(6) + rightUp;
+        String holdBoxMiddleLines = straightVertically + " ".repeat(6) + straightVertically;
+        String holdBoxBottomLine = leftDown + String.valueOf(straightHorizontally).repeat(6) + rightDown;
+        width = width - 10;
+        height = 15;
+        terminal.write(holdBoxFirstLine, width, height++);
+        for (int i = 0; i < 4; i++) {
+            terminal.write(holdBoxMiddleLines, width, height++);
+        }
+        terminal.write(holdBoxBottomLine, width, height);
+
         System.out.println("Finished Drawing...");
     }
 

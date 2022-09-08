@@ -1,7 +1,7 @@
 package logic;
 
 import asciiPanel.AsciiPanel;
-import logic.pieces.*;
+import logic.pieces.Tetromino;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -111,6 +111,7 @@ public class TetrisField {
             }
         }
         printCurrentPiece(terminal);
+        printHold(terminal);
     }
 
     private void printCurrentPiece(AsciiPanel terminal) {
@@ -120,6 +121,22 @@ public class TetrisField {
             for (int x = 0; x < gridPoints[y].length; x++) {
                 if (gridPoints[y][x]) {
                     terminal.write(BLOCK, 30 + x + activePieceGrid.x, 16 + y + activePieceGrid.y, activePieceGrid.getColor());
+                }
+            }
+        }
+    }
+
+    private void printHold(AsciiPanel terminal) {
+        if (holdPiece != null) {
+            Grid holdPieceGrid = holdPiece.getGrid()[0];
+            Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
+            for (int y = 0; y < gridPoints.length; y++) {
+                for (int x = 0; x < gridPoints[x].length; x++) {
+                    System.out.printf("Current x: %d, Max x: %d | ", x, gridPoints[x].length - 1);
+                    System.out.printf("Current y: %d, Max y: %d\n", y, gridPoints.length - 1);
+                    if (gridPoints[y][x]) {
+                        terminal.write(BLOCK, 21 + x, 17 + y, holdPieceGrid.getColor());
+                    }
                 }
             }
         }
@@ -164,6 +181,7 @@ public class TetrisField {
 //        printCurrentField();
     }
 
+
     private void printCurrentField() {
         for (Point[] point : points) {
             for (Point value : point) {
@@ -179,7 +197,8 @@ public class TetrisField {
         nextPiece = generator.getNext();
     }
 
-    public void printHold(AsciiPanel terminal) {
+
+    public void softDrop() {
         //TODO
     }
 }
