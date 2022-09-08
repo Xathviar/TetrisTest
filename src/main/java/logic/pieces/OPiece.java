@@ -6,7 +6,7 @@ import logic.TetrisField;
 import java.awt.*;
 import java.util.Arrays;
 
-public class OPiece extends Tetromino {
+public class OPiece extends Tetromino<OPiece> {
 
     public OPiece(TetrisField field) {
         super("O-Piece", Color.YELLOW, field);
@@ -27,5 +27,10 @@ public class OPiece extends Tetromino {
         for (Point[] wallKick : wallKicks) {
             Arrays.fill(wallKick, new Point(0, 0));
         }
+    }
+
+    @Override
+    public OPiece newPiece(TetrisField field) {
+        return new OPiece(field);
     }
 }

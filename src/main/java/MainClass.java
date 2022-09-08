@@ -26,17 +26,15 @@ public class MainClass extends JFrame implements KeyListener {
         repaint();
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
         exec.scheduleAtFixedRate(() -> {
-//            synchronized (terminal) {
-            screen.displayOutput(terminal);
-            MainClass.super.repaint();
-//            }
-        }, 0, 100, TimeUnit.MILLISECONDS);
+                repaint();
+        }, 0, 50, TimeUnit.MILLISECONDS);
     }
 
     public void repaint() {
-        terminal.clear();
-        screen.displayOutput(terminal);
-        super.repaint();
+        SwingUtilities.invokeLater(() -> {
+            screen.displayOutput(terminal);
+            super.repaint();
+        });
     }
 
 

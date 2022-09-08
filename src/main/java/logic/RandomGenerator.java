@@ -23,20 +23,30 @@ public class RandomGenerator {
         allTetrisPieces.add(new SPiece(field));
         allTetrisPieces.add(new ZPiece(field));
         Collections.shuffle(allTetrisPieces);
-        Collections.shuffle(allTetrisPieces);
-        Collections.shuffle(allTetrisPieces);
         tetrisPieceOrder.addAll(allTetrisPieces);
-        System.out.println(tetrisPieceOrder);
     }
 
     public Tetromino getNext() {
-        Tetromino n = tetrisPieceOrder.poll();
-        if (n == null) {
+        if (tetrisPieceOrder.size() < 4) {
             generateNewOrder();
-            n = tetrisPieceOrder.poll();
         }
-        System.out.println(n);
-        return n;
+        return tetrisPieceOrder.poll();
+    }
+
+    public List<Tetromino> peek(int number) {
+        while (number < tetrisPieceOrder.size()) {
+            generateNewOrder();
+        }
+
+        List<Tetromino> ret = new ArrayList<>();
+        Object[] tetrisPieceOrderArr = tetrisPieceOrder.toArray();
+        for (int i = 0; i < number; i++) {
+            ret.add((Tetromino) tetrisPieceOrderArr[i]);
+        }
+        return ret;
+    }
+    public Tetromino peekOne(){
+        return peek(1).get(0);
     }
 
 }

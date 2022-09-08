@@ -22,16 +22,6 @@ public class Grid {
         this.field = field;
     }
 
-
-    public void updateY(int newHeight) {
-        //TODO Update Logic here I think
-    }
-
-    public void updateX(int newWidth) {
-
-        //TODO Update Logic here I think
-    }
-
     public void moveLeft() {
         if (!isValidPosition(x - 1, y)) {
             return;
@@ -87,6 +77,7 @@ public class Grid {
     public Boolean[][] getSetPoints() {
         return setPoints;
     }
+
 
     public Color getColor() {
         return color;

@@ -78,19 +78,29 @@ public class PlayScreen implements Screen {
             terminal.write(middleLines.toString(), width, height++);
         }
         terminal.write(bottomLine, width, height);
-
-        String holdBoxFirstLine = leftUp + String.valueOf(straightHorizontally).repeat(6) + rightUp;
-        String holdBoxMiddleLines = straightVertically + " ".repeat(6) + straightVertically;
-        String holdBoxBottomLine = leftDown + String.valueOf(straightHorizontally).repeat(6) + rightDown;
-        width = width - 10;
         height = 15;
-        terminal.write(holdBoxFirstLine, width, height++);
-        for (int i = 0; i < 4; i++) {
-            terminal.write(holdBoxMiddleLines, width, height++);
-        }
-        terminal.write(holdBoxBottomLine, width, height);
-
+        writeBoxAt(terminal, width - 8, height);
+        writeBoxAt(terminal, width + 12, height);
         System.out.println("Finished Drawing...");
     }
+
+    private void writeBoxAt(AsciiPanel terminal, int width, int height) {
+        char leftDown = 200;
+        char leftUp = 201;
+        char rightUp = 187;
+        char rightDown = 188;
+        char straightHorizontally = 205;
+        char straightVertically = 186;
+        String boxFirstLine = leftUp + String.valueOf(straightHorizontally).repeat(6) + rightUp;
+        String boxMiddleLines = straightVertically + " ".repeat(6) + straightVertically;
+        String boxBottomLine = leftDown + String.valueOf(straightHorizontally).repeat(6) + rightDown;
+
+        terminal.write(boxFirstLine, width, height++);
+        for (int i = 0; i < 4; i++) {
+            terminal.write(boxMiddleLines, width, height++);
+        }
+        terminal.write(boxBottomLine, width, height);
+    }
+
 
 }

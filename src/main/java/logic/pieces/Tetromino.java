@@ -5,7 +5,7 @@ import logic.TetrisField;
 
 import java.awt.*;
 
-public abstract class Tetromino {
+public abstract class Tetromino <T> {
     private final String name;
     final Color color;
     final Grid[] grid;
@@ -119,7 +119,7 @@ public abstract class Tetromino {
         return false;
     }
 
-    private void updateGrids() {
+    void updateGrids() {
         for (Grid grid1 : grid) {
             grid1.x = this.x;
             grid1.y = this.y;
@@ -141,4 +141,31 @@ public abstract class Tetromino {
     public Grid[] getGrid() {
         return grid;
     }
+
+    public Tetromino clonePiece() {
+        Tetromino ret = (Tetromino) this.newPiece(field);
+        ret.x = this.x;
+        ret.y = this.y;
+        ret.setCurrentRotation(this.getCurrentRotation());
+        ret.updateGrids();
+        return ret;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getCurrentRotation() {
+        return currentRotation;
+    }
+
+    public void setCurrentRotation(int currentRotation) {
+        this.currentRotation = currentRotation;
+    }
+
+    public abstract T newPiece(TetrisField field);
 }

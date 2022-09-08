@@ -5,7 +5,7 @@ import logic.TetrisField;
 
 import java.awt.*;
 
-public class JPiece extends Tetromino {
+public class JPiece extends Tetromino <JPiece> {
 
     public JPiece(TetrisField field) {
         super("J-Piece", Color.BLUE, field);
@@ -63,5 +63,10 @@ public class JPiece extends Tetromino {
         wallKicks[3][2] = test3;
         wallKicks[3][3] = test4;
         wallKicks[3][4] = test5;
+    }
+
+    @Override
+    public JPiece newPiece(TetrisField field) {
+        return new JPiece(field);
     }
 }
