@@ -37,24 +37,8 @@ public class Grid {
     }
 
     public boolean moveDown() {
-        Integer[] downMostPoints = new Integer[setPoints.length];
-        Arrays.fill(downMostPoints, -1);
-        for (int y = setPoints.length - 1; y > 0; y--) {
-            for (int x = 0; x < setPoints[y].length; x++) {
-                if (setPoints[y][x] && downMostPoints[x] == -1) {
-                    downMostPoints[x] = y;
-                }
-            }
-        }
-        for (int x = 0; x < downMostPoints.length; x++) {
-            if (downMostPoints[x] != -1) {
-                if (downMostPoints[x] + 1 + this.y >= 20) {
-                    return false;
-                }
-                if (!field.isFreePixel(x + this.x, downMostPoints[x] + 1 + this.y)) {
-                    return false;
-                }
-            }
+        if (!isValidPosition(x, y + 1)) {
+            return false;
         }
         this.y++;
         return true;

@@ -34,7 +34,7 @@ public class RandomGenerator {
     }
 
     public List<Tetromino> peek(int number) {
-        while (number < tetrisPieceOrder.size()) {
+        while (number > tetrisPieceOrder.size()) {
             generateNewOrder();
         }
 

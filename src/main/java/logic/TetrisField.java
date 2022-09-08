@@ -2,6 +2,7 @@ package logic;
 
 import asciiPanel.AsciiPanel;
 import logic.pieces.Tetromino;
+import screens.PlayScreen;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class TetrisField {
 
     public static final char BACKGROUND = 1;
 
-    private static Color PREVIEWCOLOR = new Color(255,255,255, 128);
+    private static Color PREVIEWCOLOR = new Color(255, 255, 255, 128);
     private Point[][] points = new Point[20][10];
 
     private RandomGenerator generator;
@@ -27,24 +28,45 @@ public class TetrisField {
 
     private Tetromino holdPiece;
 
-    private Tetromino nextPiece;
-
     private Tetromino helperPiece;
+
+    private long score;
+
+    private int level;
+
+    private int numberofLinesToClear;
+
+    private static final int LINE_THRESHOLD = 10;
+
+    private static final int SPEEDMULTIPLIER = 50;
+
+    private int currentMillis = 1000;
 
 
     private ScheduledExecutorService exec;
 
-    public TetrisField() {
+    private java.util.List<Tetromino> nextPieces;
+
+    private PlayScreen screen;
+
+    public TetrisField(int level, PlayScreen screen) {
         for (Point[] point : points) {
             Arrays.fill(point, new Point(true, Color.BLACK));
         }
         generator = new RandomGenerator(this);
         activePiece = generator.getNext();
         calculateNewHelperPiecePosition();
-        nextPiece = generator.getNext();
+        nextPieces = generator.peek(4);
         holdPiece = null;
+        score = 0;
+        this.level = level;
+        for (int i = 0; i < level - 1; i++) {
+            currentMillis -= this.currentMillis / 10;
+        }
         exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(this::gameTick, 0, 1, TimeUnit.SECONDS);
+        exec.scheduleAtFixedRate(this::gameTick, 0, currentMillis, TimeUnit.MILLISECONDS);
+        numberofLinesToClear = LINE_THRESHOLD;
+        this.screen = screen;
     }
 
 
@@ -75,8 +97,8 @@ public class TetrisField {
         } else {
             synchronized (activePiece) {
                 holdPiece = activePiece;
-                activePiece = nextPiece;
-                nextPiece = generator.getNext();
+                activePiece = generator.getNext();
+                nextPieces = generator.peek(4);
             }
         }
         synchronized (holdPiece) {
@@ -86,6 +108,7 @@ public class TetrisField {
     }
 
     private void checkForClearedLines() {
+        int numberOfClearedLines = 0;
         a:
         for (int y = 0; y < points.length; y++) {
             for (int x = 0; x < points[y].length; x++) {
@@ -95,9 +118,19 @@ public class TetrisField {
                 if (x + 1 == points[y].length) {
                     System.out.println("Clearing Line at y=" + y);
                     clearLine(y);
+                    numberOfClearedLines++;
+
                     moveRestDown(y);
                 }
             }
+        }
+        score += 10 * Math.pow(numberOfClearedLines, 2) * Math.pow(level, 2);
+        numberofLinesToClear -= numberOfClearedLines;
+        if (numberofLinesToClear < 1) {
+            level++;
+            currentMillis -= currentMillis / 10;
+            rescheduleScheduler();
+            numberofLinesToClear = LINE_THRESHOLD;
         }
     }
 
@@ -131,6 +164,16 @@ public class TetrisField {
             printHold(terminal);
         }
         printQueue(terminal);
+        printScoreAndStuff(terminal);
+    }
+
+    private void printScoreAndStuff(AsciiPanel terminal) {
+        int y = 23;
+        terminal.write("LEVEL", 22, y++, Color.YELLOW);
+        terminal.write(String.format("  %03d", level), 21, y++, Color.WHITE);
+        terminal.write(Character.toString(196).repeat(7), 21, y++, Color.LIGHT_GRAY);
+        terminal.write("SCORE", 21, y++, Color.YELLOW);
+        terminal.write(String.format("%07d", score), 21, y, Color.WHITE);
     }
 
     private void printCurrentPiece(AsciiPanel terminal) {
@@ -141,7 +184,7 @@ public class TetrisField {
         for (int y = 0; y < gridPoints.length; y++) {
             for (int x = 0; x < gridPoints[y].length; x++) {
                 if (gridPoints[y][x]) {
-                    terminal.write(BLOCK, 30 + x + helperPieceGrid.x, 16 + y + helperPieceGrid.y, PREVIEWCOLOR);
+                    terminal.write(BLOCK, 30 + x + helperPieceGrid.x, 16 + y + helperPieceGrid.y, PREVIEWCOLOR, Color.BLACK);
                     terminal.write(BLOCK, 30 + x + activePieceGrid.x, 16 + y + activePieceGrid.y, activePieceGrid.getColor());
                 }
             }
@@ -166,18 +209,32 @@ public class TetrisField {
     }
 
     private synchronized void printQueue(AsciiPanel terminal) {
-        Grid holdPieceGrid = nextPiece.getGrid()[0];
-        Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
-        terminal.write(BLOCKCHAIN, 43, 17, Color.BLACK);
-        terminal.write(BLOCKCHAIN, 43, 18, Color.BLACK);
-        terminal.write(BLOCKCHAIN, 43, 19, Color.BLACK);
-        for (int y = 0; y < gridPoints.length; y++) {
-            for (int x = 0; x < gridPoints[y].length; x++) {
-                if (gridPoints[y][x]) {
-                    terminal.write(BLOCK, 43 + x, 17 + y, holdPieceGrid.getColor());
+        for (int i = 0; i < nextPieces.size(); i++) {
+            Grid holdPieceGrid = nextPieces.get(i).getGrid()[0];
+            Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
+            terminal.write(BLOCKCHAIN, 43, 17 + i * 5, Color.BLACK);
+            terminal.write(BLOCKCHAIN, 43, 18 + i * 5, Color.BLACK);
+            terminal.write(BLOCKCHAIN, 43, 19 + i * 5, Color.BLACK);
+            for (int y = 0; y < gridPoints.length; y++) {
+                for (int x = 0; x < gridPoints[y].length; x++) {
+                    if (gridPoints[y][x]) {
+                        terminal.write(BLOCK, 43 + x, 17 + y + i * 5, holdPieceGrid.getColor());
+                    }
                 }
             }
         }
+//        Grid holdPieceGrid = nextPieces.get(0).getGrid()[0];
+//        Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
+//        terminal.write(BLOCKCHAIN, 43, 17, Color.BLACK);
+//        terminal.write(BLOCKCHAIN, 43, 18, Color.BLACK);
+//        terminal.write(BLOCKCHAIN, 43, 19, Color.BLACK);
+//        for (int y = 0; y < gridPoints.length; y++) {
+//            for (int x = 0; x < gridPoints[y].length; x++) {
+//                if (gridPoints[y][x]) {
+//                    terminal.write(BLOCK, 43 + x, 17 + y, holdPieceGrid.getColor());
+//                }
+//            }
+//        }
     }
 
     public boolean isFreePixel(int x, int y) {
@@ -218,7 +275,8 @@ public class TetrisField {
     }
 
     public void hardDrop() {
-        activePiece.hardDrop();
+        int counter = activePiece.hardDrop();
+        score += (counter) >> 1;
         newActivePiece();
 //        printCurrentField();
     }
@@ -235,8 +293,8 @@ public class TetrisField {
 
     public void newActivePiece() {
         addGrid(getActivePiece().returnPiece());
-        activePiece = nextPiece;
-        nextPiece = generator.getNext();
+        activePiece = generator.getNext();
+        nextPieces = generator.peek(4);
         calculateNewHelperPiecePosition();
     }
 
@@ -251,8 +309,17 @@ public class TetrisField {
         gameTick();
     }
 
-    private void rescheduleScheduler(int millis) {
+    private void rescheduleScheduler() {
         exec.shutdownNow();
-        exec.scheduleAtFixedRate(this::gameTick, 0, millis, TimeUnit.MILLISECONDS);
+        exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(this::gameTick, 0, currentMillis, TimeUnit.MILLISECONDS);
+    }
+
+    public long getScore() {
+        return score;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }

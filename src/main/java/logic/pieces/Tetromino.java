@@ -99,10 +99,17 @@ public abstract class Tetromino <T> {
         updateGrids();
     }
 
-    public void hardDrop() {
+    public int hardDrop() {
+        int counter = 0;
         while (true) {
-            if (!grid[currentRotation].moveDown()) break;
+            boolean moved = grid[currentRotation].moveDown();
+            if (moved) {
+                counter ++;
+            } else {
+                break;
+            }
         }
+        return counter;
     }
 
     public boolean gameTick() {
