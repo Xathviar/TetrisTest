@@ -71,7 +71,7 @@ public class TetrisField {
 
 
     /**
-     * Finished Pieces get here, Since they won't move anymore. Most likey at least
+     * Placed Pieces get here, Since they won't move anymore. Most likey at least
      *
      * @param grid
      */
@@ -294,6 +294,10 @@ public class TetrisField {
     public void newActivePiece() {
         addGrid(getActivePiece().returnPiece());
         activePiece = generator.getNext();
+        if (!activePiece.getGrid()[0].isValidPosition(3,0)) {
+            exec.shutdownNow();
+            screen.loseScreen= true;
+        }
         nextPieces = generator.peek(4);
         calculateNewHelperPiecePosition();
     }

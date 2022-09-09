@@ -18,7 +18,7 @@ public class PlayScreen implements Screen {
     public boolean initScreen = true;
 
     public boolean loseScreen = false;
-    private static final String[] tetrisLogo = """
+    public static final String[] tetrisLogo = """
              _________  ________  _________  _______     _____   ______  \s
             |  _   _  ||_   __  ||  _   _  ||_   __ \\   |_   _|.' ____ \\ \s
             |_/ | | \\_|  | |_ \\_||_/ | | \\_|  | |__) |    | |  | (___ \\_|\s
@@ -44,7 +44,7 @@ public class PlayScreen implements Screen {
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
         if (loseScreen) {
-            return new LoseScreen(field.getLevel(), field.getScore(), startTime - System.currentTimeMillis());
+            return new LoseScreen(field.getLevel(), field.getScore(), System.currentTimeMillis() - startTime);
         }
         switch (key.getKeyCode()) {
             case KeyEvent.VK_LEFT -> field.moveLeft();
@@ -103,7 +103,7 @@ public class PlayScreen implements Screen {
 
     }
 
-    private void writeBoxAt(AsciiPanel terminal, int x, int y, int width, int height) {
+    public static void writeBoxAt(AsciiPanel terminal, int x, int y, int width, int height) {
         char leftDown = 200;
         char leftUp = 201;
         char rightUp = 187;
