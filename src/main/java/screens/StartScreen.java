@@ -3,6 +3,7 @@ package screens;
 import asciiPanel.AsciiPanel;
 import logic.HighScore;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +66,13 @@ public class StartScreen implements Screen {
                 if (i == 10) {
                     break;
                 }
-                terminal.write(score.toString(), 16, 18 + i);
+                Color brown = new Color(150,116,68);
+                switch (i) {
+                    case 0 -> terminal.write(score.toString(), 16, 18 + i, Color.YELLOW);
+                    case 1 -> terminal.write(score.toString(), 16, 18 + i, Color.GRAY);
+                    case 2 -> terminal.write(score.toString(), 16, 18 + i, brown);
+                    default -> terminal.write(score.toString(), 16, 18 + i, Color.LIGHT_GRAY);
+                }
                 i++;
             }
             initScreen = false;

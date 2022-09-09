@@ -18,7 +18,6 @@ public class MainClass extends JFrame implements KeyListener {
     public MainClass() {
         super();
         terminal = new AsciiPanel(70, 50, new AsciiFont("custom_cp437_20x20.png", 20, 20));
-        terminal.write("humble Beginning");
         add(terminal);
         pack();
         screen = new StartScreen();
