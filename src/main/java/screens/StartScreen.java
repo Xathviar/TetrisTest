@@ -4,6 +4,7 @@ import asciiPanel.AsciiPanel;
 import logic.HighScore;
 
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -38,7 +39,12 @@ public class StartScreen implements Screen {
                 scores.add(new HighScore(name, level, score, String.format("%d:%d", TimeUnit.MILLISECONDS.toMinutes(timePassed), (TimeUnit.MILLISECONDS.toSeconds(timePassed) % 60))));
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            File file = new File("highscores.txt");
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
         System.out.println(scores);
     }
