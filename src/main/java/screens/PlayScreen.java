@@ -11,11 +11,7 @@ public class PlayScreen implements Screen {
     private final long startTime;
 
     public PlayScreen() {
-        try {
-            field = new TetrisField(1, this, "T-Piece-Test.level");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        field = new TetrisField(1, this);
         System.out.println("Hello World!");
         startTime = System.currentTimeMillis();
     }
