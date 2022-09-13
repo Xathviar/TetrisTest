@@ -49,6 +49,7 @@ public class Grid {
             for (int j = 0; j < setPoints[i].length; j++) {
                 if (setPoints[i][j]) {
                     if (!field.isFreePixel(j + x, i + y)) {
+//                        System.out.printf("Pixel %d:%d is not free!\n", j + x, i + y);
                         return false;
                     }
                 }

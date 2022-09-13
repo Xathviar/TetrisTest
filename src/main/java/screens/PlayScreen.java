@@ -4,13 +4,18 @@ import asciiPanel.AsciiPanel;
 import logic.TetrisField;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 public class PlayScreen implements Screen {
     private TetrisField field;
     private final long startTime;
 
     public PlayScreen() {
-        field = new TetrisField(1, this);
+        try {
+            field = new TetrisField(1, this, "T-Piece-Test.level");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Hello World!");
         startTime = System.currentTimeMillis();
     }

@@ -1,11 +1,16 @@
 package logic;
 
 import asciiPanel.AsciiPanel;
+import logic.pieces.TPiece;
 import logic.pieces.Tetromino;
 import screens.PlayScreen;
 
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -69,6 +74,34 @@ public class TetrisField {
         this.screen = screen;
     }
 
+    public TetrisField(int level, PlayScreen screen, String levelPath) throws IOException {
+        for (Point[] point : points) {
+            Arrays.fill(point, new Point(true, Color.BLACK));
+        }
+        List<String> lines = Files.readAllLines(Paths.get(levelPath));
+        for (int i = 0; i < lines.size(); i++) {
+            for (int j = 0; j < lines.get(i).length(); j++) {
+                if (lines.get(i).charAt(j) == '#') {
+                    points[i][j] = new Point(false, Color.GRAY);
+                }
+            }
+        }
+        generator = new RandomGenerator(this);
+        activePiece = new TPiece(this);
+        calculateNewHelperPiecePosition();
+        nextPieces = generator.peek(4);
+        holdPiece = null;
+        score = 0;
+        this.level = level;
+        for (int i = 0; i < level - 1; i++) {
+            currentMillis -= this.currentMillis / 10;
+        }
+        exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(this::gameTick, 0, currentMillis, TimeUnit.MILLISECONDS);
+        numberofLinesToClear = LINE_THRESHOLD;
+        this.screen = screen;
+    }
+
 
     /**
      * Placed Pieces get here, Since they won't move anymore. Most likey at least
@@ -105,6 +138,7 @@ public class TetrisField {
             holdPiece.resetPosition();
         }
         helperPiece = activePiece;
+        calculateNewHelperPiecePosition();
     }
 
     private void checkForClearedLines() {
@@ -119,7 +153,6 @@ public class TetrisField {
                     System.out.println("Clearing Line at y=" + y);
                     clearLine(y);
                     numberOfClearedLines++;
-
                     moveRestDown(y);
                 }
             }
@@ -152,8 +185,8 @@ public class TetrisField {
     public void printTetrisField(AsciiPanel terminal) {
         for (int i = 0; i < SCREEN_HEIGHT; i++) {
             for (int j = 0; j < SCREEN_WIDTH; j++) {
-                if (points[i][j].getColor() == Color.BLACK) {
-                    terminal.write(BACKGROUND, 30 + j, 16 + i, Color.GRAY);
+                if (points[i][j].isFree()) {
+                    terminal.write(BACKGROUND, 30 + j, 16 + i, Color.GRAY, Color.BLACK);
                 } else {
                     terminal.write(BLOCK, 30 + j, 16 + i, points[i][j].getColor());
                 }
@@ -184,7 +217,7 @@ public class TetrisField {
         for (int y = 0; y < gridPoints.length; y++) {
             for (int x = 0; x < gridPoints[y].length; x++) {
                 if (gridPoints[y][x]) {
-                    terminal.write(BLOCK, 30 + x + helperPieceGrid.x, 16 + y + helperPieceGrid.y, PREVIEWCOLOR, Color.BLACK);
+                    terminal.write(BLOCK, 30 + x + helperPieceGrid.x, 16 + y + helperPieceGrid.y, Color.LIGHT_GRAY, Color.BLACK);
                     terminal.write(BLOCK, 30 + x + activePieceGrid.x, 16 + y + activePieceGrid.y, activePieceGrid.getColor());
                 }
             }
@@ -282,7 +315,7 @@ public class TetrisField {
     }
 
 
-    private void printCurrentField() {
+    public void printCurrentField() {
         for (Point[] point : points) {
             for (Point value : point) {
                 System.out.print(value);
@@ -304,7 +337,6 @@ public class TetrisField {
 
     private void calculateNewHelperPiecePosition() {
         helperPiece = activePiece.clonePiece();
-        System.out.printf("%dx:%dy | %dx:%dy\n", activePiece.getX(), activePiece.getY(), helperPiece.getX(), helperPiece.getY());
         helperPiece.hardDrop();
     }
 

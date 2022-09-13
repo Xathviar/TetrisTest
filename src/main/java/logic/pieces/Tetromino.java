@@ -56,6 +56,7 @@ public abstract class Tetromino <T> {
                 this.y = temp_y;
                 updateGrids();
                 currentRotation = tempRotation;
+                readyToFix = false;
                 return;
             }
         }
@@ -67,7 +68,7 @@ public abstract class Tetromino <T> {
             tempRotation = 0;
         else
             tempRotation = currentRotation + 1;
-        for (Point point : wallKicks[tempRotation]) {
+        for (Point point : wallKicks[currentRotation]) {
             int temp_x = point.x + x;
             int temp_y = point.y + y;
             if (grid[tempRotation].isValidPosition(temp_x, temp_y)) {
@@ -75,6 +76,7 @@ public abstract class Tetromino <T> {
                 this.y = temp_y;
                 updateGrids();
                 currentRotation = tempRotation;
+                readyToFix = false;
                 return;
             }
         }
@@ -207,9 +209,9 @@ public abstract class Tetromino <T> {
         wallKicks[2][3] = test4;
         wallKicks[2][4] = test5;
         test2 = new Point(-1, 0);
-        test3 = new Point(1, -1);
-        test4 = new Point(0, 2);
-        test5 = new Point(1, 2);
+        test3 = new Point(-1, 1);
+        test4 = new Point(0, -2);
+        test5 = new Point(-1, -2);
         wallKicks[3][0] = test1;
         wallKicks[3][1] = test2;
         wallKicks[3][2] = test3;
