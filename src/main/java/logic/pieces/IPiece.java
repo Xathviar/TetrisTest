@@ -28,8 +28,8 @@ public class IPiece extends Tetromino <IPiece> {
         Point test1 = new Point(0, 0);
         Point test2 = new Point(-2, 0);
         Point test3 = new Point(1, 0);
-        Point test4 = new Point(-2, -1);
-        Point test5 = new Point(1, 2);
+        Point test4 = new Point(-2, 1);
+        Point test5 = new Point(1, -2);
         wallKicks[0][0] = test1;
         wallKicks[0][1] = test2;
         wallKicks[0][2] = test3;
@@ -37,8 +37,8 @@ public class IPiece extends Tetromino <IPiece> {
         wallKicks[0][4] = test5;
         test2 = new Point(-1, 0);
         test3 = new Point(2, 0);
-        test4 = new Point(-1, 2);
-        test5 = new Point(2, -1);
+        test4 = new Point(-1, -2);
+        test5 = new Point(2, 1);
         wallKicks[1][0] = test1;
         wallKicks[1][1] = test2;
         wallKicks[1][2] = test3;
@@ -46,8 +46,8 @@ public class IPiece extends Tetromino <IPiece> {
         wallKicks[1][4] = test5;
         test2 = new Point(2, 0);
         test3 = new Point(-1, 0);
-        test4 = new Point(2, 1);
-        test5 = new Point(-1, -2);
+        test4 = new Point(2, -1);
+        test5 = new Point(-1, 2);
         wallKicks[2][0] = test1;
         wallKicks[2][1] = test2;
         wallKicks[2][2] = test3;
@@ -55,8 +55,8 @@ public class IPiece extends Tetromino <IPiece> {
         wallKicks[2][4] = test5;
         test2 = new Point(-1, 0);
         test3 = new Point(-2, 0);
-        test4 = new Point(1, -2);
-        test5 = new Point(-2, 1);
+        test4 = new Point(1, 2);
+        test5 = new Point(-2, -1);
         wallKicks[3][0] = test1;
         wallKicks[3][1] = test2;
         wallKicks[3][2] = test3;

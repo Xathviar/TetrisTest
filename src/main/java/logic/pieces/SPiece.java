@@ -5,7 +5,7 @@ import logic.TetrisField;
 
 import java.awt.*;
 
-public class SPiece extends Tetromino <OPiece>{
+public class SPiece extends Tetromino <SPiece>{
 
     public SPiece(TetrisField field) {
         super("S-Piece", Color.GREEN, field);
@@ -25,47 +25,11 @@ public class SPiece extends Tetromino <OPiece>{
 
     @Override
     public void initWallKicks() {
-        Point test1 = new Point(0, 0);
-        Point test2 = new Point(-1, 0);
-        Point test3 = new Point(-1, 1);
-        Point test4 = new Point(0, -2);
-        Point test5 = new Point(-1, -2);
-        wallKicks[0][0] = test1;
-        wallKicks[0][1] = test2;
-        wallKicks[0][2] = test3;
-        wallKicks[0][3] = test4;
-        wallKicks[0][4] = test5;
-        test2 = new Point(1, 0);
-        test3 = new Point(1, -1);
-        test4 = new Point(0, 2);
-        test5 = new Point(1, 2);
-        wallKicks[1][0] = test1;
-        wallKicks[1][1] = test2;
-        wallKicks[1][2] = test3;
-        wallKicks[1][3] = test4;
-        wallKicks[1][4] = test5;
-        test2 = new Point(1, 0);
-        test3 = new Point(1, 1);
-        test4 = new Point(0, -2);
-        test5 = new Point(1, -2);
-        wallKicks[2][0] = test1;
-        wallKicks[2][1] = test2;
-        wallKicks[2][2] = test3;
-        wallKicks[2][3] = test4;
-        wallKicks[2][4] = test5;
-        test2 = new Point(-1, 0);
-        test3 = new Point(1, 1);
-        test4 = new Point(0, -2);
-        test5 = new Point(1, -2);
-        wallKicks[3][0] = test1;
-        wallKicks[3][1] = test2;
-        wallKicks[3][2] = test3;
-        wallKicks[3][3] = test4;
-        wallKicks[3][4] = test5;
+        wallKicks = wallKicksAllButI();
     }
 
     @Override
-    public OPiece newPiece(TetrisField field) {
-        return new OPiece(field);
+    public SPiece newPiece(TetrisField field) {
+        return new SPiece(field);
     }
 }

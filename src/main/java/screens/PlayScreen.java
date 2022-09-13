@@ -10,7 +10,7 @@ public class PlayScreen implements Screen {
     private final long startTime;
 
     public PlayScreen() {
-        field = new TetrisField(10, this);
+        field = new TetrisField(1, this);
         System.out.println("Hello World!");
         startTime = System.currentTimeMillis();
     }
