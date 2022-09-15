@@ -32,7 +32,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>MainClass</Main-Class>
+                                        <Main-Class>screens.MainClass</Main-Class>
                                         <Build-Number>${project.version}</Build-Number>
                                     </manifestEntries>
                                 </transformer>
@@ -113,7 +113,7 @@
                     </platforms>
                     <programs>
                         <program>
-                            <mainClass>MainClass</mainClass>
+                            <mainClass>screens.MainClass</mainClass>
                             <id>${artifactId}</id>
                         </program>
                     </programs>
