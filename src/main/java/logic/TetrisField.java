@@ -350,7 +350,8 @@ public class TetrisField {
 
 
     public void softDrop() {
-        gameTick();
+        getActivePiece().softDrop();
+//        gameTick();
     }
 
     private void rescheduleScheduler() {
