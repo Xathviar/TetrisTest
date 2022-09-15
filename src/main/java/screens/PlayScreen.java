@@ -1,19 +1,37 @@
 package screens;
 
 import asciiPanel.AsciiPanel;
+import com.sun.tools.javac.Main;
+import logic.Key;
 import logic.TetrisField;
 
 import java.awt.event.KeyEvent;
-import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class PlayScreen implements Screen {
     private TetrisField field;
     private final long startTime;
+    private ScheduledExecutorService exec;
+
 
     public PlayScreen() {
         field = new TetrisField(1, this);
         System.out.println("Hello World!");
         startTime = System.currentTimeMillis();
+        exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(this::handleInput, 0, 10, TimeUnit.MILLISECONDS);
+    }
+
+    private void handleInput() {
+        if (loseScreen) {
+            MainClass.aClass.screen = new LoseScreen(field.getLevel(), field.getScore(), System.currentTimeMillis() - startTime);
+        }
+        for (Key pressedKey : MainClass.pressedKeys) {
+            if (pressedKey != null)
+                pressedKey.handleKeyInput(field);
+        }
     }
 
     public boolean initScreen = true;
@@ -44,18 +62,18 @@ public class PlayScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
-        if (loseScreen) {
-            return new LoseScreen(field.getLevel(), field.getScore(), System.currentTimeMillis() - startTime);
-        }
-        switch (key.getKeyCode()) {
-            case KeyEvent.VK_LEFT -> field.moveLeft();
-            case KeyEvent.VK_RIGHT -> field.moveRight();
-            case KeyEvent.VK_UP -> field.rotateClockwise();
-            case KeyEvent.VK_DOWN -> field.softDrop();
-            case KeyEvent.VK_CONTROL -> field.rotateCClockwise();
-            case KeyEvent.VK_SPACE -> field.hardDrop();
-            case KeyEvent.VK_SHIFT -> field.swapHold();
-        }
+//        if (loseScreen) {
+//            return new LoseScreen(field.getLevel(), field.getScore(), System.currentTimeMillis() - startTime);
+//        }
+//        switch (key.getKeyCode()) {
+//            case KeyEvent.VK_LEFT -> field.moveLeft();
+//            case KeyEvent.VK_RIGHT -> field.moveRight();
+//            case KeyEvent.VK_UP -> field.rotateClockwise();
+//            case KeyEvent.VK_DOWN -> field.softDrop();
+//            case KeyEvent.VK_CONTROL -> field.rotateCClockwise();
+//            case KeyEvent.VK_SPACE -> field.hardDrop();
+//            case KeyEvent.VK_SHIFT -> field.swapHold();
+//        }
         return this;
     }
 

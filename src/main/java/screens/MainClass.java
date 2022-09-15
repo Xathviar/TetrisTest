@@ -1,11 +1,15 @@
+package screens;
+
 import asciiPanel.AsciiFont;
 import asciiPanel.AsciiPanel;
-import screens.Screen;
-import screens.StartScreen;
+import logic.Key;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +17,12 @@ import java.util.concurrent.TimeUnit;
 public class MainClass extends JFrame implements KeyListener {
     private final AsciiPanel terminal;
 
-    private Screen screen;
+    public Screen screen;
+
+    public static Set<Key> pressedKeys = new HashSet<>();
+
+    public static MainClass aClass;
+
 
     public MainClass() {
         super();
@@ -25,7 +34,7 @@ public class MainClass extends JFrame implements KeyListener {
         repaint();
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
         exec.scheduleAtFixedRate(() -> {
-                repaint();
+            repaint();
         }, 0, 50, TimeUnit.MILLISECONDS);
     }
 
@@ -36,9 +45,12 @@ public class MainClass extends JFrame implements KeyListener {
         });
     }
 
-
     public void keyPressed(KeyEvent e) {
         screen = screen.respondToUserInput(e, terminal);
+        if (screen instanceof PlayScreen) {
+            Key keyToAdd = Key.getEnumFromKeyCode(e.getKeyCode());
+            MainClass.pressedKeys.add(keyToAdd);
+        }
     }
 
 
@@ -50,7 +62,11 @@ public class MainClass extends JFrame implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-
+        Key pressedKey = Key.getEnumFromKeyCode(keyEvent.getKeyCode());
+        if (pressedKey != null) {
+            pressedKey.resetKey();
+            MainClass.pressedKeys.remove(pressedKey);
+        }
     }
 
 
@@ -58,5 +74,6 @@ public class MainClass extends JFrame implements KeyListener {
         MainClass mainClass = new MainClass();
         mainClass.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainClass.setVisible(true);
+        aClass = mainClass;
     }
 }

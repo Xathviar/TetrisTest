@@ -50,7 +50,7 @@ public class LoseScreen implements Screen {
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
         char c = key.getKeyChar();
-        String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+        String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_ ";
         if (key.getKeyCode() == KeyEvent.VK_ENTER && name.length() > 0) {
             System.out.println("Help");
             saveHighScore();
