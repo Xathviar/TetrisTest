@@ -114,6 +114,12 @@ public abstract class Tetromino <T> {
         return counter;
     }
 
+    public void softDrop()  {
+        grid[currentRotation].moveDown();
+        this.y = grid[currentRotation].y;
+        updateGrids();
+    }
+
     public boolean gameTick() {
         if (!grid[currentRotation].moveDown()) {
             if (readyToFix) {
