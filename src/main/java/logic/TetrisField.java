@@ -47,6 +47,8 @@ public class TetrisField {
 
     private int currentMillis = 1000;
 
+    private boolean allowSwap;
+
 
     private ScheduledExecutorService exec;
 
@@ -63,6 +65,7 @@ public class TetrisField {
         calculateNewHelperPiecePosition();
         nextPieces = generator.peek(4);
         holdPiece = null;
+        allowSwap = true;
         score = 0;
         this.level = level;
         for (int i = 0; i < level - 1; i++) {
@@ -121,6 +124,9 @@ public class TetrisField {
     }
 
     public void swapHold() {
+        if (!allowSwap) {
+            return;
+        }
         if (holdPiece != null) {
             synchronized (holdPiece) {
                 Tetromino temp = holdPiece;
@@ -139,6 +145,7 @@ public class TetrisField {
         }
         helperPiece = activePiece;
         calculateNewHelperPiecePosition();
+        allowSwap = false;
     }
 
     private void checkForClearedLines() {
@@ -333,6 +340,7 @@ public class TetrisField {
         }
         nextPieces = generator.peek(4);
         calculateNewHelperPiecePosition();
+        allowSwap = true;
     }
 
     private void calculateNewHelperPiecePosition() {
