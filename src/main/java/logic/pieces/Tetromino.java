@@ -166,6 +166,14 @@ public abstract class Tetromino <T> {
         return ret;
     }
 
+    public void changeColorGrey() {
+        grid[0].setColor(Color.GRAY);
+    }
+
+    public void returnNormalColor() {
+        grid[0].setColor(color);
+    }
+
     public int getX() {
         return x;
     }

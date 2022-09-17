@@ -68,6 +68,10 @@ public class Grid {
         return color;
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     public void setX(int x) {
         this.x = x;
     }

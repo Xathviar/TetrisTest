@@ -145,7 +145,9 @@ public class TetrisField {
         }
         helperPiece = activePiece;
         calculateNewHelperPiecePosition();
+
         allowSwap = false;
+        holdPiece.changeColorGrey();
     }
 
     private void checkForClearedLines() {
@@ -340,7 +342,9 @@ public class TetrisField {
         }
         nextPieces = generator.peek(4);
         calculateNewHelperPiecePosition();
+
         allowSwap = true;
+        holdPiece.returnNormalColor();
     }
 
     private void calculateNewHelperPiecePosition() {
