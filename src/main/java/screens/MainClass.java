@@ -19,7 +19,7 @@ public class MainClass extends JFrame implements KeyListener {
 
     public Screen screen;
 
-    public static Set<Key> pressedKeys = new HashSet<>();
+    public static final Set<Key> pressedKeys = new HashSet<>();
 
     public static MainClass aClass;
 

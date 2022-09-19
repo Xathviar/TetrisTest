@@ -83,7 +83,7 @@ public enum Key {
             }
         }
     },
-    CONTROL(KeyEvent.VK_CONTROL, 500) {
+    CONTROL(KeyEvent.VK_CONTROL, 25) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {

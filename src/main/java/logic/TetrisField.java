@@ -336,15 +336,16 @@ public class TetrisField {
     public void newActivePiece() {
         addGrid(getActivePiece().returnPiece());
         activePiece = generator.getNext();
-        if (!activePiece.getGrid()[0].isValidPosition(3,0)) {
+        if (!activePiece.getGrid()[0].isValidPosition(3, 0)) {
             exec.shutdownNow();
-            screen.loseScreen= true;
+            screen.loseScreen = true;
         }
         nextPieces = generator.peek(4);
         calculateNewHelperPiecePosition();
-
+        if (!allowSwap) {
+            holdPiece.returnNormalColor();
+        }
         allowSwap = true;
-        holdPiece.returnNormalColor();
     }
 
     private void calculateNewHelperPiecePosition() {
@@ -370,5 +371,9 @@ public class TetrisField {
 
     public int getLevel() {
         return level;
+    }
+
+    public void shutdownThread() {
+        exec.shutdownNow();
     }
 }

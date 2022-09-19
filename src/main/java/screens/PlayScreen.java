@@ -27,10 +27,18 @@ public class PlayScreen implements Screen {
     private void handleInput() {
         if (loseScreen) {
             MainClass.aClass.screen = new LoseScreen(field.getLevel(), field.getScore(), System.currentTimeMillis() - startTime);
+            exec.shutdownNow();
+            field.shutdownThread();
+            MainClass.aClass.repaint();
         }
-        for (Key pressedKey : MainClass.pressedKeys) {
-            if (pressedKey != null)
-                pressedKey.handleKeyInput(field);
+        synchronized (MainClass.pressedKeys) {
+            for (Key pressedKey : MainClass.pressedKeys) {
+                System.out.println(pressedKey);
+                if (pressedKey != null)
+                    pressedKey.handleKeyInput(field);
+                else
+                    MainClass.pressedKeys.remove(null);
+            }
         }
     }
 
