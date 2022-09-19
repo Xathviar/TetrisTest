@@ -49,6 +49,17 @@ public class TetrisField {
 
     private boolean allowSwap;
 
+    private int combo = -1;
+
+    /**
+     * 0: normal
+     * 1: Tetris
+     * 2: T-Spin
+     */
+    private int lastLineClear;
+
+    private boolean isTspin;
+
 
     private ScheduledExecutorService exec;
 
@@ -112,6 +123,8 @@ public class TetrisField {
      * @param grid
      */
     public void addGrid(Grid grid) {
+        isTspin();
+
         Boolean[][] gridPoints = grid.getSetPoints();
         for (int y = 0; y < gridPoints.length; y++) {
             for (int x = 0; x < gridPoints[y].length; x++) {
@@ -166,6 +179,14 @@ public class TetrisField {
                 }
             }
         }
+
+        if (numberOfClearedLines != 0) {
+            combo++;
+            System.out.println("Lines Sent: " + sentLinesTotal(numberOfClearedLines));
+        } else {
+            combo = -1;
+        }
+
         score += 10 * Math.pow(numberOfClearedLines, 2) * Math.pow(level, 2);
         numberofLinesToClear -= numberOfClearedLines;
         if (numberofLinesToClear < 1) {
@@ -174,6 +195,53 @@ public class TetrisField {
             rescheduleScheduler();
             numberofLinesToClear = LINE_THRESHOLD;
         }
+    }
+
+    private int sentLinesTotal(int linesCleared) {
+        //TODO Tspin Mini maybe? aber kein bock eig.
+
+        int comboLines = sentLinesByCombo();
+        int allClearLines = isAllClear();
+
+        if (linesCleared == 4) {
+            int backToBackBonus = evaluateBackToBack(1);
+            lastLineClear = 1;
+//            System.out.println("Tetris + Combo " + combo);
+            return 4 + comboLines + backToBackBonus + allClearLines;
+        }
+        if (isTspin) {
+            int backToBackBonus = evaluateBackToBack(2);
+            lastLineClear = 2;
+//            System.out.println("T-Spin + Combo " + combo);
+            return linesCleared*2 + comboLines + backToBackBonus + allClearLines;
+        }
+        lastLineClear = 0;
+//        System.out.println("Combo " + combo);
+        return linesCleared-1 + comboLines + allClearLines;
+    }
+
+    private int sentLinesByCombo() {
+        return switch (combo) {
+            case -1, 0 -> 0;
+            case 1, 2 -> 1;
+            case 3, 4 -> 2;
+            case 5, 6 -> 3;
+            case 7, 8, 9 -> 4;
+            default -> 5;
+        };
+    }
+
+    private int evaluateBackToBack(int current) {
+        if (lastLineClear == current) {
+            System.out.print(" Back-To-Back ");
+            return 1;
+        }
+        return 0;
+    }
+
+    private void isTspin() {
+        Grid current = activePiece.getGrid()[activePiece.getCurrentRotation()];
+        isTspin = getActivePiece().toString().equals("T-Piece") && !current.isValidPosition(current.x, current.y-1);
     }
 
     private void moveRestDown(int y) {
@@ -188,6 +256,15 @@ public class TetrisField {
         for (Point point : points[y]) {
             point.resetPoint();
         }
+    }
+
+    private int isAllClear() {
+        for (Point point : points[points.length-1]) {
+            if (point.getColor() != Color.BLACK) {
+                return 0;
+            }
+        }
+        return 10;
     }
 
 
