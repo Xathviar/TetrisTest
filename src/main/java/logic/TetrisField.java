@@ -56,7 +56,7 @@ public class TetrisField {
      * 1: Tetris
      * 2: T-Spin
      */
-    private int lastLineClear;
+    private boolean storeB2B;
 
     private boolean isTspin;
 
@@ -205,17 +205,17 @@ public class TetrisField {
 
         if (linesCleared == 4) {
             int backToBackBonus = evaluateBackToBack(1);
-            lastLineClear = 1;
+            storeB2B = true;
 //            System.out.println("Tetris + Combo " + combo);
             return 4 + comboLines + backToBackBonus + allClearLines;
         }
         if (isTspin) {
             int backToBackBonus = evaluateBackToBack(2);
-            lastLineClear = 2;
+            storeB2B = true;
 //            System.out.println("T-Spin + Combo " + combo);
             return linesCleared*2 + comboLines + backToBackBonus + allClearLines;
         }
-        lastLineClear = 0;
+        storeB2B = false;
 //        System.out.println("Combo " + combo);
         return linesCleared-1 + comboLines + allClearLines;
     }
@@ -232,7 +232,7 @@ public class TetrisField {
     }
 
     private int evaluateBackToBack(int current) {
-        if (lastLineClear == current) {
+        if (storeB2B) {
             System.out.print(" Back-To-Back ");
             return 1;
         }
