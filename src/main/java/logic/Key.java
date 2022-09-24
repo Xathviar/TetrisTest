@@ -95,6 +95,11 @@ public enum Key {
                 counter++;
             }
         }
+    },
+    NOOP(KeyEvent.VK_E, 10000) {
+        @Override
+        public void handleKeyInput(TetrisField field) {
+        }
     };
 
 
@@ -143,7 +148,7 @@ public enum Key {
             }
 
         }
-        return null;
+        return NOOP;
     }
 
 

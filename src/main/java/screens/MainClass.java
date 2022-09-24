@@ -47,9 +47,11 @@ public class MainClass extends JFrame implements KeyListener {
 
     public void keyPressed(KeyEvent e) {
         screen = screen.respondToUserInput(e, terminal);
-        if (screen instanceof PlayScreen) {
-            Key keyToAdd = Key.getEnumFromKeyCode(e.getKeyCode());
-            MainClass.pressedKeys.add(keyToAdd);
+        synchronized (MainClass.pressedKeys) {
+            if (screen instanceof PlayScreen) {
+                Key keyToAdd = Key.getEnumFromKeyCode(e.getKeyCode());
+                MainClass.pressedKeys.add(keyToAdd);
+            }
         }
     }
 
@@ -62,10 +64,12 @@ public class MainClass extends JFrame implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-        Key pressedKey = Key.getEnumFromKeyCode(keyEvent.getKeyCode());
-        if (pressedKey != null) {
-            pressedKey.resetKey();
-            MainClass.pressedKeys.remove(pressedKey);
+        synchronized (MainClass.pressedKeys) {
+            Key pressedKey = Key.getEnumFromKeyCode(keyEvent.getKeyCode());
+            if (pressedKey != null) {
+                pressedKey.resetKey();
+                MainClass.pressedKeys.remove(pressedKey);
+            }
         }
     }
 
