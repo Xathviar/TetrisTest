@@ -22,6 +22,10 @@ public class PlayScreen implements Screen {
         exec.scheduleAtFixedRate(this::handleInput, 0, 10, TimeUnit.MILLISECONDS);
     }
 
+    public void shutdownThread() {
+        exec.shutdownNow();
+    }
+
     private void handleInput() {
         if (loseScreen) {
             MainClass.aClass.screen = new LoseScreen(field.getLevel(), field.getScore(), System.currentTimeMillis() - startTime);
@@ -59,9 +63,9 @@ public class PlayScreen implements Screen {
                 terminal.write(tetrisLogo[i], 5, i + 1);
             }
             System.out.println("Does it get here?");
-            drawBoard(terminal);
             initScreen = false;
         }
+        drawBoard(terminal);
         field.printTetrisField(terminal);
     }
 
@@ -71,10 +75,8 @@ public class PlayScreen implements Screen {
     }
 
     private void drawBoard(AsciiPanel terminal) {
-        System.out.println("Drawing...");
         int height = 15;
         int width = (terminal.getWidthInCharacters() - 12) / 2;
-        System.out.println(width);
         char leftDown = 200;
         char leftUp = 201;
         char rightUp = 187;

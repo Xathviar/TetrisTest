@@ -28,7 +28,7 @@ public abstract class Tetromino <T> {
         currentRotation = 0;
         this.field = field;
         x = 3;
-        y = 0;
+        y = 30;
         wallKicks = new Point[4][5];
         initGrid();
         initWallKicks();
@@ -122,6 +122,7 @@ public abstract class Tetromino <T> {
 
     public boolean gameTick() {
         if (!grid[currentRotation].moveDown()) {
+            System.out.println("HELLO");
             if (readyToFix) {
                 readyToFix = false;
                 return true;
@@ -148,7 +149,7 @@ public abstract class Tetromino <T> {
 
     public void resetPosition() {
         this.x = 3;
-        this.y = 0;
+        this.y = 30;
         this.currentRotation = 0;
         updateGrids();
     }
@@ -224,5 +225,13 @@ public abstract class Tetromino <T> {
         wallKicks[3][3] = test4;
         wallKicks[3][4] = test5;
         return wallKicks;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }
