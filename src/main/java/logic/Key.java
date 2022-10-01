@@ -4,33 +4,25 @@ import java.awt.event.KeyEvent;
 
 @SuppressWarnings("SpellCheckingInspection")
 public enum Key {
-    MOVELEFT(10) {
+    MOVELEFT(5) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {
                 field.moveLeft();
             }
-            if (this.counter == this.interval) {
-                counter = 0;
-            } else {
-                counter++;
-            }
+            handleLogic(this,25);
         }
     },
-    MOVERIGHT(10) {
+    MOVERIGHT(5) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {
                 field.moveRight();
             }
-            if (this.counter == this.interval) {
-                counter = 0;
-            } else {
-                counter++;
-            }
+            handleLogic(this, 25);
         }
     },
-    ROTATECLOCKWISE(25) {
+    ROTATECLOCKWISE(100) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {
@@ -82,7 +74,7 @@ public enum Key {
             }
         }
     },
-    ROTATECOUNTERCLOCKWISE(25) {
+    ROTATECOUNTERCLOCKWISE(100) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {
@@ -103,17 +95,20 @@ public enum Key {
 
 
     final int interval;
+    boolean firstTimePressed;
     int counter;
 
     Key(int interval) {
         this.interval = interval;
         counter = 0;
+        firstTimePressed = true;
     }
 
     public abstract void handleKeyInput(TetrisField field);
 
     public void resetKey() {
         this.counter = 0;
+        this.firstTimePressed = true;
     }
 
     public static Key getEnumFromKeyCode(int keycode) {
@@ -142,6 +137,23 @@ public enum Key {
 
         }
         return NOOP;
+    }
+
+    private static void handleLogic(Key key,int initialDelay) {
+        if (key.firstTimePressed) {
+            if (key.counter == initialDelay) {
+                key.counter = 0;
+                key.firstTimePressed = false;
+            } else {
+                key.counter++;
+            }
+        } else {
+            if (key.counter == key.interval) {
+                key.counter = 0;
+            } else {
+                key.counter++;
+            }
+        }
     }
 
 
