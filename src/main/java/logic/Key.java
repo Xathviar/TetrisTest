@@ -1,11 +1,10 @@
 package logic;
 
-import screens.Screen;
-
 import java.awt.event.KeyEvent;
 
+@SuppressWarnings("SpellCheckingInspection")
 public enum Key {
-    ARROW_LEFT(KeyEvent.VK_LEFT, 10) {
+    MOVELEFT(10) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {
@@ -18,7 +17,7 @@ public enum Key {
             }
         }
     },
-    ARROW_RIGHT(KeyEvent.VK_RIGHT, 10) {
+    MOVERIGHT(10) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {
@@ -31,7 +30,7 @@ public enum Key {
             }
         }
     },
-    ARROW_UP(KeyEvent.VK_UP, 25) {
+    ROTATECLOCKWISE(25) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {
@@ -44,7 +43,7 @@ public enum Key {
             }
         }
     },
-    ARROW_DOWN(KeyEvent.VK_DOWN, 10) {
+    SOFTDROP(10) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {
@@ -57,7 +56,7 @@ public enum Key {
             }
         }
     },
-    SPACE(KeyEvent.VK_SPACE, 100) {
+    HARDDROP(100) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {
@@ -70,7 +69,7 @@ public enum Key {
             }
         }
     },
-    SHIFT(KeyEvent.VK_SHIFT, 100) {
+    HOLD(100) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {
@@ -83,7 +82,7 @@ public enum Key {
             }
         }
     },
-    CONTROL(KeyEvent.VK_CONTROL, 25) {
+    ROTATECOUNTERCLOCKWISE(25) {
         @Override
         public void handleKeyInput(TetrisField field) {
             if (this.counter == 0) {
@@ -96,24 +95,18 @@ public enum Key {
             }
         }
     },
-    NOOP(KeyEvent.VK_E, 10000) {
+    NOOP(10000) {
         @Override
         public void handleKeyInput(TetrisField field) {
         }
     };
 
 
-    int keycode;
-    int interval;
+    final int interval;
     int counter;
 
-    Key(int keycode, int interval) {
-        this.keycode = keycode;
+    Key(int interval) {
         this.interval = interval;
-        counter = 0;
-    }
-
-    Key() {
         counter = 0;
     }
 
@@ -126,25 +119,25 @@ public enum Key {
     public static Key getEnumFromKeyCode(int keycode) {
         switch (keycode) {
             case KeyEvent.VK_LEFT -> {
-                return ARROW_LEFT;
+                return MOVELEFT;
             }
             case KeyEvent.VK_RIGHT -> {
-                return ARROW_RIGHT;
+                return MOVERIGHT;
             }
             case KeyEvent.VK_DOWN -> {
-                return ARROW_DOWN;
+                return SOFTDROP;
             }
             case KeyEvent.VK_UP -> {
-                return ARROW_UP;
+                return ROTATECLOCKWISE;
             }
             case KeyEvent.VK_SPACE -> {
-                return SPACE;
+                return HARDDROP;
             }
             case KeyEvent.VK_SHIFT -> {
-                return SHIFT;
+                return HOLD;
             }
             case KeyEvent.VK_CONTROL -> {
-                return CONTROL;
+                return ROTATECOUNTERCLOCKWISE;
             }
 
         }

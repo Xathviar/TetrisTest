@@ -1,7 +1,6 @@
 package screens;
 
 import asciiPanel.AsciiPanel;
-import com.sun.tools.javac.Main;
 import logic.Key;
 import logic.TetrisField;
 
@@ -11,14 +10,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class PlayScreen implements Screen {
-    private TetrisField field;
+    private final TetrisField field;
     private final long startTime;
-    private ScheduledExecutorService exec;
+    private final ScheduledExecutorService exec;
 
 
     public PlayScreen() {
         field = new TetrisField(1, this);
-        System.out.println("Hello World!");
         startTime = System.currentTimeMillis();
         exec = Executors.newSingleThreadScheduledExecutor();
         exec.scheduleAtFixedRate(this::handleInput, 0, 10, TimeUnit.MILLISECONDS);
@@ -33,7 +31,6 @@ public class PlayScreen implements Screen {
         }
         synchronized (MainClass.pressedKeys) {
             for (Key pressedKey : MainClass.pressedKeys) {
-                System.out.println(pressedKey);
                 if (pressedKey != null)
                     pressedKey.handleKeyInput(field);
                 else
@@ -70,18 +67,6 @@ public class PlayScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
-//        if (loseScreen) {
-//            return new LoseScreen(field.getLevel(), field.getScore(), System.currentTimeMillis() - startTime);
-//        }
-//        switch (key.getKeyCode()) {
-//            case KeyEvent.VK_LEFT -> field.moveLeft();
-//            case KeyEvent.VK_RIGHT -> field.moveRight();
-//            case KeyEvent.VK_UP -> field.rotateClockwise();
-//            case KeyEvent.VK_DOWN -> field.softDrop();
-//            case KeyEvent.VK_CONTROL -> field.rotateCClockwise();
-//            case KeyEvent.VK_SPACE -> field.hardDrop();
-//            case KeyEvent.VK_SHIFT -> field.swapHold();
-//        }
         return this;
     }
 
@@ -137,9 +122,10 @@ public class PlayScreen implements Screen {
         char rightDown = 188;
         char straightHorizontally = 205;
         char straightVertically = 186;
-        String boxFirstLine = leftUp + String.valueOf(straightHorizontally).repeat(width - 2) + rightUp;
+        String horizontalLines = String.valueOf(straightHorizontally).repeat(width - 2);
+        String boxFirstLine = leftUp + horizontalLines + rightUp;
         String boxMiddleLines = straightVertically + " ".repeat(width - 2) + straightVertically;
-        String boxBottomLine = leftDown + String.valueOf(straightHorizontally).repeat(width - 2) + rightDown;
+        String boxBottomLine = leftDown + horizontalLines + rightDown;
 
         terminal.write(boxFirstLine, x, y++);
         for (int i = 0; i < height - 2; i++) {

@@ -1,47 +1,15 @@
 package logic;
 
 public class HighScore implements Comparable<HighScore> {
-    private String name;
-    private int level;
-    private long score;
-    private String time;
+    private final String name;
+    private final int level;
+    private final long score;
+    private final String time;
 
     public HighScore(String name, int level, long score, String time) {
         this.name = name;
         this.level = level;
         this.score = score;
-        this.time = time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public long getScore() {
-        return score;
-    }
-
-    public void setScore(long score) {
-        this.score = score;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
         this.time = time;
     }
 

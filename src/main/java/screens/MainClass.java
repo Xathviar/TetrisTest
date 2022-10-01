@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -33,9 +32,7 @@ public class MainClass extends JFrame implements KeyListener {
         addKeyListener(this);
         repaint();
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(() -> {
-            repaint();
-        }, 0, 50, TimeUnit.MILLISECONDS);
+        exec.scheduleAtFixedRate(this::repaint, 0, 50, TimeUnit.MILLISECONDS);
     }
 
     public void repaint() {

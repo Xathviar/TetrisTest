@@ -1,7 +1,6 @@
 package logic;
 
 import java.awt.*;
-import java.util.Arrays;
 
 public class Grid {
     private final Boolean[][] setPoints;
@@ -12,7 +11,7 @@ public class Grid {
     public int y;
     private Color color;
 
-    private TetrisField field;
+    private final TetrisField field;
 
     public Grid(Boolean[][] setPoints, Color color, TetrisField field, int x, int y) {
         this.setPoints = setPoints;
@@ -72,7 +71,4 @@ public class Grid {
         this.color = color;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
 }

@@ -12,7 +12,7 @@ public abstract class Tetromino <T> {
 
     private int currentRotation;
 
-    TetrisField field;
+    final TetrisField field;
 
     Point[][] wallKicks;
 
@@ -172,14 +172,6 @@ public abstract class Tetromino <T> {
 
     public void returnNormalColor() {
         grid[0].setColor(color);
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public int getCurrentRotation() {

@@ -5,7 +5,7 @@ import logic.pieces.*;
 import java.util.*;
 
 public class RandomGenerator {
-    public Queue<Tetromino> tetrisPieceOrder = new ArrayDeque<>();
+    public final Queue<Tetromino> tetrisPieceOrder = new ArrayDeque<>();
     private final TetrisField field;
 
     public RandomGenerator(TetrisField field) {
@@ -44,9 +44,6 @@ public class RandomGenerator {
             ret.add((Tetromino) tetrisPieceOrderArr[i]);
         }
         return ret;
-    }
-    public Tetromino peekOne(){
-        return peek(1).get(0);
     }
 
 }

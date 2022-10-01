@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -18,10 +17,11 @@ import java.util.concurrent.TimeUnit;
 import static screens.PlayScreen.tetrisLogo;
 import static screens.PlayScreen.writeBoxAt;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class StartScreen implements Screen {
     private boolean initScreen = true;
 
-    public Set<HighScore> scores;
+    public final Set<HighScore> scores;
 
     public StartScreen() {
         scores = new TreeSet<>();
@@ -47,7 +47,6 @@ public class StartScreen implements Screen {
                 throw new RuntimeException(ex);
             }
         }
-        System.out.println(scores);
     }
 
     @Override

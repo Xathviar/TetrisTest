@@ -4,7 +4,6 @@ import asciiPanel.AsciiPanel;
 
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -13,11 +12,11 @@ import static screens.PlayScreen.tetrisLogo;
 
 public class LoseScreen implements Screen {
     private boolean initialScreen;
-    private int level;
-    private long score;
-    private long timePassed;
+    private final int level;
+    private final long score;
+    private final long timePassed;
 
-    private String time;
+    private final String time;
 
     private String name;
 
@@ -52,7 +51,6 @@ public class LoseScreen implements Screen {
         char c = key.getKeyChar();
         String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_ ";
         if (key.getKeyCode() == KeyEvent.VK_ENTER && name.length() > 0) {
-            System.out.println("Help");
             saveHighScore();
             return new StartScreen();
         }
@@ -65,12 +63,9 @@ public class LoseScreen implements Screen {
             name += c;
             return this;
         } else if (key.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-            System.out.println(name);
             if (name.length() > 0) {
                 name = name.substring(0, name.length() - 1);
             }
-            System.out.println(name);
-            System.out.println("----___----");
         }
         return this;
     }
