@@ -166,7 +166,15 @@ public class TetrisField {
             combo++;
             int rawSendCapacity = sentLinesTotal(numberOfClearedLines);
             System.out.println("Lines Sent: " + rawSendCapacity);
-            //TODO
+            score += 10 * Math.pow(rawSendCapacity, 2) * Math.pow(level, 2);
+
+            numberofLinesToClear -= numberOfClearedLines;
+            if (numberofLinesToClear < 1) {
+                level++;
+                currentMillis -= currentMillis / 10;
+                rescheduleScheduler();
+                numberofLinesToClear = LINE_THRESHOLD;
+            }
             int garbageToSend = garbagePieceHandler.removeGarbageLines(sentLinesTotal(numberOfClearedLines));
             //TODO Schick Gameserver wv. Garbage gesendet wird...
         } else {
@@ -174,14 +182,6 @@ public class TetrisField {
             receiveGarbage();
         }
 
-        score += 10 * Math.pow(numberOfClearedLines, 2) * Math.pow(level, 2);
-        numberofLinesToClear -= numberOfClearedLines;
-        if (numberofLinesToClear < 1) {
-            level++;
-            currentMillis -= currentMillis / 10;
-            rescheduleScheduler();
-            numberofLinesToClear = LINE_THRESHOLD;
-        }
     }
 
     private int sentLinesTotal(int linesCleared) {

@@ -87,16 +87,18 @@ public abstract class Tetromino <T> {
     }
 
     public void movePieceLeft() {
-        readyToFix = false;
-        grid[currentRotation].moveLeft();
+        if (grid[currentRotation].moveLeft()) {
+            readyToFix = false;
+        }
         this.x = grid[currentRotation].x;
         updateGrids();
     }
 
 
     public void movePieceRight() {
-        readyToFix = false;
-        grid[currentRotation].moveRight();
+        if (grid[currentRotation].moveRight()) {
+            readyToFix = false;
+        }
         this.x = grid[currentRotation].x;
         updateGrids();
     }

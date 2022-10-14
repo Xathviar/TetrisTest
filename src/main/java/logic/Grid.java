@@ -21,18 +21,20 @@ public class Grid {
         this.field = field;
     }
 
-    public void moveLeft() {
+    public boolean moveLeft() {
         if (!isValidPosition(x - 1, y)) {
-            return;
+            return false;
         }
         this.x--;
+        return true;
     }
 
-    public void moveRight() {
+    public boolean moveRight() {
         if (!isValidPosition(x + 1, y)) {
-            return;
+            return false;
         }
         this.x++;
+        return true;
     }
 
     public boolean moveDown() {
