@@ -25,7 +25,7 @@ public class MainClass extends JFrame implements KeyListener {
 
     public MainClass() {
         super();
-        terminal = new AsciiPanel(96, 40, new AsciiFont("custom_cp437_20x20.png", 20, 20));
+        terminal = new AsciiPanel(70, 50, new AsciiFont("custom_cp437_20x20.png", 20, 20));
         add(terminal);
         pack();
         screen = new StartScreen();
@@ -74,7 +74,6 @@ public class MainClass extends JFrame implements KeyListener {
     public static void main(String[] args) {
         MainClass mainClass = new MainClass();
         mainClass.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        mainClass.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainClass.setVisible(true);
         aClass = mainClass;
     }

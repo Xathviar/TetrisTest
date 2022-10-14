@@ -207,6 +207,12 @@
             <artifactId>AsciiPanel</artifactId>
             <version>94388d2</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.heroiclabs.nakama-java</groupId>
+            <artifactId>nakama-java-all</artifactId>
+            <version>04bf397</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
 </project>

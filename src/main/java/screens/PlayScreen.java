@@ -62,7 +62,6 @@ public class PlayScreen implements Screen {
             for (int i = 0; i < tetrisLogo.length; i++) {
                 terminal.write(tetrisLogo[i], 5, i + 1);
             }
-            System.out.println("Does it get here?");
             initScreen = false;
         }
         drawBoard(terminal);

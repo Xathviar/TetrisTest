@@ -128,7 +128,6 @@ public class TetrisField {
         List<GarbagePiece> garbages = garbagePieceHandler.getReadyGarbage();
         for (GarbagePiece garbage : garbages) {
             int garbagePosition = (int) (Math.random() * 9);
-            System.out.println(garbagePosition);
             int line = garbage.getLines();
             for (int y = line; y < 50; y++) {
                 for (int x = 0; x < 10; x++) {
@@ -156,7 +155,6 @@ public class TetrisField {
                     continue a;
                 }
                 if (x + 1 == points[y].length) {
-                    System.out.println("Clearing Line at y=" + y);
                     clearLine(y);
                     numberOfClearedLines++;
                     moveRestDown(y);
@@ -222,7 +220,6 @@ public class TetrisField {
 
     private int evaluateBackToBack() {
         if (storeB2B) {
-            System.out.print(" Back-To-Back ");
             return 1;
         }
         return 0;
