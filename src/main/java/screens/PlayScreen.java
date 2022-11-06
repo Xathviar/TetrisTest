@@ -73,6 +73,11 @@ public class PlayScreen implements Screen {
         return this;
     }
 
+    @Override
+    public boolean finishInput() {
+        return false;
+    }
+
     private void drawBoard(AsciiPanel terminal) {
         int height = 15;
         int width = (terminal.getWidthInCharacters() - 12) / 2;

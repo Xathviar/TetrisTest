@@ -70,6 +70,11 @@ public class LoseScreen implements Screen {
         return this;
     }
 
+    @Override
+    public boolean finishInput() {
+        return false;
+    }
+
     private void saveHighScore() {
         try {
             FileWriter fw = new FileWriter("highscores.txt", true);

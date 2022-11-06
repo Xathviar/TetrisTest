@@ -2,6 +2,9 @@ package screens;
 
 import asciiPanel.AsciiFont;
 import asciiPanel.AsciiPanel;
+import com.heroiclabs.nakama.Client;
+import com.heroiclabs.nakama.Session;
+import com.heroiclabs.nakama.SocketClient;
 import logic.Key;
 
 import javax.swing.*;
@@ -21,6 +24,12 @@ public class MainClass extends JFrame implements KeyListener {
     public static final Set<Key> pressedKeys = new HashSet<>();
 
     public static MainClass aClass;
+
+    public Session session;
+
+    public Client client;
+
+    public SocketClient socket;
 
 
     public MainClass() {

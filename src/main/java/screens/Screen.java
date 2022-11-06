@@ -10,4 +10,5 @@ public interface Screen {
 
     Screen respondToUserInput(KeyEvent key, AsciiPanel terminal);
 
+    boolean finishInput();
 }
