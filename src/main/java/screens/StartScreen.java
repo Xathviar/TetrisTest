@@ -1,7 +1,6 @@
 package screens;
 
 import asciiPanel.AsciiPanel;
-import com.sun.tools.javac.Main;
 import logic.HighScore;
 
 import java.awt.*;
@@ -82,7 +81,7 @@ public class StartScreen implements Screen {
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
         if (key.getKeyCode() == KeyEvent.VK_ENTER) {
-            LoginScreen screen = new LoginScreen();
+            PlayScreen screen = new PlayScreen();
             screen.displayOutput(terminal);
             return screen;
         }

@@ -7,10 +7,6 @@ import asciiPanel.AsciiPanel;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
-import com.sun.tools.javac.Main;
-import org.w3c.dom.Text;
-
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;

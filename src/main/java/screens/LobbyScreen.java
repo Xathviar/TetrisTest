@@ -4,14 +4,9 @@ import asciiPanel.AsciiPanel;
 import com.heroiclabs.nakama.*;
 import com.heroiclabs.nakama.api.Match;
 import com.heroiclabs.nakama.api.MatchList;
-import com.sun.tools.javac.Main;
 import lombok.extern.slf4j.Slf4j;
-import nakama.com.google.gson.Gson;
-import nakama.com.google.protobuf.StringValue;
 
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
