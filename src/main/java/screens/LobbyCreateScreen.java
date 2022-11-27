@@ -1,14 +1,25 @@
 package screens;
 
 import asciiPanel.AsciiPanel;
+import com.heroiclabs.nakama.Match;
+import com.heroiclabs.nakama.api.Group;
+import com.heroiclabs.nakama.api.Rpc;
+import com.sun.tools.javac.Main;
+import lombok.extern.slf4j.Slf4j;
+import nakama.com.google.gson.Gson;
 
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static screens.PlayScreen.tetrisLogo;
 
-public class LobbyCreateScreen implements Screen{
+@Slf4j
+public class LobbyCreateScreen implements Screen {
     private int selected = 0;
-    private String groupName;
+    private String groupName = "";
+
     @Override
     public void displayOutput(AsciiPanel terminal) {
         terminal.clear();
@@ -21,25 +32,34 @@ public class LobbyCreateScreen implements Screen{
 
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
-        if (key.getKeyCode() == KeyEvent.VK_DOWN) {
-            selected++;
-            if (selected == 4) {
-                selected = 0;
+        if (key.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+            if (groupName.length() > 0) {
+                groupName = groupName.substring(0, groupName.length() - 1);
             }
-            return this;
-        }
-        if (key.getKeyCode() == KeyEvent.VK_UP) {
-            selected--;
-            if (selected < 0) {
-                selected = 3;
-            }
-            return this;
         }
         String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890";
         char c = key.getKeyChar();
-        if (selected == 0) {
-            if (letters.indexOf(c) > -1) {
-                groupName += c;
+        if (letters.indexOf(c) > -1) {
+            groupName += c;
+        }
+        if (key.getKeyCode() == KeyEvent.VK_ENTER) {
+            String desc = "Will be ignored anyways";
+            String avatarURL = "";
+            String langTag = "";
+            boolean open = true;
+            int maxSize = 2;
+            try {
+                Group group = MainClass.aClass.client.createGroup(MainClass.aClass.session, groupName, desc, avatarURL, langTag, open, maxSize).get();
+                MainClass.aClass.groups.add(group);
+                MainClass.aClass.match = MainClass.aClass.socket.createMatch().get();
+                Map<String, Object> payload = new HashMap<>();
+                payload.put("GroupId", group.getId());
+                payload.put("MatchID", MainClass.aClass.match.getMatchId());
+                Rpc rpcResult = MainClass.aClass.client.rpc(MainClass.aClass.session, "UpdateGroupMetadata", new Gson().toJson(payload, payload.getClass())).get();
+                log.debug(rpcResult.toString());
+                //TODO LobbyWaitingScreen
+            } catch (InterruptedException | ExecutionException e) {
+                log.error(e.getMessage());
             }
         }
         return this;

@@ -2,11 +2,17 @@ package screens;
 
 import asciiPanel.AsciiPanel;
 import com.heroiclabs.nakama.*;
+import com.heroiclabs.nakama.api.Group;
+import com.heroiclabs.nakama.api.GroupList;
 import com.heroiclabs.nakama.api.Match;
 import com.heroiclabs.nakama.api.MatchList;
 import lombok.extern.slf4j.Slf4j;
+import nakama.com.google.common.hash.BloomFilter;
 
 import java.awt.event.KeyEvent;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,16 +21,29 @@ import java.util.concurrent.TimeUnit;
 import static screens.PlayScreen.tetrisLogo;
 
 @Slf4j
-public class LobbyScreen implements Screen {
+public class LobbyScreen implements Screen, Runnable {
+    //TODO Add Group Selection and advancement to Lobby Waiting Screen
     private final ScheduledExecutorService exec;
-    private MatchList matchList;
+    private static Map<String, String> lobbies = new HashMap<>();
 
     public LobbyScreen() {
         exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(this::fetchLobbies, 0, 30, TimeUnit.SECONDS);
+        exec.scheduleAtFixedRate(this, 0, 30, TimeUnit.SECONDS);
     }
 
     private void fetchLobbies() {
+        synchronized (lobbies) {
+            lobbies.clear();
+            try {
+                GroupList list = MainClass.aClass.client.listGroups(MainClass.aClass.session, "%").get();
+                for (Group group : list.getGroupsList()) {
+                    lobbies.put(group.getId(), group.getName());
+                }
+                log.info(lobbies.toString());
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
@@ -33,12 +52,14 @@ public class LobbyScreen implements Screen {
         for (int i = 0; i < tetrisLogo.length; i++) {
             terminal.write(tetrisLogo[i], 5, i + 1);
         }
+        terminal.write(new Date().toString(), 5, 20);
         int y = 10;
-        if (matchList != null) {
-            for (Match match : matchList.getMatchesList()) {
-                terminal.write(String.format("%s, %s", match.getMatchId(), match.hasLabel()), 5, y++);
+        synchronized (lobbies) {
+            for (Map.Entry<String, String> value : lobbies.entrySet()) {
+                terminal.write("Lobby: " + value.getValue(), 5, y++);
             }
         }
+        terminal.write("To refresh the lobby screen press [r]", 5, ++y);
         terminal.write("To create your own Lobby press [c]", 5, ++y);
     }
 
@@ -56,11 +77,15 @@ public class LobbyScreen implements Screen {
                 };
                 MainClass.aClass.socket.connect(MainClass.aClass.session, listener).get();
                 log.info("Socket connected.");
-                com.heroiclabs.nakama.Match match = MainClass.aClass.socket.createMatch().get();
-                MainClass.aClass.socket.updateStatus(match.getMatchId()).get();
+                LobbyCreateScreen screen = new LobbyCreateScreen();
+                screen.displayOutput(terminal);
+                return screen;
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
+        }
+        if (key.getKeyCode() == KeyEvent.VK_R) {
+            this.fetchLobbies();
         }
         return this;
     }
@@ -68,5 +93,10 @@ public class LobbyScreen implements Screen {
     @Override
     public boolean finishInput() {
         return false;
+    }
+
+    @Override
+    public void run() {
+        fetchLobbies();
     }
 }

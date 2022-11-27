@@ -3,14 +3,18 @@ package screens;
 import asciiPanel.AsciiFont;
 import asciiPanel.AsciiPanel;
 import com.heroiclabs.nakama.Client;
+import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
+import com.heroiclabs.nakama.api.Group;
 import logic.Key;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,6 +34,8 @@ public class MainClass extends JFrame implements KeyListener {
     public Client client;
 
     public SocketClient socket;
+    public List<Group> groups = new ArrayList<>();
+    public Match match;
 
 
     public MainClass() {
@@ -85,5 +91,12 @@ public class MainClass extends JFrame implements KeyListener {
         mainClass.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainClass.setVisible(true);
         aClass = mainClass;
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                for (Group group : MainClass.aClass.groups) {
+                    MainClass.aClass.client.deleteGroup(MainClass.aClass.session, group.getId());
+                }
+            }
+        }, "Shutdown-thread"));
     }
 }

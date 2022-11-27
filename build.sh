@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 bDATE=$(date '+%Y%m%d%H%M%S')
 bDIR=$(dirname $0)
 bDIR=$(cd $bDIR && pwd)
