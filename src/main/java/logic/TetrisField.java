@@ -208,14 +208,25 @@ public class TetrisField {
     }
 
     private int sentLinesByCombo() {
-        return switch (combo) {
-            case -1, 0 -> 0;
-            case 1, 2 -> 1;
-            case 3, 4 -> 2;
-            case 5, 6 -> 3;
-            case 7, 8, 9 -> 4;
-            default -> 5;
-        };
+        switch (combo) {
+            case -1:
+            case 0:
+                return 0;
+            case 1:
+            case 2:
+                return 1;
+            case 3:
+            case 4:
+                return 2;
+            case 5:
+            case 6:
+                return 3;
+            case 7:
+            case 8:
+            case 9:
+                return 4;
+        }
+        return 5;
     }
 
     private int evaluateBackToBack() {

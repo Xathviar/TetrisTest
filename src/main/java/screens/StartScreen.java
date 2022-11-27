@@ -65,12 +65,19 @@ public class StartScreen implements Screen {
                 if (i == 10) {
                     break;
                 }
-                Color brown = new Color(150,116,68);
+                Color brown = new Color(150, 116, 68);
                 switch (i) {
-                    case 0 -> terminal.write(score.toString(), 16, 18 + i, Color.YELLOW);
-                    case 1 -> terminal.write(score.toString(), 16, 18 + i, Color.GRAY);
-                    case 2 -> terminal.write(score.toString(), 16, 18 + i, brown);
-                    default -> terminal.write(score.toString(), 16, 18 + i, Color.LIGHT_GRAY);
+                    case 0:
+                        terminal.write(score.toString(), 16, 18 + i, Color.YELLOW);
+                        break;
+                    case 1:
+                        terminal.write(score.toString(), 16, 18 + i, Color.GRAY);
+                        break;
+                    case 2:
+                        terminal.write(score.toString(), 16, 18 + i, brown);
+                        break;
+                    default:
+                        terminal.write(score.toString(), 16, 18 + i, Color.LIGHT_GRAY);
                 }
                 i++;
             }

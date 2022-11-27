@@ -10,7 +10,7 @@ public enum Key {
             if (this.counter == 0) {
                 field.moveLeft();
             }
-            handleLogic(this,25);
+            handleLogic(this, 25);
         }
     },
     MOVERIGHT(5) {
@@ -113,33 +113,32 @@ public enum Key {
 
     public static Key getEnumFromKeyCode(int keycode) {
         switch (keycode) {
-            case KeyEvent.VK_LEFT -> {
+            case KeyEvent.VK_LEFT:
                 return MOVELEFT;
-            }
-            case KeyEvent.VK_RIGHT -> {
+            case KeyEvent.VK_RIGHT:
                 return MOVERIGHT;
-            }
-            case KeyEvent.VK_DOWN -> {
+
+            case KeyEvent.VK_DOWN:
                 return SOFTDROP;
-            }
-            case KeyEvent.VK_UP -> {
+
+            case KeyEvent.VK_UP:
                 return ROTATECLOCKWISE;
-            }
-            case KeyEvent.VK_SPACE -> {
+
+            case KeyEvent.VK_SPACE:
                 return HARDDROP;
-            }
-            case KeyEvent.VK_SHIFT -> {
+
+            case KeyEvent.VK_SHIFT:
                 return HOLD;
-            }
-            case KeyEvent.VK_CONTROL -> {
+
+            case KeyEvent.VK_CONTROL:
                 return ROTATECOUNTERCLOCKWISE;
-            }
+
 
         }
         return NOOP;
     }
 
-    private static void handleLogic(Key key,int initialDelay) {
+    private static void handleLogic(Key key, int initialDelay) {
         if (key.firstTimePressed) {
             if (key.counter == initialDelay) {
                 key.counter = 0;
