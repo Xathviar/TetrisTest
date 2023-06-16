@@ -1,5 +1,6 @@
 package logic.pieces;
 
+import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
 
@@ -9,7 +10,7 @@ import java.util.Arrays;
 public class OPiece extends Tetromino<OPiece> {
 
     public OPiece(TetrisField field) {
-        super("O-Piece", Color.YELLOW, field);
+        super("O-Piece", TextColor.ANSI.YELLOW, field);
     }
 
     @Override

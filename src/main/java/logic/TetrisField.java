@@ -1,10 +1,11 @@
 package logic;
 
-import asciiPanel.AsciiPanel;
+import Helper.TerminalHelper;
+import com.googlecode.lanterna.TextColor;
 import logic.pieces.Tetromino;
 import screens.PlayScreen;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -59,7 +60,7 @@ public class TetrisField {
 
     public TetrisField(int level, PlayScreen screen) {
         for (Point[] point : points) {
-            Arrays.fill(point, new Point(true, Color.BLACK));
+            Arrays.fill(point, new Point(true, TextColor.ANSI.BLACK));
         }
         generator = new RandomGenerator(this);
         activePiece = generator.getNext();
@@ -137,9 +138,9 @@ public class TetrisField {
             for (int y = 0; y < line; y++) {
                 for (int x = 0; x < 10; x++) {
                     if (x == garbagePosition) {
-                        points[y + 50 - line][x] = new Point(true, Color.BLACK);
+                        points[y + 50 - line][x] = new Point(true, TextColor.ANSI.BLACK);
                     } else {
-                        points[y + 50 - line][x] = new Point(false, Color.GRAY);
+                        points[y + 50 - line][x] = new Point(false, TextColor.ANSI.BLACK_BRIGHT);
                     }
                 }
             }
@@ -263,11 +264,11 @@ public class TetrisField {
     }
 
 
-    public void printTetrisField(AsciiPanel terminal) {
+    public void printTetrisField(TerminalHelper terminal) {
         for (int i = 0; i < SCREEN_HEIGHT; i++) {
             for (int j = 0; j < SCREEN_WIDTH; j++) {
                 if (points[i + 30][j].isFree()) {
-                    terminal.write(BACKGROUND, 30 + j, 16 + i, Color.GRAY, Color.BLACK);
+                    terminal.write(BACKGROUND, 30 + j, 16 + i, TextColor.ANSI.BLACK_BRIGHT, TextColor.ANSI.BLACK);
                 } else {
                     terminal.write(BLOCK, 30 + j, 16 + i, points[i + 30][j].getColor());
                 }
@@ -281,16 +282,16 @@ public class TetrisField {
         printScoreAndStuff(terminal);
     }
 
-    private void printScoreAndStuff(AsciiPanel terminal) {
+    private void printScoreAndStuff(TerminalHelper terminal) {
         int y = 23;
-        terminal.write("LEVEL", 22, y++, Color.YELLOW);
-        terminal.write(String.format("  %03d", level), 21, y++, Color.WHITE);
-        terminal.write(Character.toString(196).repeat(7), 21, y++, Color.LIGHT_GRAY);
-        terminal.write("SCORE", 21, y++, Color.YELLOW);
-        terminal.write(String.format("%07d", score), 21, y, Color.WHITE);
+        terminal.write("LEVEL", 22, y++, TextColor.ANSI.YELLOW);
+        terminal.write(String.format("  %03d", level), 21, y++, TextColor.ANSI.WHITE);
+        terminal.write(Character.toString(196).repeat(7), 21, y++, TextColor.ANSI.BLACK_BRIGHT);
+        terminal.write("SCORE", 21, y++, TextColor.ANSI.YELLOW);
+        terminal.write(String.format("%07d", score), 21, y, TextColor.ANSI.WHITE);
     }
 
-    private void printCurrentPiece(AsciiPanel terminal) {
+    private void printCurrentPiece(TerminalHelper terminal) {
         Grid activePieceGrid = activePiece.returnPiece();
         Boolean[][] gridPoints = activePieceGrid.getSetPoints();
         Grid helperPieceGrid = helperPiece.returnPiece();
@@ -298,20 +299,20 @@ public class TetrisField {
         for (int y = 0; y < gridPoints.length; y++) {
             for (int x = 0; x < gridPoints[y].length; x++) {
                 if (gridPoints[y][x]) {
-                    terminal.write(BLOCK, 30 + x + helperPieceGrid.x, 16 + y + helperPieceGrid.y - 30, Color.LIGHT_GRAY, Color.BLACK);
+                    terminal.write(BLOCK, 30 + x + helperPieceGrid.x, 16 + y + helperPieceGrid.y - 30, TextColor.ANSI.BLACK_BRIGHT, TextColor.ANSI.BLACK);
                     terminal.write(BLOCK, 30 + x + activePieceGrid.x, 16 + y + activePieceGrid.y - 30, activePieceGrid.getColor());
                 }
             }
         }
     }
 
-    private synchronized void printHold(AsciiPanel terminal) {
+    private synchronized void printHold(TerminalHelper terminal) {
         synchronized (holdPiece) {
             Grid holdPieceGrid = holdPiece.getGrid()[0];
             Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
-            terminal.write(BLOCKCHAIN, 23, 17, Color.BLACK);
-            terminal.write(BLOCKCHAIN, 23, 18, Color.BLACK);
-            terminal.write(BLOCKCHAIN, 23, 19, Color.BLACK);
+            terminal.write(BLOCKCHAIN, 23, 17, TextColor.ANSI.BLACK);
+            terminal.write(BLOCKCHAIN, 23, 18, TextColor.ANSI.BLACK);
+            terminal.write(BLOCKCHAIN, 23, 19, TextColor.ANSI.BLACK);
             for (int y = 0; y < gridPoints.length; y++) {
                 for (int x = 0; x < gridPoints[y].length; x++) {
                     if (gridPoints[y][x]) {
@@ -322,13 +323,13 @@ public class TetrisField {
         }
     }
 
-    private synchronized void printQueue(AsciiPanel terminal) {
+    private synchronized void printQueue(TerminalHelper terminal) {
         for (int i = 0; i < nextPieces.size(); i++) {
             Grid holdPieceGrid = nextPieces.get(i).getGrid()[0];
             Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
-            terminal.write(BLOCKCHAIN, 43, 17 + i * 5, Color.BLACK);
-            terminal.write(BLOCKCHAIN, 43, 18 + i * 5, Color.BLACK);
-            terminal.write(BLOCKCHAIN, 43, 19 + i * 5, Color.BLACK);
+            terminal.write(BLOCKCHAIN, 43, 17 + i * 5, TextColor.ANSI.BLACK);
+            terminal.write(BLOCKCHAIN, 43, 18 + i * 5, TextColor.ANSI.BLACK);
+            terminal.write(BLOCKCHAIN, 43, 19 + i * 5, TextColor.ANSI.BLACK);
             for (int y = 0; y < gridPoints.length; y++) {
                 for (int x = 0; x < gridPoints[y].length; x++) {
                     if (gridPoints[y][x]) {

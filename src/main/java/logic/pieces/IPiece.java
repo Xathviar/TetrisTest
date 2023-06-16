@@ -1,5 +1,6 @@
 package logic.pieces;
 
+import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
 
@@ -8,7 +9,7 @@ import java.awt.*;
 public class IPiece extends Tetromino <IPiece> {
 
     public IPiece(TetrisField field) {
-        super("I-Piece", Color.CYAN, field);
+        super("I-Piece", TextColor.ANSI.CYAN, field);
     }
 
     @Override

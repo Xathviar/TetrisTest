@@ -1,6 +1,6 @@
 package logic;
 
-import java.awt.*;
+import com.googlecode.lanterna.TextColor;
 
 public class Grid {
     private final Boolean[][] setPoints;
@@ -9,11 +9,11 @@ public class Grid {
      */
     public int x;
     public int y;
-    private Color color;
+    private TextColor color;
 
     private final TetrisField field;
 
-    public Grid(Boolean[][] setPoints, Color color, TetrisField field, int x, int y) {
+    public Grid(Boolean[][] setPoints, TextColor color, TetrisField field, int x, int y) {
         this.setPoints = setPoints;
         this.color = color;
         this.x = x;
@@ -64,11 +64,11 @@ public class Grid {
     }
 
 
-    public Color getColor() {
+    public TextColor getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(TextColor color) {
         this.color = color;
     }
 

@@ -1,15 +1,13 @@
 package screens;
 
-import asciiPanel.AsciiPanel;
-import com.heroiclabs.nakama.*;
+import Helper.TerminalHelper;
+import com.googlecode.lanterna.input.KeyStroke;
+import com.heroiclabs.nakama.AbstractSocketListener;
+import com.heroiclabs.nakama.SocketListener;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
-import com.heroiclabs.nakama.api.Match;
-import com.heroiclabs.nakama.api.MatchList;
 import lombok.extern.slf4j.Slf4j;
-import nakama.com.google.common.hash.BloomFilter;
 
-import java.awt.event.KeyEvent;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +45,7 @@ public class LobbyScreen implements Screen, Runnable {
     }
 
     @Override
-    public void displayOutput(AsciiPanel terminal) {
+    public void displayOutput(TerminalHelper terminal) {
         terminal.clear();
         for (int i = 0; i < tetrisLogo.length; i++) {
             terminal.write(tetrisLogo[i], 5, i + 1);
@@ -64,10 +62,9 @@ public class LobbyScreen implements Screen, Runnable {
     }
 
     @Override
-    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
-        if (key.getKeyCode() == KeyEvent.VK_C) {
+    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+        if (Character.toLowerCase(key.getCharacter()) == 'c') {
             try {
-
                 MainClass.aClass.socket = MainClass.aClass.client.createSocket();
                 SocketListener listener = new AbstractSocketListener() {
                     @Override
@@ -84,7 +81,7 @@ public class LobbyScreen implements Screen, Runnable {
                 throw new RuntimeException(e);
             }
         }
-        if (key.getKeyCode() == KeyEvent.VK_R) {
+        if (Character.toLowerCase(key.getCharacter()) == 'r') {
             this.fetchLobbies();
         }
         return this;

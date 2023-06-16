@@ -1,14 +1,13 @@
 package screens;
 
-import asciiPanel.AsciiPanel;
-import com.heroiclabs.nakama.Match;
+import Helper.TerminalHelper;
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.Rpc;
-import com.sun.tools.javac.Main;
 import lombok.extern.slf4j.Slf4j;
 import nakama.com.google.gson.Gson;
 
-import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -21,7 +20,7 @@ public class LobbyCreateScreen implements Screen {
     private String groupName = "";
 
     @Override
-    public void displayOutput(AsciiPanel terminal) {
+    public void displayOutput(TerminalHelper terminal) {
         terminal.clear();
         for (int i = 0; i < tetrisLogo.length; i++) {
             terminal.write(tetrisLogo[i], 5, i + 1);
@@ -31,18 +30,18 @@ public class LobbyCreateScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
-        if (key.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+        if (key.getKeyType() == KeyType.Backspace) {
             if (groupName.length() > 0) {
                 groupName = groupName.substring(0, groupName.length() - 1);
             }
         }
         String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890";
-        char c = key.getKeyChar();
+        char c = key.getCharacter();
         if (letters.indexOf(c) > -1) {
             groupName += c;
         }
-        if (key.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (key.getKeyType() == KeyType.Enter) {
             String desc = "Will be ignored anyways";
             String avatarURL = "";
             String langTag = "";

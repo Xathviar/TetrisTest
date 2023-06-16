@@ -1,8 +1,9 @@
 package screens;
 
-import asciiPanel.AsciiPanel;
+import Helper.TerminalHelper;
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 
-import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class LoseScreen implements Screen {
     }
 
     @Override
-    public void displayOutput(AsciiPanel terminal) {
+    public void displayOutput(TerminalHelper terminal) {
         if (initialScreen) {
             terminal.clear();
             for (int i = 0; i < tetrisLogo.length; i++) {
@@ -47,10 +48,10 @@ public class LoseScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
-        char c = key.getKeyChar();
+    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+        char c = key.getCharacter();
         String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_ ";
-        if (key.getKeyCode() == KeyEvent.VK_ENTER && name.length() > 0) {
+        if (key.getKeyType() == KeyType.Enter && name.length() > 0) {
             saveHighScore();
             return new StartScreen();
         }
@@ -62,7 +63,7 @@ public class LoseScreen implements Screen {
         } else if (letters.indexOf(c) > -1 && name.length() <= 16) {
             name += c;
             return this;
-        } else if (key.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+        } else if (key.getKeyType() == KeyType.Backspace) {
             if (name.length() > 0) {
                 name = name.substring(0, name.length() - 1);
             }

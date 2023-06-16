@@ -1,7 +1,11 @@
 package screens;
 
-import asciiPanel.AsciiFont;
-import asciiPanel.AsciiPanel;
+import Helper.TerminalHelper;
+import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
+import com.googlecode.lanterna.terminal.Terminal;
+import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
@@ -10,8 +14,9 @@ import com.heroiclabs.nakama.api.Group;
 import logic.Key;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +25,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MainClass extends JFrame implements KeyListener {
-    private final AsciiPanel terminal;
+public class MainClass {
+    private Terminal terminal;
+
+    private TerminalHelper terminalHelper;
 
     public Screen screen;
 
@@ -39,63 +46,61 @@ public class MainClass extends JFrame implements KeyListener {
 
 
     public MainClass() {
-        super();
-        terminal = new AsciiPanel(70, 50, new AsciiFont("custom_cp437_20x20.png", 20, 20));
-        add(terminal);
-        pack();
+        setupTerminal();
         screen = new StartScreen();
-        addKeyListener(this);
         repaint();
-        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(this::repaint, 0, 50, TimeUnit.MILLISECONDS);
+        ScheduledExecutorService repaint = Executors.newSingleThreadScheduledExecutor();
+        repaint.scheduleAtFixedRate(this::repaint, 0, 50, TimeUnit.MILLISECONDS);
+        ScheduledExecutorService keyStroke = Executors.newSingleThreadScheduledExecutor();
+        keyStroke.scheduleAtFixedRate(this::keyPressed, 0, 10, TimeUnit.MILLISECONDS);
+    }
+
+    private void setupTerminal() {
+        Font font = null;
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, new File("/home/af/TetrisTest/src/main/resources/MxPlus_Rainbow100_re_40.ttf"));
+        } catch (FontFormatException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        font = font.deriveFont(20f);
+        DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
+        defaultTerminalFactory.setTerminalEmulatorTitle("Terminal Tetris");
+        defaultTerminalFactory.setInitialTerminalSize(new TerminalSize(80, 25));
+        defaultTerminalFactory.setPreferTerminalEmulator(true);
+        SwingTerminalFontConfiguration config = SwingTerminalFontConfiguration.newInstance(font);
+        defaultTerminalFactory.setTerminalEmulatorFontConfiguration(config);
+        try {
+            terminal = defaultTerminalFactory.createTerminal();
+            terminalHelper = new TerminalHelper(terminal);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void repaint() {
         SwingUtilities.invokeLater(() -> {
-            screen.displayOutput(terminal);
-            super.repaint();
+            screen.displayOutput(terminalHelper);
         });
     }
 
-    public void keyPressed(KeyEvent e) {
-        screen = screen.respondToUserInput(e, terminal);
-        synchronized (MainClass.pressedKeys) {
-            if (screen instanceof PlayScreen) {
-                Key keyToAdd = Key.getEnumFromKeyCode(e.getKeyCode());
-                MainClass.pressedKeys.add(keyToAdd);
-            }
+    public void keyPressed() {
+        KeyStroke key;
+        try {
+            key = terminal.pollInput();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-    }
-
-
-    @Override
-    public void keyTyped(KeyEvent keyEvent) {
-
-    }
-
-
-    @Override
-    public void keyReleased(KeyEvent keyEvent) {
-        synchronized (MainClass.pressedKeys) {
-            Key pressedKey = Key.getEnumFromKeyCode(keyEvent.getKeyCode());
-            if (pressedKey != null) {
-                pressedKey.resetKey();
-                MainClass.pressedKeys.remove(pressedKey);
-            }
-        }
+        if (key == null)
+            return;
+        screen = screen.respondToUserInput(key, terminalHelper);
     }
 
 
     public static void main(String[] args) {
-        MainClass mainClass = new MainClass();
-        mainClass.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainClass.setVisible(true);
-        aClass = mainClass;
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            public void run() {
-                for (Group group : MainClass.aClass.groups) {
-                    MainClass.aClass.client.deleteGroup(MainClass.aClass.session, group.getId());
-                }
+        aClass = new MainClass();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            for (Group group : MainClass.aClass.groups) {
+                MainClass.aClass.client.deleteGroup(MainClass.aClass.session, group.getId());
             }
         }, "Shutdown-thread"));
     }

@@ -3,11 +3,12 @@ package screens;
 import Components.Button;
 import Components.SelectionHelper;
 import Components.TextInput;
-import asciiPanel.AsciiPanel;
+import Helper.TerminalHelper;
+import com.googlecode.lanterna.input.KeyStroke;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
-import java.awt.event.KeyEvent;
+
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
@@ -30,7 +31,7 @@ public class LoginScreen implements Screen {
     }
 
     @Override
-    public void displayOutput(AsciiPanel terminal) {
+    public void displayOutput(TerminalHelper terminal) {
         terminal.clear();
         for (int i = 0; i < tetrisLogo.length; i++) {
             terminal.write(tetrisLogo[i], 5, i + 1);
@@ -45,7 +46,7 @@ public class LoginScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
+    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
         Screen returnScreen = helper.manageKey(key);
         if (returnScreen != null) {
             return returnScreen;

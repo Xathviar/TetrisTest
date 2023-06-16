@@ -1,8 +1,8 @@
 package Components;
 
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import screens.Screen;
-
-import java.awt.event.KeyEvent;
 
 public class TextInput implements Component {
     private String label;
@@ -34,19 +34,19 @@ public class TextInput implements Component {
     }
 
     @Override
-    public Screen handleKeyDown(KeyEvent key) {
+    public Screen handleKeyDown(KeyStroke key) {
         if (!isSelected) {
-            if (key.getKeyCode() == KeyEvent.VK_ENTER || key.getKeyCode() == KeyEvent.VK_SPACE) {
+            if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
                 isSelected = true;
             }
         } else {
-            if (key.getKeyCode() == KeyEvent.VK_ENTER || key.getKeyCode() == KeyEvent.VK_SPACE) {
+            if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
                 isSelected = false;
             }
-            if (key.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+            if (key.getKeyType() == KeyType.Backspace) {
                 deleteLastLetter();
             }
-            char c = key.getKeyChar();
+            char c = key.getCharacter();
             if (isPassword) {
                 if (password.indexOf(c) > -1) {
                     input += c;

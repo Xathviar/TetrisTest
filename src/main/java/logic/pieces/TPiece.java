@@ -1,14 +1,13 @@
 package logic.pieces;
 
+import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
-
-import java.awt.*;
 
 public class TPiece extends Tetromino<TPiece> {
 
     public TPiece(TetrisField field) {
-        super("T-Piece", Color.PINK, field);
+        super("T-Piece", TextColor.ANSI.MAGENTA, field);
     }
 
     @Override

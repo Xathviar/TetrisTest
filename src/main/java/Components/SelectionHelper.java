@@ -1,10 +1,10 @@
 package Components;
 
-import asciiPanel.AsciiPanel;
+import Helper.TerminalHelper;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import screens.Screen;
-
-import java.awt.*;
-import java.awt.event.KeyEvent;
 
 public class SelectionHelper {
     private Component[] components;
@@ -34,11 +34,11 @@ public class SelectionHelper {
         return components[selected];
     }
 
-    public void drawComponent(AsciiPanel terminal, int x, int y, int index) {
-        terminal.write(components[index].drawComponent(), x, y, index == selected ? components[index].isSelected() ? Color.GREEN : Color.CYAN : Color.LIGHT_GRAY);
+    public void drawComponent(TerminalHelper terminal, int x, int y, int index) {
+        terminal.write(components[index].drawComponent(), x, y, index == selected ? components[index].isSelected() ? TextColor.ANSI.GREEN : TextColor.ANSI.CYAN : TextColor.ANSI.BLACK_BRIGHT);
     }
 
-    public void drawAllComponents(AsciiPanel terminal, int x, int y) {
+    public void drawAllComponents(TerminalHelper terminal, int x, int y) {
         for (int i = 0; i < components.length; i++) {
             drawComponent(terminal, x, y + i, i);
         }
@@ -56,14 +56,14 @@ public class SelectionHelper {
         return selected;
     }
 
-    public Screen manageKey(KeyEvent keycode) {
+    public Screen manageKey(KeyStroke keycode) {
         if (components[selected].isSelected()) {
             return components[selected].handleKeyDown(keycode);
 
         }
-        if (keycode.getKeyCode() == KeyEvent.VK_UP || keycode.getKeyCode() == KeyEvent.VK_W) {
+        if (keycode.getKeyType() == KeyType.ArrowUp || Character.toLowerCase(keycode.getCharacter()) == 'w') {
             this.selectAbove();
-        } else if (keycode.getKeyCode() == KeyEvent.VK_DOWN || keycode.getKeyCode() == KeyEvent.VK_S) {
+        } else if (keycode.getKeyType() == KeyType.ArrowDown || Character.toLowerCase(keycode.getCharacter()) == 's') {
             this.selectBelow();
         } else {
             return components[selected].handleKeyDown(keycode);

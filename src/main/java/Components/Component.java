@@ -1,15 +1,13 @@
 package Components;
 
+import com.googlecode.lanterna.input.KeyStroke;
 import screens.Screen;
-
-import java.awt.event.KeyEvent;
-import java.util.HashMap;
 
 public interface Component {
 
     public String drawComponent();
 
-    public Screen handleKeyDown(KeyEvent key);
+    public Screen handleKeyDown(KeyStroke key);
 
     public boolean isSelected();
 

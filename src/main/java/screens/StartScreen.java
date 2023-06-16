@@ -1,10 +1,12 @@
 package screens;
 
-import asciiPanel.AsciiPanel;
+import Helper.TerminalHelper;
+import com.googlecode.lanterna.TextColor;
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import logic.HighScore;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -50,7 +52,7 @@ public class StartScreen implements Screen {
     }
 
     @Override
-    public void displayOutput(AsciiPanel terminal) {
+    public void displayOutput(TerminalHelper terminal) {
         if (initScreen) {
             terminal.clear();
             for (int i = 0; i < tetrisLogo.length; i++) {
@@ -68,16 +70,16 @@ public class StartScreen implements Screen {
                 Color brown = new Color(150, 116, 68);
                 switch (i) {
                     case 0:
-                        terminal.write(score.toString(), 16, 18 + i, Color.YELLOW);
+                        terminal.write(score.toString(), 16, 18 + i, TextColor.ANSI.YELLOW);
                         break;
                     case 1:
-                        terminal.write(score.toString(), 16, 18 + i, Color.GRAY);
+                        terminal.write(score.toString(), 16, 18 + i, TextColor.ANSI.BLACK_BRIGHT);
                         break;
                     case 2:
-                        terminal.write(score.toString(), 16, 18 + i, brown);
+                        terminal.write(score.toString(), 16, 18 + i, TextColor.ANSI.CYAN);
                         break;
                     default:
-                        terminal.write(score.toString(), 16, 18 + i, Color.LIGHT_GRAY);
+                        terminal.write(score.toString(), 16, 18 + i, TextColor.ANSI.DEFAULT);
                 }
                 i++;
             }
@@ -86,8 +88,8 @@ public class StartScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
-        if (key.getKeyCode() == KeyEvent.VK_ENTER) {
+    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+        if (key.getKeyType() == KeyType.Enter) {
             LoginScreen screen = new LoginScreen();
 //            PlayScreen screen = new PlayScreen();
             screen.displayOutput(terminal);

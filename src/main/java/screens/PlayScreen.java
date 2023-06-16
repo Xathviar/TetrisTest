@@ -1,10 +1,10 @@
 package screens;
 
-import asciiPanel.AsciiPanel;
+import Helper.TerminalHelper;
+import com.googlecode.lanterna.input.KeyStroke;
 import logic.Key;
 import logic.TetrisField;
 
-import java.awt.event.KeyEvent;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -55,7 +55,7 @@ public class PlayScreen implements Screen {
                     "  |_____|  |________|  |_____|  |____| |___||_____| \\______.'\n").split("\n");
 
     @Override
-    public void displayOutput(AsciiPanel terminal) {
+    public void displayOutput(TerminalHelper terminal) {
         if (initScreen) {
             terminal.clear();
             for (int i = 0; i < tetrisLogo.length; i++) {
@@ -68,7 +68,7 @@ public class PlayScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
+    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
         return this;
     }
 
@@ -77,7 +77,7 @@ public class PlayScreen implements Screen {
         return false;
     }
 
-    private void drawBoard(AsciiPanel terminal) {
+    private void drawBoard(TerminalHelper terminal) {
         int height = 15;
         int width = (terminal.getWidthInCharacters() - 12) / 2;
         char leftDown = 200;
@@ -120,7 +120,7 @@ public class PlayScreen implements Screen {
 
     }
 
-    public static void writeBoxAt(AsciiPanel terminal, int x, int y, int width, int height) {
+    public static void writeBoxAt(TerminalHelper terminal, int x, int y, int width, int height) {
         char leftDown = 200;
         char leftUp = 201;
         char rightUp = 187;

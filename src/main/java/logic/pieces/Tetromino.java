@@ -1,5 +1,6 @@
 package logic.pieces;
 
+import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
 
@@ -7,7 +8,7 @@ import java.awt.*;
 
 public abstract class Tetromino <T> {
     private final String name;
-    final Color color;
+    final TextColor color;
     final Grid[] grid;
 
     private int currentRotation;
@@ -21,7 +22,7 @@ public abstract class Tetromino <T> {
 
     private boolean readyToFix;
 
-    Tetromino(String name, Color color, TetrisField field) {
+    Tetromino(String name, TextColor color, TetrisField field) {
         this.name = name;
         this.color = color;
         this.grid = new Grid[4];
@@ -170,7 +171,7 @@ public abstract class Tetromino <T> {
     }
 
     public void changeColorGrey() {
-        grid[0].setColor(Color.GRAY);
+        grid[0].setColor(TextColor.ANSI.BLACK_BRIGHT);
     }
 
     public void returnNormalColor() {
