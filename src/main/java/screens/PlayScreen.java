@@ -2,7 +2,6 @@ package screens;
 
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
-import logic.Key;
 import logic.TetrisField;
 
 import java.util.concurrent.Executors;
@@ -19,29 +18,23 @@ public class PlayScreen implements Screen {
         field = new TetrisField(1, this);
         startTime = System.currentTimeMillis();
         exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(this::handleInput, 0, 10, TimeUnit.MILLISECONDS);
+//        exec.scheduleAtFixedRate(this::handleInput, 0, 10, TimeUnit.MILLISECONDS);
     }
 
     public void shutdownThread() {
         exec.shutdownNow();
     }
 
-    private void handleInput() {
-        if (loseScreen) {
-            MainClass.aClass.screen = new LoseScreen(field.getLevel(), field.getScore(), System.currentTimeMillis() - startTime);
-            exec.shutdownNow();
-            field.shutdownThread();
-            MainClass.aClass.repaint();
-        }
-        synchronized (MainClass.pressedKeys) {
-            for (Key pressedKey : MainClass.pressedKeys) {
-                if (pressedKey != null)
-                    pressedKey.handleKeyInput(field);
-                else
-                    MainClass.pressedKeys.remove(null);
-            }
-        }
-    }
+//    private void handleInput() {
+//        synchronized (MainClass.pressedKeys) {
+//            for (Key pressedKey : MainClass.pressedKeys) {
+//                if (pressedKey != null)
+//                    pressedKey.handleKeyInput(field);
+//                else
+//                    MainClass.pressedKeys.remove(null);
+//            }
+//        }
+//    }
 
     public boolean initScreen = true;
 
@@ -69,6 +62,27 @@ public class PlayScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+        if (loseScreen) {
+            MainClass.aClass.screen = new LoseScreen(field.getLevel(), field.getScore(), System.currentTimeMillis() - startTime);
+            exec.shutdownNow();
+            field.shutdownThread();
+            MainClass.aClass.repaint();
+        }
+        switch (key.getKeyType()) {
+            case ArrowLeft:
+                field.moveLeft();
+                break;
+            case ArrowRight:
+                field.moveRight();
+                break;
+            case ArrowDown:
+                field.softDrop();
+                break;
+            case ArrowUp:
+                field.hardDrop();
+                break;
+        }
+
         return this;
     }
 

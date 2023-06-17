@@ -63,7 +63,7 @@ public class LobbyScreen implements Screen, Runnable {
 
     @Override
     public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
-        if (Character.toLowerCase(key.getCharacter()) == 'c') {
+        if (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 'c') {
             try {
                 MainClass.aClass.socket = MainClass.aClass.client.createSocket();
                 SocketListener listener = new AbstractSocketListener() {
@@ -81,7 +81,7 @@ public class LobbyScreen implements Screen, Runnable {
                 throw new RuntimeException(e);
             }
         }
-        if (Character.toLowerCase(key.getCharacter()) == 'r') {
+        if (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 'r') {
             this.fetchLobbies();
         }
         return this;

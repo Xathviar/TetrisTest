@@ -15,7 +15,6 @@ import java.util.concurrent.ExecutionException;
 import static screens.PlayScreen.tetrisLogo;
 
 public class LoginScreen implements Screen {
-    private boolean initScreen = true;
 
     private String errorMessage = "";
 
@@ -27,7 +26,7 @@ public class LoginScreen implements Screen {
                 new TextInput("Password", false, true),
                 new TextInput("Username", false, false),
                 new Button("Login", this, new LobbyScreen())
-                );
+        );
     }
 
     @Override
@@ -47,6 +46,7 @@ public class LoginScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+        System.out.println("Start");
         Screen returnScreen = helper.manageKey(key);
         if (returnScreen != null) {
             return returnScreen;
