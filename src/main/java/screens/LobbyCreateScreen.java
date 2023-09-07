@@ -56,7 +56,9 @@ public class LobbyCreateScreen implements Screen {
                 payload.put("MatchID", MainClass.aClass.match.getMatchId());
                 Rpc rpcResult = MainClass.aClass.client.rpc(MainClass.aClass.session, "UpdateGroupMetadata", new Gson().toJson(payload, payload.getClass())).get();
                 log.debug(rpcResult.toString());
-                //TODO LobbyWaitingScreen
+                LobbyWaitingScreen waitingScreen = new LobbyWaitingScreen(group.getId(), groupName);
+                waitingScreen.displayOutput(terminal);
+                return waitingScreen;
             } catch (InterruptedException | ExecutionException e) {
                 log.error(e.getMessage());
             }
