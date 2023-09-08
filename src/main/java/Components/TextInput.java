@@ -37,12 +37,18 @@ public class TextInput implements Component {
     public Screen handleKeyDown(KeyStroke key) {
         try  {
             key.getKeyType();
+            key.getCharacter();
         } catch (NullPointerException e) {
             System.out.println((int)key.getCharacter());
         }
         if (!isSelected) {
-            if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
-                isSelected = true;
+            try {
+                System.out.println(key);
+                if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
+                    isSelected = true;
+                }
+            } catch (NullPointerException ignored) {
+
             }
         } else {
             if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {

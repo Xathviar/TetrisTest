@@ -1,6 +1,6 @@
 local nk = require("nakama")
 
-local function custom_rpc_func(context, payload)
+local function update_group_metadata(context, payload)
     nk.logger_info(string.format("Payload: %q", payload))
 
     -- "payload" is bytes sent by the client we'll JSON decode it.
@@ -12,4 +12,4 @@ local function custom_rpc_func(context, payload)
     return nk.json_encode(metadata)
 end
 
-nk.register_rpc(custom_rpc_func, "UpdateGroupMetadata")
+nk.register_rpc(update_group_metadata, "UpdateGroupMetadata")

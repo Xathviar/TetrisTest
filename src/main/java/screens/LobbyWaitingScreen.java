@@ -2,13 +2,17 @@ package screens;
 
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
+import com.heroiclabs.nakama.Match;
+import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupUserList;
-import com.sun.tools.javac.Main;
-import nakama.com.google.common.util.concurrent.ListenableFuture;
+import com.heroiclabs.nakama.api.UserGroupList;
+import nakama.com.google.common.reflect.TypeToken;
+import nakama.com.google.gson.Gson;
 
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,14 +24,29 @@ public class LobbyWaitingScreen implements Screen, Runnable {
 
     private final ScheduledExecutorService exec;
 
-    private final HashMap<String, String> playerlist;
+    private final LinkedHashMap<String, String> playerlist;
 
     private String groupID;
 
     private String lobbyName;
 
-    public LobbyWaitingScreen(String groupID, String lobbyName) {
-        this.playerlist = new HashMap<>();
+    public LobbyWaitingScreen(String groupID, String lobbyName, boolean createdLobby) {
+        if (!createdLobby) {
+            MainClass.aClass.group_id = groupID;
+            try {
+                MainClass.aClass.createdGroup = false;
+                UserGroupList userGroups = MainClass.aClass.client.listUserGroups(MainClass.aClass.session, MainClass.aClass.session.getUserId()).get();
+                Group group = userGroups.getUserGroups(0).getGroup();
+                Gson gson = new Gson();
+                String s = group.getMetadata();
+                Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+                HashMap<String, String> map = gson.fromJson(s, type);
+                Match match = MainClass.aClass.socket.joinMatch(map.get("MatchID")).get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        this.playerlist = new LinkedHashMap<>();
         this.groupID = groupID;
         this.lobbyName = lobbyName;
         this.exec = Executors.newSingleThreadScheduledExecutor();

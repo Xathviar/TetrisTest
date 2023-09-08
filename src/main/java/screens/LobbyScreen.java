@@ -1,7 +1,9 @@
 package screens;
 
 import Helper.TerminalHelper;
+import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import com.heroiclabs.nakama.AbstractSocketListener;
 import com.heroiclabs.nakama.SocketListener;
 import com.heroiclabs.nakama.api.Group;
@@ -9,12 +11,9 @@ import com.heroiclabs.nakama.api.GroupList;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static screens.PlayScreen.tetrisLogo;
 
@@ -22,11 +21,16 @@ import static screens.PlayScreen.tetrisLogo;
 public class LobbyScreen implements Screen, Runnable {
     //TODO Add Group Selection and advancement to Lobby Waiting Screen
     private final ScheduledExecutorService exec;
-    private static Map<String, String> lobbies = new HashMap<>();
+    private static Map<String, String> lobbies = new LinkedHashMap<>();
+
+    ScheduledFuture<?> result;
+    private int selected = -1;
+    private boolean runnable;
 
     public LobbyScreen() {
+        runnable = true;
         exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(this, 0, 30, TimeUnit.SECONDS);
+        result = exec.scheduleAtFixedRate(this, 0, 10, TimeUnit.SECONDS);
     }
 
     private void fetchLobbies() {
@@ -54,7 +58,11 @@ public class LobbyScreen implements Screen, Runnable {
         int y = 10;
         synchronized (lobbies) {
             for (Map.Entry<String, String> value : lobbies.entrySet()) {
-                terminal.write("Lobby: " + value.getValue(), 5, y++);
+                if (selected == y - 10) {
+                    terminal.write("Lobby: " + value.getValue(), 5, y++, TextColor.ANSI.GREEN);
+                } else {
+                    terminal.write("Lobby: " + value.getValue(), 5, y++);
+                }
             }
         }
         terminal.write("To refresh the lobby screen press [r]", 5, ++y);
@@ -74,6 +82,9 @@ public class LobbyScreen implements Screen, Runnable {
                 };
                 MainClass.aClass.socket.connect(MainClass.aClass.session, listener).get();
                 log.info("Socket connected.");
+                result.cancel(true);
+                exec.shutdownNow();
+                runnable = false;
                 LobbyCreateScreen screen = new LobbyCreateScreen();
                 screen.displayOutput(terminal);
                 return screen;
@@ -83,6 +94,38 @@ public class LobbyScreen implements Screen, Runnable {
         }
         if (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 'r') {
             this.fetchLobbies();
+        }
+        if (key.getKeyType() == KeyType.ArrowUp || (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 'w')) {
+            this.selectAbove();
+        } else if (key.getKeyType() == KeyType.ArrowDown || (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 's')) {
+            System.out.println("Select Below!");
+            this.selectBelow();
+        }
+        try {
+            if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
+                if (selected == -1) {
+                    return this;
+                }
+                int c = 0;
+                for (String group_id : lobbies.keySet()) {
+                    if (c == selected) {
+                        try {
+                            MainClass.aClass.client.joinGroup(MainClass.aClass.session, group_id).get();
+                            result.cancel(true);
+                            exec.shutdownNow();
+                            runnable = false;
+                            LobbyWaitingScreen waitingScreen = new LobbyWaitingScreen(group_id, lobbies.get(group_id), false);
+                            waitingScreen.displayOutput(terminal);
+                            return waitingScreen;
+                        } catch (InterruptedException | ExecutionException e) {
+                            // TODO Handle if Group is full. Maybe just display Groups that aren't full
+                        }
+                    }
+                    c++;
+                }
+            }
+        } catch (NullPointerException ignored) {
+
         }
         return this;
     }
@@ -94,6 +137,25 @@ public class LobbyScreen implements Screen, Runnable {
 
     @Override
     public void run() {
-        fetchLobbies();
+        if (runnable) {
+            fetchLobbies();
+        }
     }
+
+    public void selectAbove() {
+        if (selected == 0) {
+            selected = lobbies.size() - 1;
+        } else {
+            selected--;
+        }
+    }
+
+    public void selectBelow() {
+        if (selected == lobbies.size() - 1) {
+            selected = 0;
+        } else {
+            selected++;
+        }
+    }
+
 }

@@ -22,6 +22,15 @@ public class TerminalHelper {
         }
     }
 
+    public void hideCursor() {
+        try {
+            terminal.setCursorPosition(this.getWidthInCharacters(), this.getHeightInCharacters());
+            terminal.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public void write(String msg, int x, int y, TextColor fg) {
         try {
@@ -79,7 +88,6 @@ public class TerminalHelper {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public int getHeightInCharacters() {

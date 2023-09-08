@@ -41,7 +41,7 @@ public class LoginScreen implements Screen {
             terminal.write("ERROR: ", 1, 15);
             terminal.write(errorMessage, 4, 16);
         }
-
+        terminal.hideCursor();
     }
 
     @Override

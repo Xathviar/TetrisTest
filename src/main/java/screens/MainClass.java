@@ -3,6 +3,7 @@ package screens;
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
@@ -11,6 +12,7 @@ import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
 import com.heroiclabs.nakama.api.Group;
+import com.sun.tools.javac.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,9 +21,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -40,9 +40,11 @@ public class MainClass implements Runnable, KeyListener {
     public Client client;
 
     public SocketClient socket;
-    public List<Group> groups = new ArrayList<>();
+    public String group_id = "";
     public Match match;
     private boolean running;
+
+    public boolean createdGroup;
 
 
     public MainClass() {
@@ -84,13 +86,16 @@ public class MainClass implements Runnable, KeyListener {
             screen.displayOutput(terminalHelper);
         });
     }
+
     public static void main(String[] args) {
         aClass = new MainClass();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            for (Group group : MainClass.aClass.groups) {
-                MainClass.aClass.client.deleteGroup(MainClass.aClass.session, group.getId());
+            if (MainClass.aClass.createdGroup) {
+                MainClass.aClass.client.deleteGroup(MainClass.aClass.session, aClass.group_id);
+            } else {
+                MainClass.aClass.client.leaveGroup(MainClass.aClass.session, aClass.group_id);
             }
-        }, "Shutdown-thread"));
+        }, "Delete all groups"));
     }
 
     @Override
@@ -101,9 +106,10 @@ public class MainClass implements Runnable, KeyListener {
                 key = terminal.readInput();
                 if (key == null)
                     return;
+                if (key.getKeyType() == KeyType.EOF)
+                    System.exit(0);
                 System.out.println(key);
                 screen = screen.respondToUserInput(key, terminalHelper);
-                System.out.println("help");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
