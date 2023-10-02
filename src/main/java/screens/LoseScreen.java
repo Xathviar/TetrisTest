@@ -12,13 +12,11 @@ import java.util.concurrent.TimeUnit;
 import static screens.PlayScreen.tetrisLogo;
 
 public class LoseScreen implements Screen {
-    private boolean initialScreen;
     private final int level;
     private final long score;
     private final long timePassed;
-
     private final String time;
-
+    private boolean initialScreen;
     private String name;
 
     public LoseScreen(int level, long score, long timePassed) {
@@ -80,7 +78,7 @@ public class LoseScreen implements Screen {
         try {
             FileWriter fw = new FileWriter("highscores.txt", true);
             BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(name + ";" + level + ";" + score +";" + timePassed);
+            bw.write(name + ";" + level + ";" + score + ";" + timePassed);
             bw.newLine();
             bw.close();
         } catch (IOException e) {

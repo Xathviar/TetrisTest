@@ -11,8 +11,6 @@ import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
-import com.heroiclabs.nakama.api.Group;
-import com.sun.tools.javac.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,31 +18,22 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class MainClass implements Runnable, KeyListener {
-    private Terminal terminal;
-
-    private TerminalHelper terminalHelper;
-
-    public Screen screen;
-
     public static MainClass aClass;
-
+    public Screen screen;
     public Session session;
-
     public Client client;
-
     public SocketClient socket;
     public String group_id = "";
     public Match match;
-    private boolean running;
-
     public boolean createdGroup;
+    private Terminal terminal;
+    private TerminalHelper terminalHelper;
+    private boolean running;
 
 
     public MainClass() {
@@ -56,6 +45,17 @@ public class MainClass implements Runnable, KeyListener {
         Thread t = new Thread(this);
         running = true;
         t.start();
+    }
+
+    public static void main(String[] args) {
+        aClass = new MainClass();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (MainClass.aClass.createdGroup) {
+                MainClass.aClass.client.deleteGroup(MainClass.aClass.session, aClass.group_id);
+            } else {
+                MainClass.aClass.client.leaveGroup(MainClass.aClass.session, aClass.group_id);
+            }
+        }, "Delete all groups"));
     }
 
     private void setupTerminal() {
@@ -85,17 +85,6 @@ public class MainClass implements Runnable, KeyListener {
         SwingUtilities.invokeLater(() -> {
             screen.displayOutput(terminalHelper);
         });
-    }
-
-    public static void main(String[] args) {
-        aClass = new MainClass();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            if (MainClass.aClass.createdGroup) {
-                MainClass.aClass.client.deleteGroup(MainClass.aClass.session, aClass.group_id);
-            } else {
-                MainClass.aClass.client.leaveGroup(MainClass.aClass.session, aClass.group_id);
-            }
-        }, "Delete all groups"));
     }
 
     @Override

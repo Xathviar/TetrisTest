@@ -4,14 +4,13 @@ import com.googlecode.lanterna.TextColor;
 
 public class Grid {
     private final Boolean[][] setPoints;
+    private final TetrisField field;
     /**
      * The Horizontal Coordinate
      */
     public int x;
     public int y;
     private TextColor color;
-
-    private final TetrisField field;
 
     public Grid(Boolean[][] setPoints, TextColor color, TetrisField field, int x, int y) {
         this.setPoints = setPoints;

@@ -21,9 +21,8 @@ import static screens.PlayScreen.writeBoxAt;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class StartScreen implements Screen {
-    private boolean initScreen = true;
-
     public final Set<HighScore> scores;
+    private boolean initScreen = true;
 
     public StartScreen() {
         scores = new TreeSet<>();

@@ -5,13 +5,13 @@ import com.googlecode.lanterna.input.KeyType;
 import screens.Screen;
 
 public class TextInput implements Component {
+    private final String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890@.";
+    private final String password = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890!<>,.:;()[]{}@#$%^&*-=+_\\|\"'/?~";
     private String label;
     private String input;
     private boolean isSelected;
     private boolean onlyDigits;
     private boolean isPassword;
-    private final String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890@.";
-    private final String password = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890!<>,.:;()[]{}@#$%^&*-=+_\\|\"'/?~";
 
 
     public TextInput(String label, boolean onlyDigits, boolean isPassword) {
@@ -35,11 +35,11 @@ public class TextInput implements Component {
 
     @Override
     public Screen handleKeyDown(KeyStroke key) {
-        try  {
+        try {
             key.getKeyType();
             key.getCharacter();
         } catch (NullPointerException e) {
-            System.out.println((int)key.getCharacter());
+            System.out.println((int) key.getCharacter());
         }
         if (!isSelected) {
             try {
@@ -76,15 +76,15 @@ public class TextInput implements Component {
         return isSelected;
     }
 
-    public void setInput(String input) {
-        this.input = input;
-    }
-
     public String getLabel() {
         return label;
     }
 
     public String getInput() {
         return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
     }
 }

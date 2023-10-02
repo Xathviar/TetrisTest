@@ -14,21 +14,22 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static screens.PlayScreen.tetrisLogo;
 
 @Slf4j
 public class LobbyScreen implements Screen, Runnable {
-    //TODO Add Group Selection and advancement to Lobby Waiting Screen
-    private final ScheduledExecutorService exec;
     private static Map<String, String> lobbies = new LinkedHashMap<>();
-
+    private final ScheduledExecutorService exec;
+    public volatile AtomicBoolean runnable;
     ScheduledFuture<?> result;
     private int selected = -1;
-    private boolean runnable;
 
     public LobbyScreen() {
-        runnable = true;
+        log.info("Hello I am the Constructor!");
+        runnable = new AtomicBoolean();
+        runnable.set(true);
         exec = Executors.newSingleThreadScheduledExecutor();
         result = exec.scheduleAtFixedRate(this, 0, 10, TimeUnit.SECONDS);
     }
@@ -42,8 +43,8 @@ public class LobbyScreen implements Screen, Runnable {
                     lobbies.put(group.getId(), group.getName());
                 }
                 log.info(lobbies.toString());
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                log.info(e.toString());
             }
         }
     }
@@ -82,9 +83,14 @@ public class LobbyScreen implements Screen, Runnable {
                 };
                 MainClass.aClass.socket.connect(MainClass.aClass.session, listener).get();
                 log.info("Socket connected.");
-                result.cancel(true);
-                exec.shutdownNow();
-                runnable = false;
+//                result.cancel(true);
+//                exec.shutdownNow();
+                log.info("Before setting runnable to false");
+                synchronized (runnable) {
+                    runnable.set(false);
+                }
+                log.info("After setting runnable to false");
+                log.info("Runnable: " + runnable);
                 LobbyCreateScreen screen = new LobbyCreateScreen();
                 screen.displayOutput(terminal);
                 return screen;
@@ -111,13 +117,16 @@ public class LobbyScreen implements Screen, Runnable {
                     if (c == selected) {
                         try {
                             MainClass.aClass.client.joinGroup(MainClass.aClass.session, group_id).get();
-                            result.cancel(true);
-                            exec.shutdownNow();
-                            runnable = false;
+//                            result.cancel(true);
+//                            exec.shutdownNow();
+                            synchronized (runnable) {
+                                runnable.set(false);
+                            }
                             LobbyWaitingScreen waitingScreen = new LobbyWaitingScreen(group_id, lobbies.get(group_id), false);
                             waitingScreen.displayOutput(terminal);
                             return waitingScreen;
                         } catch (InterruptedException | ExecutionException e) {
+                            log.info(e.toString());
                             // TODO Handle if Group is full. Maybe just display Groups that aren't full
                         }
                     }
@@ -137,8 +146,16 @@ public class LobbyScreen implements Screen, Runnable {
 
     @Override
     public void run() {
-        if (runnable) {
-            fetchLobbies();
+        log.info("Running run...");
+        synchronized (runnable) {
+            System.out.println(runnable);
+            if (runnable.get()) {
+                fetchLobbies();
+            } else {
+                log.info("Stopping the Thread as the User doesn't need it anymore");
+                exec.shutdownNow();
+                throw new RuntimeException();
+            }
         }
     }
 

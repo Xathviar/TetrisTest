@@ -4,7 +4,7 @@ import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
 
-public class JPiece extends Tetromino <JPiece> {
+public class JPiece extends Tetromino<JPiece> {
 
     public JPiece(TetrisField field) {
         super("J-Piece", TextColor.ANSI.BLUE, field);

@@ -8,13 +8,15 @@ public class RandomGenerator {
     public final Queue<Tetromino> tetrisPieceOrder = new ArrayDeque<>();
     private final TetrisField field;
 
+    private final List<Tetromino> allTetrisPieces = new ArrayList<>();
+
     public RandomGenerator(TetrisField field) {
         this.field = field;
+        populateArrayList();
         generateNewOrder();
     }
 
-    private void generateNewOrder() {
-        List<Tetromino> allTetrisPieces = new ArrayList<>();
+    private void populateArrayList() {
         allTetrisPieces.add(new TPiece(field));
         allTetrisPieces.add(new IPiece(field));
         allTetrisPieces.add(new JPiece(field));
@@ -22,6 +24,9 @@ public class RandomGenerator {
         allTetrisPieces.add(new OPiece(field));
         allTetrisPieces.add(new SPiece(field));
         allTetrisPieces.add(new ZPiece(field));
+    }
+
+    private void generateNewOrder() {
         Collections.shuffle(allTetrisPieces);
         tetrisPieceOrder.addAll(allTetrisPieces);
     }

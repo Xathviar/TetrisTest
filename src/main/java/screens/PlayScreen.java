@@ -6,24 +6,19 @@ import logic.TetrisField;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class PlayScreen implements Screen {
+    public static final String[] tetrisLogo = (
+            " _________  ________  _________  _______     _____   ______  \n" +
+                    "|  _   _  ||_   __  ||  _   _  ||_   __ \\   |_   _|.' ____ \\ \n" +
+                    "|_/ | | \\_|  | |_ \\_||_/ | | \\_|  | |__) |    | |  | (___ \\_|\n" +
+                    "    | |      |  _| _     | |      |  __ /     | |   _.____`. \n" +
+                    "   _| |_    _| |__/ |   _| |_    _| |  \\ \\_  _| |_ | \\____) |\n" +
+                    "  |_____|  |________|  |_____|  |____| |___||_____| \\______.'\n").split("\n");
     private final TetrisField field;
     private final long startTime;
     private final ScheduledExecutorService exec;
-
-
-    public PlayScreen() {
-        field = new TetrisField(1, this);
-        startTime = System.currentTimeMillis();
-        exec = Executors.newSingleThreadScheduledExecutor();
-//        exec.scheduleAtFixedRate(this::handleInput, 0, 10, TimeUnit.MILLISECONDS);
-    }
-
-    public void shutdownThread() {
-        exec.shutdownNow();
-    }
+    public boolean initScreen = true;
 
 //    private void handleInput() {
 //        synchronized (MainClass.pressedKeys) {
@@ -35,17 +30,37 @@ public class PlayScreen implements Screen {
 //            }
 //        }
 //    }
-
-    public boolean initScreen = true;
-
     public boolean loseScreen = false;
-    public static final String[] tetrisLogo = (
-                    " _________  ________  _________  _______     _____   ______  \n" +
-                    "|  _   _  ||_   __  ||  _   _  ||_   __ \\   |_   _|.' ____ \\ \n" +
-                    "|_/ | | \\_|  | |_ \\_||_/ | | \\_|  | |__) |    | |  | (___ \\_|\n" +
-                    "    | |      |  _| _     | |      |  __ /     | |   _.____`. \n" +
-                    "   _| |_    _| |__/ |   _| |_    _| |  \\ \\_  _| |_ | \\____) |\n" +
-                    "  |_____|  |________|  |_____|  |____| |___||_____| \\______.'\n").split("\n");
+
+    public PlayScreen() {
+        field = new TetrisField(1, this);
+        startTime = System.currentTimeMillis();
+        exec = Executors.newSingleThreadScheduledExecutor();
+//        exec.scheduleAtFixedRate(this::handleInput, 0, 10, TimeUnit.MILLISECONDS);
+    }
+
+    public static void writeBoxAt(TerminalHelper terminal, int x, int y, int width, int height) {
+        char leftDown = 200;
+        char leftUp = 201;
+        char rightUp = 187;
+        char rightDown = 188;
+        char straightHorizontally = 205;
+        char straightVertically = 186;
+        String horizontalLines = String.valueOf(straightHorizontally).repeat(width - 2);
+        String boxFirstLine = leftUp + horizontalLines + rightUp;
+        String boxMiddleLines = straightVertically + " ".repeat(width - 2) + straightVertically;
+        String boxBottomLine = leftDown + horizontalLines + rightDown;
+
+        terminal.write(boxFirstLine, x, y++);
+        for (int i = 0; i < height - 2; i++) {
+            terminal.write(boxMiddleLines, x, y++);
+        }
+        terminal.write(boxBottomLine, x, y);
+    }
+
+    public void shutdownThread() {
+        exec.shutdownNow();
+    }
 
     @Override
     public void displayOutput(TerminalHelper terminal) {
@@ -132,25 +147,6 @@ public class PlayScreen implements Screen {
         terminal.write((char) 185, width + 19, height + 10);
         terminal.write((char) 185, width + 19, height + 15);
 
-    }
-
-    public static void writeBoxAt(TerminalHelper terminal, int x, int y, int width, int height) {
-        char leftDown = 200;
-        char leftUp = 201;
-        char rightUp = 187;
-        char rightDown = 188;
-        char straightHorizontally = 205;
-        char straightVertically = 186;
-        String horizontalLines = String.valueOf(straightHorizontally).repeat(width - 2);
-        String boxFirstLine = leftUp + horizontalLines + rightUp;
-        String boxMiddleLines = straightVertically + " ".repeat(width - 2) + straightVertically;
-        String boxBottomLine = leftDown + horizontalLines + rightDown;
-
-        terminal.write(boxFirstLine, x, y++);
-        for (int i = 0; i < height - 2; i++) {
-            terminal.write(boxMiddleLines, x, y++);
-        }
-        terminal.write(boxBottomLine, x, y);
     }
 
 

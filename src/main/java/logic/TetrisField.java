@@ -20,42 +20,23 @@ public class TetrisField {
     public static final String BLOCKCHAIN = "" + BLOCK + BLOCK + BLOCK + BLOCK;
 
     public static final char BACKGROUND = 1;
-
-    private final Point[][] points = new Point[50][10];
-
-    private final RandomGenerator generator;
-
-    private Tetromino activePiece;
-
-    private Tetromino holdPiece;
-
-    private Tetromino helperPiece;
-
-    private long score;
-
-    private int level;
-
-    private int numberofLinesToClear;
-
     private static final int LINE_THRESHOLD = 10;
-
-    private int currentMillis = 1000;
-
-    private boolean allowSwap;
-
-    private int combo = -1;
-
-    private boolean storeB2B;
-
-    private boolean isTspin;
-
-
-    private ScheduledExecutorService exec;
-
-    private java.util.List<Tetromino> nextPieces;
-
+    private final Point[][] points = new Point[50][10];
+    private final RandomGenerator generator;
     private final PlayScreen screen;
-
+    private Tetromino activePiece;
+    private Tetromino holdPiece;
+    private Tetromino helperPiece;
+    private long score;
+    private int level;
+    private int numberofLinesToClear;
+    private int currentMillis = 1000;
+    private boolean allowSwap;
+    private int combo = -1;
+    private boolean storeB2B;
+    private boolean isTspin;
+    private ScheduledExecutorService exec;
+    private java.util.List<Tetromino> nextPieces;
     private GarbagePieceHandler garbagePieceHandler;
 
     public TetrisField(int level, PlayScreen screen) {

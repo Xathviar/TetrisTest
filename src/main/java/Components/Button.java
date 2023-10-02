@@ -4,7 +4,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import screens.Screen;
 
-public class Button implements Component{
+public class Button implements Component {
 
     private String label;
     private Screen currentScreen;

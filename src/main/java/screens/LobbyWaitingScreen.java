@@ -24,11 +24,11 @@ public class LobbyWaitingScreen implements Screen, Runnable {
 
     private final ScheduledExecutorService exec;
 
-    private final LinkedHashMap<String, String> playerlist;
+    private final LinkedHashMap<String, String> playerList;
 
-    private String groupID;
+    private final String groupID;
 
-    private String lobbyName;
+    private final String lobbyName;
 
     public LobbyWaitingScreen(String groupID, String lobbyName, boolean createdLobby) {
         if (!createdLobby) {
@@ -39,14 +39,15 @@ public class LobbyWaitingScreen implements Screen, Runnable {
                 Group group = userGroups.getUserGroups(0).getGroup();
                 Gson gson = new Gson();
                 String s = group.getMetadata();
-                Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+                Type type = new TypeToken<HashMap<String, String>>() {
+                }.getType();
                 HashMap<String, String> map = gson.fromJson(s, type);
                 Match match = MainClass.aClass.socket.joinMatch(map.get("MatchID")).get();
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }
-        this.playerlist = new LinkedHashMap<>();
+        this.playerList = new LinkedHashMap<>();
         this.groupID = groupID;
         this.lobbyName = lobbyName;
         this.exec = Executors.newSingleThreadScheduledExecutor();
@@ -55,12 +56,12 @@ public class LobbyWaitingScreen implements Screen, Runnable {
 
     @Override
     public void run() {
-        synchronized (playerlist) {
-            playerlist.clear();
+        synchronized (playerList) {
+            playerList.clear();
             try {
                 GroupUserList groupUserList = MainClass.aClass.client.listGroupUsers(MainClass.aClass.session, this.groupID).get();
                 for (GroupUserList.GroupUser groupUser : groupUserList.getGroupUsersList()) {
-                    playerlist.put(groupUser.getUser().getId(), groupUser.getUser().getUsername());
+                    playerList.put(groupUser.getUser().getId(), groupUser.getUser().getUsername());
                 }
             } catch (Exception ignored) {
 
@@ -77,13 +78,14 @@ public class LobbyWaitingScreen implements Screen, Runnable {
         int y = 10;
         terminal.writeCenter(String.format("<--- LobbyName: %s --->", lobbyName), y++);
         terminal.write("Current Players waiting in the Lobby", 5, y++);
-        for (String player : playerlist.values()) {
+        for (String player : playerList.values()) {
             terminal.write(player, 5, y++);
         }
     }
 
     @Override
     public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+
         return this;
     }
 
