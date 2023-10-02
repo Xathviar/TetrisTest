@@ -31,6 +31,10 @@ public class LobbyScreen implements Screen, Runnable {
         runnable = new AtomicBoolean();
         runnable.set(true);
         exec = Executors.newSingleThreadScheduledExecutor();
+    }
+
+
+    public void startThread() {
         result = exec.scheduleAtFixedRate(this, 0, 10, TimeUnit.SECONDS);
     }
 

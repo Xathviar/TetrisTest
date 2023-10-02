@@ -51,20 +51,31 @@ public class TextInput implements Component {
 
             }
         } else {
-            if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
-                isSelected = false;
-            }
-            if (key.getKeyType() == KeyType.Backspace) {
-                deleteLastLetter();
-            }
-            char c = key.getCharacter();
-            if (isPassword) {
-                if (password.indexOf(c) > -1) {
-                    input += c;
+            try {
+                key.getCharacter();
+                if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
+                    isSelected = false;
+
                 }
-            } else {
-                if (letters.indexOf(c) > -1) {
-                    input += c;
+                if (key.getKeyType() == KeyType.Backspace) {
+                    deleteLastLetter();
+                }
+                char c = key.getCharacter();
+                if (isPassword) {
+                    if (password.indexOf(c) > -1) {
+                        input += c;
+                    }
+                } else {
+                    if (letters.indexOf(c) > -1) {
+                        input += c;
+                    }
+                }
+            } catch (NullPointerException e) {
+                if (key.getKeyType() == KeyType.Enter) {
+                    isSelected = false;
+                }
+                if (key.getKeyType() == KeyType.Backspace) {
+                    deleteLastLetter();
                 }
             }
         }

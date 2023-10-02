@@ -22,8 +22,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MainClass implements Runnable, KeyListener {
+public class MainClass extends JFrame implements Runnable, KeyListener {
     public static MainClass aClass;
+
     public Screen screen;
     public Session session;
     public Client client;
@@ -45,6 +46,7 @@ public class MainClass implements Runnable, KeyListener {
         Thread t = new Thread(this);
         running = true;
         t.start();
+        addKeyListener(this);
     }
 
     public static void main(String[] args) {
@@ -75,6 +77,7 @@ public class MainClass implements Runnable, KeyListener {
         defaultTerminalFactory.setTerminalEmulatorFontConfiguration(config);
         try {
             terminal = defaultTerminalFactory.createTerminal();
+            terminal.setCursorVisible(false);
             terminalHelper = new TerminalHelper(terminal);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -112,6 +115,7 @@ public class MainClass implements Runnable, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent keyEvent) {
+        System.out.println(keyEvent.getKeyChar());
 
     }
 

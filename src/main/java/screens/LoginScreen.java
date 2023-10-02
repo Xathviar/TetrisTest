@@ -67,7 +67,7 @@ public class LoginScreen implements Screen {
             System.out.println("Session expires at: " + session.getExpireTime());
             MainClass.aClass.session = session;
             MainClass.aClass.client = client;
-            MainClass.aClass.screen = new LobbyScreen();
+//            MainClass.aClass.screen = new LobbyScreen();
             return true;
         } catch (InterruptedException | ExecutionException e) {
             errorMessage = e.getMessage();
