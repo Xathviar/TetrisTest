@@ -99,7 +99,7 @@ public class MainClass implements Runnable {
                     return;
                 if (key.getKeyType() == KeyType.EOF)
                     System.exit(0);
-                System.out.println(key);
+//                System.out.println(key);
                 screen = screen.respondToUserInput(key, terminalHelper);
             }
         } catch (IOException e) {

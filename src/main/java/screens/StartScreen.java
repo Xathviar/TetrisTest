@@ -89,8 +89,8 @@ public class StartScreen implements Screen {
     @Override
     public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
         if (key.getKeyType() == KeyType.Enter) {
-            LoginScreen screen = new LoginScreen();
-//            PlayScreen screen = new PlayScreen();
+//            LoginScreen screen = new LoginScreen();
+            PlayScreen screen = new PlayScreen();
             screen.displayOutput(terminal);
             return screen;
         }

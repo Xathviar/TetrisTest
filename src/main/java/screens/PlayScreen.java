@@ -20,7 +20,7 @@ public class PlayScreen implements Screen {
     private final ScheduledExecutorService exec;
     public boolean initScreen = true;
 
-//    private void handleInput() {
+    //    private void handleInput() {
 //        synchronized (MainClass.pressedKeys) {
 //            for (Key pressedKey : MainClass.pressedKeys) {
 //                if (pressedKey != null)
@@ -40,12 +40,12 @@ public class PlayScreen implements Screen {
     }
 
     public static void writeBoxAt(TerminalHelper terminal, int x, int y, int width, int height) {
-        char leftDown = 200;
-        char leftUp = 201;
-        char rightUp = 187;
-        char rightDown = 188;
-        char straightHorizontally = 205;
-        char straightVertically = 186;
+        char leftDown = '#';
+        char leftUp = '#';
+        char rightUp = '#';
+        char rightDown = '#';
+        char straightHorizontally = '#';
+        char straightVertically = '#';
         String horizontalLines = String.valueOf(straightHorizontally).repeat(width - 2);
         String boxFirstLine = leftUp + horizontalLines + rightUp;
         String boxMiddleLines = straightVertically + " ".repeat(width - 2) + straightVertically;
@@ -72,7 +72,7 @@ public class PlayScreen implements Screen {
             initScreen = false;
         }
         drawBoard(terminal);
-        field.printTetrisField(terminal);
+        field.printTetrisField(terminal, (terminal.getWidthInCharacters() - 12) / 2, 16);
     }
 
     @Override
@@ -94,8 +94,20 @@ public class PlayScreen implements Screen {
                 field.softDrop();
                 break;
             case ArrowUp:
-                field.hardDrop();
+                field.rotateClockwise();
                 break;
+            case Character:
+                switch (Character.toLowerCase(key.getCharacter())) {
+                    case ' ':
+                        field.hardDrop();
+                        break;
+                    case 'z':
+                        field.rotateCClockwise();
+                        break;
+                    case 'x':
+                        field.swapHold();
+                        break;
+                }
         }
 
         return this;
@@ -109,12 +121,12 @@ public class PlayScreen implements Screen {
     private void drawBoard(TerminalHelper terminal) {
         int height = 15;
         int width = (terminal.getWidthInCharacters() - 12) / 2;
-        char leftDown = 200;
-        char leftUp = 201;
-        char rightUp = 187;
-        char rightDown = 188;
-        char straightHorizontally = 205;
-        char straightVertically = 186;
+        char leftDown = '#';
+        char leftUp = '#';
+        char rightUp = '#';
+        char rightDown = '#';
+        char straightHorizontally = '#';
+        char straightVertically = '#';
         String firstline = leftUp +
                 String.valueOf(straightHorizontally).repeat(10) +
                 rightUp;
@@ -132,21 +144,18 @@ public class PlayScreen implements Screen {
         }
         terminal.write(bottomLine, width, height);
         height = 15;
-        writeBoxAt(terminal, width - 8, height, 8, 6);
-        writeBoxAt(terminal, width + 12, height, 8, 6);
-        writeBoxAt(terminal, width + 12, height + 5, 8, 6);
-        writeBoxAt(terminal, width + 12, height + 10, 8, 6);
-        writeBoxAt(terminal, width + 12, height + 15, 8, 6);
-        writeBoxAt(terminal, width - 9, height + 7, 9, 15);
-        terminal.write((char) 182, width - 1, height + 10);
-        terminal.write((char) 199, width - 9, height + 10);
-        terminal.write((char) 204, width + 12, height + 5);
-        terminal.write((char) 204, width + 12, height + 10);
-        terminal.write((char) 204, width + 12, height + 15);
-        terminal.write((char) 185, width + 19, height + 5);
-        terminal.write((char) 185, width + 19, height + 10);
-        terminal.write((char) 185, width + 19, height + 15);
+        // This is the Box which displays the Hold Piece
+        writeBoxAt(terminal, width - 9, height, 9, 7);
 
+        // This is the Box which displays the scoreboard
+        writeBoxAt(terminal, width - 9, height + 15, 9, 7);
+
+        // These are the boxes drawn which show th enext four pieces
+        writeBoxAt(terminal, width + 10, height, 8, 6);
+        writeBoxAt(terminal, width + 10, height + 5, 8, 6);
+        writeBoxAt(terminal, width + 10, height + 10, 8, 6);
+        writeBoxAt(terminal, width + 10, height + 15, 8, 6);
+        terminal.write(" ", width + 11, height + 21);
     }
 
 
