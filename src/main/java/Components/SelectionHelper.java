@@ -57,21 +57,16 @@ public class SelectionHelper {
     }
 
     public Screen manageKey(KeyStroke keyStroke) {
-        System.out.println("manageKey");
         if (components[selected].isSelected()) {
-            System.out.println("Something is selected!");
             return components[selected].handleKeyDown(keyStroke);
         }
         if (keyStroke.getKeyType() == KeyType.ArrowUp || (keyStroke.getCharacter() != null && Character.toLowerCase(keyStroke.getCharacter()) == 'w')) {
             this.selectAbove();
         } else if (keyStroke.getKeyType() == KeyType.ArrowDown || (keyStroke.getCharacter() != null && Character.toLowerCase(keyStroke.getCharacter()) == 's')) {
-            System.out.println("Select Below!");
             this.selectBelow();
         } else {
-            System.out.println("Nothing was selected");
             return components[selected].handleKeyDown(keyStroke);
         }
-        System.out.println("Nothing");
         return null;
     }
 

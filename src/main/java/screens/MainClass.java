@@ -11,18 +11,18 @@ import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.Match;
 import com.heroiclabs.nakama.Session;
 import com.heroiclabs.nakama.SocketClient;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MainClass extends JFrame implements Runnable, KeyListener {
+@Slf4j
+public class MainClass implements Runnable {
     public static MainClass aClass;
 
     public Screen screen;
@@ -46,7 +46,6 @@ public class MainClass extends JFrame implements Runnable, KeyListener {
         Thread t = new Thread(this);
         running = true;
         t.start();
-        addKeyListener(this);
     }
 
     public static void main(String[] args) {
@@ -106,21 +105,5 @@ public class MainClass extends JFrame implements Runnable, KeyListener {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent keyEvent) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent keyEvent) {
-        System.out.println(keyEvent.getKeyChar());
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent keyEvent) {
-
     }
 }

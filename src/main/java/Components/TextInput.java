@@ -22,6 +22,11 @@ public class TextInput implements Component {
         this.isPassword = isPassword;
     }
 
+    public TextInput setDefaultInput(String input) {
+        this.input = input;
+        return this;
+    }
+
     public void deleteLastLetter() {
         if (input.length() > 0) {
             input = input.substring(0, input.length() - 1);

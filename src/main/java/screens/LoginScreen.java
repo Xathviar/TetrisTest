@@ -8,12 +8,14 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import static screens.PlayScreen.tetrisLogo;
 
+@Slf4j
 public class LoginScreen implements Screen {
 
     private String errorMessage = "";
@@ -22,6 +24,7 @@ public class LoginScreen implements Screen {
 
     public LoginScreen() {
         helper = new SelectionHelper(
+                new TextInput("Server-IP", false, false).setDefaultInput("127.0.0.1"),
                 new TextInput("E-Mail", false, false),
                 new TextInput("Password", false, true),
                 new TextInput("Username", false, false),
@@ -46,7 +49,6 @@ public class LoginScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
-        System.out.println("Start");
         Screen returnScreen = helper.manageKey(key);
         if (returnScreen != null) {
             return returnScreen;
@@ -57,14 +59,14 @@ public class LoginScreen implements Screen {
     @Override
     public boolean finishInput() {
         try {
-            Client client = new DefaultClient("defaultkey", "127.0.0.1", 7349, false);
+            Client client = new DefaultClient("defaultkey", helper.getTextInput("Server-IP"), 7349, false);
             Session session = client.authenticateEmail(helper.getTextInput("E-Mail"), helper.getTextInput("Password"), helper.getTextInput("Username")).get();
-            System.out.println(session);
-            System.out.println(session.getAuthToken()); // raw JWT token
-            System.out.println(session.getUserId());
-            System.out.println(session.getUsername());
-            System.out.println("Session has expired: " + session.isExpired(new Date()));
-            System.out.println("Session expires at: " + session.getExpireTime());
+            log.debug(session.toString());
+            log.debug(session.getAuthToken()); // raw JWT token
+            log.debug(session.getUserId());
+            log.debug(session.getUsername());
+            log.debug("Session has expired: " + session.isExpired(new Date()));
+            log.debug("Session expires at: " + session.getExpireTime());
             MainClass.aClass.session = session;
             MainClass.aClass.client = client;
 //            MainClass.aClass.screen = new LobbyScreen();
