@@ -9,8 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import static screens.PlayScreen.tetrisLogo;
-
 public class LoseScreen implements Screen {
     private final int level;
     private final long score;
@@ -32,9 +30,7 @@ public class LoseScreen implements Screen {
     public void displayOutput(TerminalHelper terminal) {
         if (initialScreen) {
             terminal.clear();
-            for (int i = 0; i < tetrisLogo.length; i++) {
-                terminal.write(tetrisLogo[i], 5, i + 1);
-            }
+            terminal.writeTetrisLogo();
             initialScreen = false;
             terminal.writeCenter("-- press [enter] to start a new Game --", terminal.getHeightInCharacters() - 1);
             terminal.write(String.format("Score: %s", score), 2, 11);

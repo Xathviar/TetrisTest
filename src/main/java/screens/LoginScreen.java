@@ -13,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
-import static screens.PlayScreen.tetrisLogo;
-
 @Slf4j
 public class LoginScreen implements Screen {
 
@@ -35,11 +33,8 @@ public class LoginScreen implements Screen {
     @Override
     public void displayOutput(TerminalHelper terminal) {
         terminal.clear();
-        for (int i = 0; i < tetrisLogo.length; i++) {
-            terminal.write(tetrisLogo[i], 5, i + 1);
-        }
+        terminal.writeTetrisLogo();
         helper.drawAllComponents(terminal, 5, 10);
-
         if (errorMessage.length() > 0) {
             terminal.write("ERROR: ", 1, 15);
             terminal.write(errorMessage, 4, 16);

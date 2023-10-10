@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import static screens.PlayScreen.tetrisLogo;
-
 @Slf4j
 public class LobbyCreateScreen implements Screen {
     private int selected = 0;
@@ -22,9 +20,7 @@ public class LobbyCreateScreen implements Screen {
     @Override
     public void displayOutput(TerminalHelper terminal) {
         terminal.clear();
-        for (int i = 0; i < tetrisLogo.length; i++) {
-            terminal.write(tetrisLogo[i], 5, i + 1);
-        }
+        terminal.writeTetrisLogo();
         int y = 10;
         terminal.write("LobbyName: " + groupName, 5, y);
     }

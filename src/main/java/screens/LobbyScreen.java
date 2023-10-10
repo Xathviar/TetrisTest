@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static screens.PlayScreen.tetrisLogo;
 
 @Slf4j
 public class LobbyScreen implements Screen, Runnable {
@@ -56,9 +55,7 @@ public class LobbyScreen implements Screen, Runnable {
     @Override
     public void displayOutput(TerminalHelper terminal) {
         terminal.clear();
-        for (int i = 0; i < tetrisLogo.length; i++) {
-            terminal.write(tetrisLogo[i], 5, i + 1);
-        }
+        terminal.writeTetrisLogo();
         terminal.write(new Date().toString(), 5, 20);
         int y = 10;
         synchronized (lobbies) {

@@ -17,8 +17,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static screens.PlayScreen.tetrisLogo;
-
 // TODO implement friend thing maybe?
 public class LobbyWaitingScreen implements Screen, Runnable {
 
@@ -72,9 +70,7 @@ public class LobbyWaitingScreen implements Screen, Runnable {
     @Override
     public void displayOutput(TerminalHelper terminal) {
         terminal.clear();
-        for (int i = 0; i < tetrisLogo.length; i++) {
-            terminal.write(tetrisLogo[i], 5, i + 1);
-        }
+        terminal.writeTetrisLogo();
         int y = 10;
         terminal.writeCenter(String.format("<--- LobbyName: %s --->", lobbyName), y++);
         terminal.write("Current Players waiting in the Lobby", 5, y++);

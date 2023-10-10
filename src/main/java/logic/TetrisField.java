@@ -3,7 +3,7 @@ package logic;
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.TextColor;
 import logic.pieces.Tetromino;
-import screens.PlayScreen;
+import screens.PlayOfflineScreen;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -12,16 +12,22 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static Helper.TerminalHelper.writeBoxAt;
+
 public class TetrisField {
     public static final int SCREEN_HEIGHT = 20;
     public static final int SCREEN_WIDTH = 10;
     public static final char BLOCK = '#';
 
+    private int startX;
+
+    private int startY;
+
     public static final String BLOCKCHAIN = "" + BLOCK + BLOCK + BLOCK + BLOCK;
     private static final int LINE_THRESHOLD = 10;
     private final Point[][] points = new Point[50][10];
     private final RandomGenerator generator;
-    private final PlayScreen screen;
+    private final PlayOfflineScreen screen;
     private Tetromino activePiece;
     private Tetromino holdPiece;
     private Tetromino helperPiece;
@@ -37,7 +43,9 @@ public class TetrisField {
     private java.util.List<Tetromino> nextPieces;
     private GarbagePieceHandler garbagePieceHandler;
 
-    public TetrisField(int level, PlayScreen screen) {
+    public TetrisField(int level, PlayOfflineScreen screen, int startX, int startY) {
+        this.startX = startX;
+        this.startY = startY;
         for (Point[] point : points) {
             Arrays.fill(point, new Point(true, TextColor.ANSI.BLACK));
         }
@@ -243,7 +251,8 @@ public class TetrisField {
     }
 
 
-    public void printTetrisField(TerminalHelper terminal, int startX, int startY) {
+    public void printTetrisField(TerminalHelper terminal) {
+        drawBoard(terminal);
         for (int i = 0; i < SCREEN_HEIGHT; i++) {
             for (int j = 0; j < SCREEN_WIDTH; j++) {
                 if (points[i + 30][j].isFree()) {
@@ -253,15 +262,55 @@ public class TetrisField {
                 }
             }
         }
-        printCurrentPiece(terminal, startX, startY);
+        printCurrentPiece(terminal);
         if (holdPiece != null) {
-            printHold(terminal, startX, startY);
+            printHold(terminal);
         }
-        printQueue(terminal, startX, startY);
-        printScoreAndStuff(terminal, startX, startY);
+        printQueue(terminal);
+        printScoreAndStuff(terminal);
     }
 
-    private void printScoreAndStuff(TerminalHelper terminal, int startX, int startY) {
+    private void drawBoard(TerminalHelper terminal) {
+        int height = startY - 1;
+        int width = startX;
+        char leftDown = '#';
+        char leftUp = '#';
+        char rightUp = '#';
+        char rightDown = '#';
+        char straightHorizontally = '#';
+        char straightVertically = '#';
+        String firstline = leftUp +
+                String.valueOf(straightHorizontally).repeat(10) +
+                rightUp;
+        StringBuilder middleLines = new StringBuilder();
+        middleLines.append(straightVertically);
+        middleLines.append("          ");
+        middleLines.append(straightVertically);
+        String bottomLine = leftDown +
+                String.valueOf(straightHorizontally).repeat(10) +
+                rightDown;
+
+        terminal.write(firstline, width, height++);
+        for (int i = 0; i < 20; i++) {
+            terminal.write(middleLines.toString(), width, height++);
+        }
+        terminal.write(bottomLine, width, height);
+        height = 15;
+        // This is the Box which displays the Hold Piece
+        writeBoxAt(terminal, width - 9, height, 9, 7);
+
+        // This is the Box which displays the scoreboard
+        writeBoxAt(terminal, width - 9, height + 15, 9, 7);
+
+        // These are the boxes drawn which show th enext four pieces
+        writeBoxAt(terminal, width + 10, height, 8, 6);
+        writeBoxAt(terminal, width + 10, height + 5, 8, 6);
+        writeBoxAt(terminal, width + 10, height + 10, 8, 6);
+        writeBoxAt(terminal, width + 10, height + 15, 8, 6);
+        terminal.write(" ", width + 11, height + 21);
+    }
+
+    private void printScoreAndStuff(TerminalHelper terminal) {
         int y = startY + 15;
         terminal.write("LEVEL", startX - 7, y++, TextColor.ANSI.YELLOW);
         terminal.write(String.format("  %03d", level), startX - 8, y++, TextColor.ANSI.WHITE);
@@ -270,7 +319,7 @@ public class TetrisField {
         terminal.write(String.format("%07d", score), startX - 8, y, TextColor.ANSI.WHITE);
     }
 
-    private void printCurrentPiece(TerminalHelper terminal, int startX, int startY) {
+    private void printCurrentPiece(TerminalHelper terminal) {
         Grid activePieceGrid = activePiece.returnPiece();
         Boolean[][] gridPoints = activePieceGrid.getSetPoints();
         Grid helperPieceGrid = helperPiece.returnPiece();
@@ -285,7 +334,7 @@ public class TetrisField {
         }
     }
 
-    private synchronized void printHold(TerminalHelper terminal, int startX, int startY) {
+    private synchronized void printHold(TerminalHelper terminal) {
         synchronized (holdPiece) {
             Grid holdPieceGrid = holdPiece.getGrid()[0];
             Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
@@ -302,7 +351,7 @@ public class TetrisField {
         }
     }
 
-    private synchronized void printQueue(TerminalHelper terminal, int startX, int startY) {
+    private synchronized void printQueue(TerminalHelper terminal) {
         for (int i = 0; i < nextPieces.size(); i++) {
             Grid holdPieceGrid = nextPieces.get(i).getGrid()[0];
             Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
