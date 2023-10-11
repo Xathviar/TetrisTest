@@ -2,32 +2,33 @@ package screens;
 
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
+import logic.OpponentTetrisField;
 import logic.TetrisField;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class PlayOfflineScreen implements Screen {
+public class PlayOnlineScreen implements Screen {
 
     private final TetrisField field;
     private final long startTime;
     public boolean initScreen = true;
     public boolean loseScreen = false;
+    public static boolean win = false;
 
-    public PlayOfflineScreen(TerminalHelper terminal) {
+    public PlayOnlineScreen(TerminalHelper terminal) {
         field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16, false);
         startTime = System.currentTimeMillis();
+        OpponentTetrisField.initOpponentTetrisField((terminal.getWidthInCharacters()) / 2 + 30, 16);
     }
-
 
     @Override
     public void displayOutput(TerminalHelper terminal) {
-//        if (initScreen) {
-            terminal.clear();
-            terminal.writeTetrisLogo();
-            initScreen = false;
-//        }
+        terminal.clear();
+        terminal.writeTetrisLogo();
+        initScreen = false;
         field.printTetrisField(terminal);
+        OpponentTetrisField.printTetrisField(terminal);
     }
 
     // TODO Maybe find a way to make this a more smooth experience, idk...

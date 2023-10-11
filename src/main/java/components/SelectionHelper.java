@@ -1,4 +1,4 @@
-package Components;
+package components;
 
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.TextColor;

@@ -60,7 +60,7 @@ public class MainClass implements Runnable {
     }
 
     private void setupTerminal() {
-        Font font = null;
+        Font font;
         try {
             font = Font.createFont(Font.TRUETYPE_FONT, new File("/home/af/TetrisTest/src/main/resources/MxPlus_Rainbow100_re_40.ttf"));
         } catch (FontFormatException | IOException e) {
@@ -99,7 +99,6 @@ public class MainClass implements Runnable {
                     return;
                 if (key.getKeyType() == KeyType.EOF)
                     System.exit(0);
-//                System.out.println(key);
                 screen = screen.respondToUserInput(key, terminalHelper);
             }
         } catch (IOException e) {

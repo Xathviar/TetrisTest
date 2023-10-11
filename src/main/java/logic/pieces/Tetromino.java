@@ -17,7 +17,9 @@ public abstract class Tetromino<T> {
     private int currentRotation;
     private boolean readyToFix;
 
-    Tetromino(String name, TextColor color, TetrisField field) {
+    private final int pieceId;
+
+    Tetromino(String name, TextColor color, TetrisField field, int pieceId) {
         this.name = name;
         this.color = color;
         this.grid = new Grid[4];
@@ -28,6 +30,7 @@ public abstract class Tetromino<T> {
         wallKicks = new Point[4][5];
         initGrid();
         initWallKicks();
+        this.pieceId = pieceId;
     }
 
     public static Point[][] wallKicksAllButI() {
@@ -237,5 +240,9 @@ public abstract class Tetromino<T> {
 
     public void setX(int x) {
         this.x = x;
+    }
+
+    public int getPieceId() {
+        return pieceId;
     }
 }

@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class OPiece extends Tetromino<OPiece> {
 
     public OPiece(TetrisField field) {
-        super("O-Piece", TextColor.ANSI.YELLOW, field);
+        super("O-Piece", TextColor.ANSI.YELLOW, field, 3);
     }
 
     @Override

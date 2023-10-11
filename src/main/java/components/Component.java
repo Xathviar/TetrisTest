@@ -1,4 +1,4 @@
-package Components;
+package components;
 
 import com.googlecode.lanterna.input.KeyStroke;
 import screens.Screen;

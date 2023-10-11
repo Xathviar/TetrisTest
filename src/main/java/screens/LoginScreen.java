@@ -1,8 +1,8 @@
 package screens;
 
-import Components.Button;
-import Components.SelectionHelper;
-import Components.TextInput;
+import components.Button;
+import components.SelectionHelper;
+import components.TextInput;
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.heroiclabs.nakama.Client;

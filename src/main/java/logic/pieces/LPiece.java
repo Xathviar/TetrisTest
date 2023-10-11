@@ -7,7 +7,7 @@ import logic.TetrisField;
 public class LPiece extends Tetromino<LPiece> {
 
     public LPiece(TetrisField field) {
-        super("L-Piece", TextColor.ANSI.RED_BRIGHT, field);
+        super("L-Piece", TextColor.ANSI.RED_BRIGHT, field, 2);
     }
 
     @Override

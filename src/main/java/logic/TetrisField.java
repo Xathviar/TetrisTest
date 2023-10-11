@@ -2,8 +2,11 @@ package logic;
 
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.TextColor;
+import communication.MatchSendHelper;
 import logic.pieces.Tetromino;
+import lombok.extern.slf4j.Slf4j;
 import screens.PlayOfflineScreen;
+import screens.PlayOnlineScreen;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -14,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import static Helper.TerminalHelper.writeBoxAt;
 
+@Slf4j
 public class TetrisField {
     public static final int SCREEN_HEIGHT = 20;
     public static final int SCREEN_WIDTH = 10;
@@ -27,7 +31,9 @@ public class TetrisField {
     private static final int LINE_THRESHOLD = 10;
     private final Point[][] points = new Point[50][10];
     private final RandomGenerator generator;
-    private final PlayOfflineScreen screen;
+    private PlayOfflineScreen offlineScreen;
+    private PlayOnlineScreen onlineScreen;
+
     private Tetromino activePiece;
     private Tetromino holdPiece;
     private Tetromino helperPiece;
@@ -41,9 +47,11 @@ public class TetrisField {
     private boolean isTspin;
     private ScheduledExecutorService exec;
     private java.util.List<Tetromino> nextPieces;
-    private GarbagePieceHandler garbagePieceHandler;
+    public static GarbagePieceHandler garbagePieceHandler;
 
-    public TetrisField(int level, PlayOfflineScreen screen, int startX, int startY) {
+    private final boolean isOnline;
+
+    public TetrisField(int level, PlayOfflineScreen screen, int startX, int startY, boolean isOnline) {
         this.startX = startX;
         this.startY = startY;
         for (Point[] point : points) {
@@ -61,13 +69,38 @@ public class TetrisField {
             currentMillis -= this.currentMillis / 10;
         }
         exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(this::gameTick, 0, currentMillis, TimeUnit.MILLISECONDS);
+        if (!isOnline)
+            exec.scheduleAtFixedRate(this::gameTick, 0, currentMillis, TimeUnit.MILLISECONDS);
         numberofLinesToClear = LINE_THRESHOLD;
-        this.screen = screen;
+        this.offlineScreen = screen;
         garbagePieceHandler = new GarbagePieceHandler();
-        garbagePieceHandler.addGarbage(1);
-        garbagePieceHandler.addGarbage(1);
-        garbagePieceHandler.addGarbage(1);
+        this.isOnline = isOnline;
+    }
+
+    public TetrisField(int level, PlayOnlineScreen screen, int startX, int startY, boolean isOnline) {
+        this.startX = startX;
+        this.startY = startY;
+        for (Point[] point : points) {
+            Arrays.fill(point, new Point(true, TextColor.ANSI.BLACK));
+        }
+        generator = new RandomGenerator(this);
+        activePiece = generator.getNext();
+        calculateNewHelperPiecePosition();
+        nextPieces = generator.peek(4);
+        holdPiece = null;
+        allowSwap = true;
+        score = 0;
+        this.level = level;
+        for (int i = 0; i < level - 1; i++) {
+            currentMillis -= this.currentMillis / 10;
+        }
+        exec = Executors.newSingleThreadScheduledExecutor();
+        if (!isOnline)
+            exec.scheduleAtFixedRate(this::gameTick, 0, currentMillis, TimeUnit.MILLISECONDS);
+        numberofLinesToClear = LINE_THRESHOLD;
+        this.onlineScreen = screen;
+        garbagePieceHandler = new GarbagePieceHandler();
+        this.isOnline = isOnline;
     }
 
 
@@ -118,9 +151,7 @@ public class TetrisField {
             int garbagePosition = (int) (Math.random() * 9);
             int line = garbage.getLines();
             for (int y = line; y < 50; y++) {
-                for (int x = 0; x < 10; x++) {
-                    points[y - line][x] = points[y][x];
-                }
+                System.arraycopy(points[y], 0, points[y - line], 0, 10);
             }
             for (int y = 0; y < line; y++) {
                 for (int x = 0; x < 10; x++) {
@@ -153,18 +184,21 @@ public class TetrisField {
         if (numberOfClearedLines != 0) {
             combo++;
             int rawSendCapacity = sentLinesTotal(numberOfClearedLines);
-            System.out.println("Lines Sent: " + rawSendCapacity);
+            log.info("Lines Sent: " + rawSendCapacity);
             score += 10 * Math.pow(rawSendCapacity, 2) * Math.pow(level, 2);
 
             numberofLinesToClear -= numberOfClearedLines;
             if (numberofLinesToClear < 1) {
                 level++;
                 currentMillis -= currentMillis / 10;
-                rescheduleScheduler();
+                if (!isOnline)
+                    rescheduleScheduler();
                 numberofLinesToClear = LINE_THRESHOLD;
             }
             int garbageToSend = garbagePieceHandler.removeGarbageLines(sentLinesTotal(numberOfClearedLines));
-            //TODO Schick Gameserver wv. Garbage gesendet wird...
+            if (garbageToSend > 0 && isOnline) {
+                MatchSendHelper.SENDGARBAGE.sendUpdate(garbageToSend);
+            }
         } else {
             combo = -1;
             receiveGarbage();
@@ -425,14 +459,20 @@ public class TetrisField {
 
     public void newActivePiece() {
         addGrid(getActivePiece().returnPiece());
+        if (isOnline)
+            MatchSendHelper.UPDATEBOARD.sendUpdate(activePiece);
         activePiece = generator.getNext();
         if (!activePiece.getGrid()[0].isValidPosition(3, 30)) {
             if (activePiece.getGrid()[0].isValidPosition(3, 29)) {
                 activePiece.setY(29);
             } else {
                 exec.shutdownNow();
-                screen.shutdownThread();
-                screen.loseScreen = true;
+                if (isOnline) {
+                    MatchSendHelper.LOOSE.sendUpdate();
+                    onlineScreen.loseScreen = true;
+                } else {
+                    offlineScreen.loseScreen = true;
+                }
             }
         }
         nextPieces = generator.peek(4);
@@ -441,7 +481,7 @@ public class TetrisField {
             holdPiece.returnNormalColor();
         }
         allowSwap = true;
-        System.out.printf("x: %d | y: %d\n", activePiece.getX(), activePiece.getY());
+        log.info(String.format("x: %d | y: %d\n", activePiece.getX(), activePiece.getY()));
     }
 
     private void calculateNewHelperPiecePosition() {

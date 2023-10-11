@@ -1,4 +1,4 @@
-package Components;
+package components;
 
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -40,31 +40,20 @@ public class TextInput implements Component {
 
     @Override
     public Screen handleKeyDown(KeyStroke key) {
-        try {
-            key.getKeyType();
-            key.getCharacter();
-        } catch (NullPointerException e) {
-            System.out.println((int) key.getCharacter());
-        }
         if (!isSelected) {
-            try {
-                System.out.println(key);
-                if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
-                    isSelected = true;
-                }
-            } catch (NullPointerException ignored) {
-
+            System.out.println(key);
+            if (key.getKeyType() == KeyType.Enter || (key.getKeyType() == KeyType.Character && key.getCharacter() == ' ')) {
+                isSelected = true;
             }
         } else {
-            try {
-                key.getCharacter();
-                if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
-                    isSelected = false;
+            if (key.getKeyType() == KeyType.Enter || (key.getKeyType() == KeyType.Character && key.getCharacter() == ' ')) {
+                isSelected = false;
+            }
+            if (key.getKeyType() == KeyType.Backspace) {
+                deleteLastLetter();
+            }
+            if (key.getKeyType() == KeyType.Character) {
 
-                }
-                if (key.getKeyType() == KeyType.Backspace) {
-                    deleteLastLetter();
-                }
                 char c = key.getCharacter();
                 if (isPassword) {
                     if (password.indexOf(c) > -1) {
@@ -74,13 +63,6 @@ public class TextInput implements Component {
                     if (letters.indexOf(c) > -1) {
                         input += c;
                     }
-                }
-            } catch (NullPointerException e) {
-                if (key.getKeyType() == KeyType.Enter) {
-                    isSelected = false;
-                }
-                if (key.getKeyType() == KeyType.Backspace) {
-                    deleteLastLetter();
                 }
             }
         }

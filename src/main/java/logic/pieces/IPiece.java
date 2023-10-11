@@ -8,8 +8,9 @@ import java.awt.*;
 
 public class IPiece extends Tetromino<IPiece> {
 
+
     public IPiece(TetrisField field) {
-        super("I-Piece", TextColor.ANSI.CYAN, field);
+        super("I-Piece", TextColor.ANSI.CYAN, field, 0);
     }
 
     @Override
