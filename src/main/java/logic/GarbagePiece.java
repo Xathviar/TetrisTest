@@ -10,7 +10,7 @@ public class GarbagePiece {
     }
 
     public boolean checkIsReady() {
-        return System.currentTimeMillis() - timestamp > 300000;
+        return System.currentTimeMillis() - timestamp > 5000;
     }
 
     public int getLines() {

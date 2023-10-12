@@ -25,7 +25,7 @@ public class TerminalHelper {
         try {
             terminal.setCursorPosition(x, y);
             terminal.putString(msg);
-            flush();
+//            flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -69,7 +69,7 @@ public class TerminalHelper {
         try {
             terminal.setCursorPosition(x, y);
             terminal.putCharacter(msg);
-            flush();
+//            flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

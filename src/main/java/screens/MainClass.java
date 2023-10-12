@@ -86,6 +86,7 @@ public class MainClass implements Runnable {
     public void repaint() {
         SwingUtilities.invokeLater(() -> {
             screen.displayOutput(terminalHelper);
+            terminalHelper.flush();
         });
     }
 

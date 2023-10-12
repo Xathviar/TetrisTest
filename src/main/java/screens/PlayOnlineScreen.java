@@ -5,30 +5,28 @@ import com.googlecode.lanterna.input.KeyStroke;
 import logic.OpponentTetrisField;
 import logic.TetrisField;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class PlayOnlineScreen implements Screen {
 
     private final TetrisField field;
     private final long startTime;
-    public boolean initScreen = true;
     public boolean loseScreen = false;
     public static boolean win = false;
 
+    public static OpponentTetrisField opponentTetrisField;
+
     public PlayOnlineScreen(TerminalHelper terminal) {
-        field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16, false);
+        field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16, true);
         startTime = System.currentTimeMillis();
-        OpponentTetrisField.initOpponentTetrisField((terminal.getWidthInCharacters()) / 2 + 30, 16);
+        opponentTetrisField = new OpponentTetrisField((terminal.getWidthInCharacters()) / 2 + 30, 16);
     }
 
     @Override
     public void displayOutput(TerminalHelper terminal) {
         terminal.clear();
         terminal.writeTetrisLogo();
-        initScreen = false;
         field.printTetrisField(terminal);
-        OpponentTetrisField.printTetrisField(terminal);
+        opponentTetrisField.printTetrisField(terminal);
     }
 
     // TODO Maybe find a way to make this a more smooth experience, idk...

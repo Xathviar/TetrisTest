@@ -12,44 +12,44 @@ import static Helper.TerminalHelper.writeBoxAt;
 @Getter
 public class OpponentTetrisField {
 
-    private static final int SCREEN_HEIGHT = 20;
+    private final int SCREEN_HEIGHT = 20;
 
-    private static final int SCREEN_WIDTH = 10;
+    private final int SCREEN_WIDTH = 10;
 
-    private static final char BLOCK = '#';
+    private final char BLOCK = '#';
 
-    private static final String BLOCKCHAIN = "" + BLOCK + BLOCK + BLOCK + BLOCK;
+    private final String BLOCKCHAIN = "" + BLOCK + BLOCK + BLOCK + BLOCK;
 
 
-    private static final Point[][] points = new Point[50][10];
+    private final Point[][] points = new Point[50][10];
 
     @Getter
-    private static int startX;
+    private int startX;
     @Getter
-    private static int startY;
+    private int startY;
 
-    public static void setStartX(int startX) {
-        OpponentTetrisField.startX = startX;
+    public void setStartX(int startX) {
+        this.startX = startX;
     }
 
-    public static void setStartY(int startY) {
-        OpponentTetrisField.startY = startY;
+    public void setStartY(int startY) {
+        this.startY = startY;
     }
 
-    public static void initOpponentTetrisField(int startX, int startY) {
+    public OpponentTetrisField(int startX, int startY) {
         for (Point[] point : points) {
             Arrays.fill(point, new Point(true, TextColor.ANSI.BLACK));
         }
-        OpponentTetrisField.startX = startX;
-        OpponentTetrisField.startY = startY;
-    }
 
-    public static void addPiece(Tetromino tetromino) {
+        this.startX = startX;
+        this.startY = startY;
+    }
+    public void addPiece(Tetromino tetromino) {
         addGrid(tetromino.returnPiece());
         checkForClearedLines();
     }
 
-    private static void addGrid(Grid grid) {
+    private void addGrid(Grid grid) {
         Boolean[][] gridPoints = grid.getSetPoints();
         for (int y = 0; y < gridPoints.length; y++) {
             for (int x = 0; x < gridPoints[y].length; x++) {
@@ -62,7 +62,7 @@ public class OpponentTetrisField {
     }
 
 
-    private static void checkForClearedLines() {
+    private void checkForClearedLines() {
         a:
         for (int y = 0; y < points.length; y++) {
             for (int x = 0; x < points[y].length; x++) {
@@ -77,19 +77,19 @@ public class OpponentTetrisField {
         }
     }
 
-    private static void clearLine(int y) {
+    private void clearLine(int y) {
         for (Point point : points[y]) {
             point.resetPoint();
         }
     }
 
-    private static void moveRestDown(int y) {
+    private void moveRestDown(int y) {
         for (int i = y; i > 0; i--) {
             System.arraycopy(points[i - 1], 0, points[i], 0, points[y].length);
         }
     }
 
-    public static void printTetrisField(TerminalHelper terminal) {
+    public void printTetrisField(TerminalHelper terminal) {
         drawBoard(terminal);
         for (int i = 0; i < SCREEN_HEIGHT; i++) {
             for (int j = 0; j < SCREEN_WIDTH; j++) {
@@ -101,9 +101,9 @@ public class OpponentTetrisField {
             }
         }
     }
-    private static void drawBoard(TerminalHelper terminal) {
+    private void drawBoard(TerminalHelper terminal) {
         int height = startY - 1;
-        int width = startX;
+        int width = startX - 1;
         char leftDown = '#';
         char leftUp = '#';
         char rightUp = '#';
@@ -127,7 +127,5 @@ public class OpponentTetrisField {
         }
         terminal.write(bottomLine, width, height);
     }
-
-
 
 }

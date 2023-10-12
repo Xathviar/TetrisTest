@@ -53,7 +53,7 @@ public enum MatchSendHelper {
             UpdateBoardState boardState = new Gson().fromJson(json, new TypeToken<UpdateBoardState>() {
             }.getType());
             Tetromino t = boardState.getTetrominoFromBoardState();
-            OpponentTetrisField.addPiece(t);
+            PlayOnlineScreen.opponentTetrisField.addPiece(t);
         }
     },
 
