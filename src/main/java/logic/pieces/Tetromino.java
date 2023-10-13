@@ -163,7 +163,6 @@ public abstract class Tetromino<T> {
 
     public boolean gameTick() {
         if (!grid[currentRotation].moveDown()) {
-            System.out.println("HELLO");
             if (readyToFix) {
                 readyToFix = false;
                 return true;

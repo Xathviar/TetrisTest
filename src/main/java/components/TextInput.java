@@ -41,7 +41,6 @@ public class TextInput implements Component {
     @Override
     public Screen handleKeyDown(KeyStroke key) {
         if (!isSelected) {
-            System.out.println(key);
             if (key.getKeyType() == KeyType.Enter || (key.getKeyType() == KeyType.Character && key.getCharacter() == ' ')) {
                 isSelected = true;
             }

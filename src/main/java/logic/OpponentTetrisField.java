@@ -45,7 +45,6 @@ public class OpponentTetrisField {
         this.startY = startY;
     }
     public void addPiece(Tetromino tetromino) {
-        System.out.println(tetromino);
         addGrid(tetromino.returnPiece());
         checkForClearedLines();
     }

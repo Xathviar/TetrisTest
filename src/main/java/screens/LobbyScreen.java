@@ -88,7 +88,6 @@ public class LobbyScreen implements Screen, Runnable {
         if (key.getKeyType() == KeyType.ArrowUp || (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 'w')) {
             this.selectAbove();
         } else if (key.getKeyType() == KeyType.ArrowDown || (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 's')) {
-            System.out.println("Select Below!");
             this.selectBelow();
         }
         try {
@@ -131,7 +130,6 @@ public class LobbyScreen implements Screen, Runnable {
     @Override
     public void run() {
         synchronized (runnable) {
-            System.out.println(runnable);
             if (runnable.get()) {
                 fetchLobbies();
             } else {
