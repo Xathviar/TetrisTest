@@ -14,10 +14,6 @@
         <writeinstallationinformation>no</writeinstallationinformation>
         <pack200/>
     </info>
-    <guiprefs height="600" resizable="no" width="900">
-        <modifier key="useFlags" value="yes"/>
-        <modifier key="langDisplayType" value="default"/>
-    </guiprefs>
     <locale>
         <langpack iso3="eng"/>
     </locale>

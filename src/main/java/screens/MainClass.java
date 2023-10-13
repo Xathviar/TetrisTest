@@ -69,7 +69,7 @@ public class MainClass implements Runnable {
         font = font.deriveFont(20f);
         DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
         defaultTerminalFactory.setTerminalEmulatorTitle("Terminal Tetris");
-        defaultTerminalFactory.setInitialTerminalSize(new TerminalSize(80, 25));
+//        defaultTerminalFactory.setInitialTerminalSize(new TerminalSize());
         defaultTerminalFactory.setPreferTerminalEmulator(true);
         SwingTerminalFontConfiguration config = SwingTerminalFontConfiguration.newInstance(font);
 

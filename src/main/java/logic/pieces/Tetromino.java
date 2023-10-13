@@ -3,9 +3,11 @@ package logic.pieces;
 import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
+import lombok.Getter;
 
 import java.awt.*;
 
+@Getter
 public abstract class Tetromino<T> {
     final TextColor color;
     final Grid[] grid;
@@ -194,10 +196,6 @@ public abstract class Tetromino<T> {
         updateGrids();
     }
 
-    public Grid[] getGrid() {
-        return grid;
-    }
-
     public Tetromino clonePiece() {
         Tetromino ret = (Tetromino) this.newPiece(field);
         ret.x = this.x;
@@ -215,19 +213,11 @@ public abstract class Tetromino<T> {
         grid[0].setColor(color);
     }
 
-    public int getCurrentRotation() {
-        return currentRotation;
-    }
-
     public void setCurrentRotation(int currentRotation) {
         this.currentRotation = currentRotation;
     }
 
     public abstract T newPiece(TetrisField field);
-
-    public int getY() {
-        return y;
-    }
 
     public void setY(int y) {
         this.y = y;
@@ -236,19 +226,11 @@ public abstract class Tetromino<T> {
         }
     }
 
-    public int getX() {
-        return x;
-    }
-
     public void setX(int x) {
         this.x = x;
         for (Grid grid1 : grid) {
             grid1.setX(x);
         }
-    }
-
-    public int getPieceId() {
-        return pieceId;
     }
 
 }
