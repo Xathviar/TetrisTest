@@ -4,12 +4,15 @@ import DTO.ReadyDTO;
 import DTO.UpdateBoardStateDTO;
 import logic.TetrisField;
 import logic.pieces.Tetromino;
+import lombok.extern.slf4j.Slf4j;
 import nakama.com.google.gson.Gson;
 import nakama.com.google.gson.reflect.TypeToken;
 import screens.LobbyWaitingScreen;
+import screens.LoseScreen;
 import screens.MainClass;
 import screens.PlayOnlineScreen;
 
+@Slf4j
 public enum MatchSendHelper {
 
     READY(1) {
@@ -30,6 +33,7 @@ public enum MatchSendHelper {
         }
     },
 
+    // TODO Implement Starting the Game Logic
     START(2) {
         @Override
         public void sendUpdate(Object... o) {
@@ -38,7 +42,7 @@ public enum MatchSendHelper {
 
         @Override
         public void receiveUpdate(String json) {
-
+            LobbyWaitingScreen.startGame();
         }
     },
     SENDGARBAGE(3) {
@@ -112,7 +116,14 @@ public enum MatchSendHelper {
     public abstract void receiveUpdate(String json);
 
     public static void receiveUpdate(int opcode, String json) {
+        log.debug(String.format("Received Opcode %d with Message: \n%s", opcode, json));
         switch (opcode) {
+            case 1:
+                READY.receiveUpdate(json);
+                break;
+            case 2:
+                START.receiveUpdate(json);
+                break;
             case 3:
                 SENDGARBAGE.receiveUpdate(json);
                 break;
@@ -121,6 +132,9 @@ public enum MatchSendHelper {
                 break;
             case 5:
                 UPDATEBOARD.receiveUpdate(json);
+                break;
+            case 6:
+                GAMETICK.receiveUpdate(json);
                 break;
         }
     }

@@ -10,6 +10,10 @@ import communication.MatchSendHelper;
 import logic.OpponentTetrisField;
 import logic.TetrisField;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 public class PlayOnlineScreen implements Screen {
 
@@ -20,14 +24,25 @@ public class PlayOnlineScreen implements Screen {
 
     public static OpponentTetrisField opponentTetrisField;
 
-    public PlayOnlineScreen(TerminalHelper terminal) {
+    private ScheduledExecutorService exec;
+
+    public PlayOnlineScreen(TerminalHelper terminal, boolean isHost) {
         field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16, true);
         startTime = System.currentTimeMillis();
         opponentTetrisField = new OpponentTetrisField((terminal.getWidthInCharacters()) / 2 + 30, 16);
+        exec = Executors.newSingleThreadScheduledExecutor();
+        if (isHost) {
+            exec.scheduleAtFixedRate(PlayOnlineScreen::tickMaster, 0, 1, TimeUnit.SECONDS);
+        }
     }
 
     public static void gameTick() {
         field.gameTick();
+    }
+
+    public static void tickMaster() {
+        gameTick();
+        MatchSendHelper.GAMETICK.sendUpdate();
     }
 
     @Override

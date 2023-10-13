@@ -22,11 +22,9 @@ public class PlayOfflineScreen implements Screen {
 
     @Override
     public void displayOutput(TerminalHelper terminal) {
-//        if (initScreen) {
-            terminal.clear();
-            terminal.writeTetrisLogo();
-            initScreen = false;
-//        }
+        terminal.clear();
+        terminal.writeTetrisLogo();
+        initScreen = false;
         field.printTetrisField(terminal);
     }
 

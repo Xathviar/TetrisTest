@@ -7,16 +7,15 @@ import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
-import com.heroiclabs.nakama.Client;
-import com.heroiclabs.nakama.Match;
-import com.heroiclabs.nakama.Session;
-import com.heroiclabs.nakama.SocketClient;
+import com.heroiclabs.nakama.*;
+import communication.MatchSendHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -106,6 +105,32 @@ public class MainClass implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void createSocket() {
+        try {
+            this.socket = this.client.createSocket();
+            SocketListener listener = new AbstractSocketListener() {
+                @Override
+                public void onDisconnect(final Throwable t) {
+                    log.debug("Socket disconnected.");
+                }
+                @Override
+                public void onMatchData(MatchData matchData) {
+                    if (matchData.getData() != null) {
+                        MatchSendHelper.receiveUpdate((int) matchData.getOpCode(), new String(matchData.getData()));
+                    } else {
+                        MatchSendHelper.receiveUpdate((int) matchData.getOpCode(), null);
+                    }
+
+                }
+            };
+            this.socket.connect(MainClass.aClass.session, listener).get();
+            log.debug("Socket connected.");
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

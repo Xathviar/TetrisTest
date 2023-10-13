@@ -28,7 +28,6 @@ public class LobbyScreen implements Screen, Runnable {
     private int selected = -1;
 
     public LobbyScreen() {
-        log.info("Hello I am the Constructor!");
         runnable = new AtomicBoolean();
         runnable.set(true);
         exec = Executors.newSingleThreadScheduledExecutor();
@@ -47,9 +46,8 @@ public class LobbyScreen implements Screen, Runnable {
                 for (Group group : list.getGroupsList()) {
                     lobbies.put(group.getId(), group.getName());
                 }
-                log.info(lobbies.toString());
             } catch (Exception e) {
-                log.info(e.toString());
+                log.error(e.toString());
             }
         }
     }
@@ -76,33 +74,13 @@ public class LobbyScreen implements Screen, Runnable {
     @Override
     public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
         if (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 'c') {
-            try {
-                MainClass.aClass.socket = MainClass.aClass.client.createSocket();
-                SocketListener listener = new AbstractSocketListener() {
-                    @Override
-                    public void onDisconnect(final Throwable t) {
-                        log.info("Socket disconnected.");
-                    }
-                    @Override
-                    public void onMatchData(MatchData matchData) {
-                        MatchSendHelper.receiveUpdate((int) matchData.getOpCode(), new String(matchData.getData()));
-
-                    }
-                };
-                MainClass.aClass.socket.connect(MainClass.aClass.session, listener).get();
-                log.info("Socket connected.");
-                log.info("Before setting runnable to false");
+            MainClass.aClass.createSocket();
                 synchronized (runnable) {
                     runnable.set(false);
                 }
-                log.info("After setting runnable to false");
-                log.info("Runnable: " + runnable);
                 LobbyCreateScreen screen = new LobbyCreateScreen();
                 screen.displayOutput(terminal);
                 return screen;
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
         }
         if (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 'r') {
             this.fetchLobbies();
@@ -118,6 +96,7 @@ public class LobbyScreen implements Screen, Runnable {
                 if (selected == -1) {
                     return this;
                 }
+                MainClass.aClass.createSocket();
                 int c = 0;
                 for (String group_id : lobbies.keySet()) {
                     if (c == selected) {
@@ -131,7 +110,7 @@ public class LobbyScreen implements Screen, Runnable {
                             waitingScreen.displayOutput(terminal);
                             return waitingScreen;
                         } catch (InterruptedException | ExecutionException e) {
-                            log.info(e.toString());
+                            log.error(e.toString());
                             // TODO Handle if Group is full. Maybe just display Groups that aren't full
                         }
                     }
@@ -151,13 +130,11 @@ public class LobbyScreen implements Screen, Runnable {
 
     @Override
     public void run() {
-        log.info("Running run...");
         synchronized (runnable) {
             System.out.println(runnable);
             if (runnable.get()) {
                 fetchLobbies();
             } else {
-                log.info("Stopping the Thread as the User doesn't need it anymore");
                 exec.shutdownNow();
                 throw new RuntimeException();
             }

@@ -185,7 +185,7 @@ public abstract class Tetromino<T> {
 
     @Override
     public String toString() {
-        return name;
+        return String.format("%s: - %d|%d", name, x, y);
     }
 
     public void resetPosition() {
@@ -232,6 +232,9 @@ public abstract class Tetromino<T> {
 
     public void setY(int y) {
         this.y = y;
+        for (Grid grid1 : grid) {
+            grid1.setY(y);
+        }
     }
 
     public int getX() {
@@ -240,9 +243,13 @@ public abstract class Tetromino<T> {
 
     public void setX(int x) {
         this.x = x;
+        for (Grid grid1 : grid) {
+            grid1.setX(x);
+        }
     }
 
     public int getPieceId() {
         return pieceId;
     }
+
 }

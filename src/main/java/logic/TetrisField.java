@@ -184,7 +184,7 @@ public class TetrisField {
         if (numberOfClearedLines != 0) {
             combo++;
             int rawSendCapacity = sentLinesTotal(numberOfClearedLines);
-            log.info("Lines Sent: " + rawSendCapacity);
+            log.debug("Lines Sent: " + rawSendCapacity);
             score += 10 * Math.pow(rawSendCapacity, 2) * Math.pow(level, 2);
 
             numberofLinesToClear -= numberOfClearedLines;
@@ -437,8 +437,10 @@ public class TetrisField {
 
     public void newActivePiece() {
         addGrid(getActivePiece().returnPiece());
-        if (isOnline)
+        if (isOnline) {
+            activePiece.setY(activePiece.returnPiece().getY());
             MatchSendHelper.UPDATEBOARD.sendUpdate(activePiece);
+        }
         activePiece = generator.getNext();
         if (!activePiece.getGrid()[0].isValidPosition(3, 30)) {
             if (activePiece.getGrid()[0].isValidPosition(3, 29)) {
@@ -459,7 +461,6 @@ public class TetrisField {
             holdPiece.returnNormalColor();
         }
         allowSwap = true;
-        log.info(String.format("x: %d | y: %d\n", activePiece.getX(), activePiece.getY()));
     }
 
     private void calculateNewHelperPiecePosition() {

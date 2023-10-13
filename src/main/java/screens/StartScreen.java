@@ -96,7 +96,7 @@ public class StartScreen implements Screen {
             return screen;
         }
         if (key.getKeyType() == KeyType.Character && Character.toLowerCase(key.getCharacter()) == 'e') {
-            PlayOnlineScreen screen = new PlayOnlineScreen(terminal);
+            PlayOnlineScreen screen = new PlayOnlineScreen(terminal, false);
             screen.displayOutput(terminal);
             return screen;
         }

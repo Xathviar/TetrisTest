@@ -1,7 +1,9 @@
 package logic;
 
 import com.googlecode.lanterna.TextColor;
+import lombok.Getter;
 
+@Getter
 public class Grid {
     private final Boolean[][] setPoints;
     private final TetrisField field;
@@ -69,6 +71,14 @@ public class Grid {
 
     public void setColor(TextColor color) {
         this.color = color;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
 }

@@ -1,7 +1,9 @@
 package DTO;
 
 import logic.pieces.*;
+import lombok.Getter;
 
+@Getter
 public class UpdateBoardStateDTO {
     public final int opcode = 4;
 
@@ -37,22 +39,6 @@ public class UpdateBoardStateDTO {
         this.droppedX = droppedX;
         this.droppedY = droppedY;
         this.rotation = rotation;
-    }
-
-    public int getDroppedPiece() {
-        return droppedPiece;
-    }
-
-    public int getDroppedX() {
-        return droppedX;
-    }
-
-    public int getDroppedY() {
-        return droppedY;
-    }
-
-    public int getRotation() {
-        return rotation;
     }
 
     public Tetromino getTetrominoFromBoardState() {
