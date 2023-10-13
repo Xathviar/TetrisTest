@@ -1,5 +1,6 @@
 package screens;
 
+import com.sun.tools.javac.Main;
 import components.Button;
 import components.SelectionHelper;
 import components.TextInput;
@@ -46,6 +47,8 @@ public class LoginScreen implements Screen {
     public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
         Screen returnScreen = helper.manageKey(key);
         if (returnScreen != null) {
+            LobbyScreen screen = (LobbyScreen) returnScreen;
+            screen.startThread();
             return returnScreen;
         }
         return this;
@@ -64,6 +67,7 @@ public class LoginScreen implements Screen {
             log.debug("Session expires at: " + session.getExpireTime());
             MainClass.aClass.session = session;
             MainClass.aClass.client = client;
+            MainClass.aClass.user_id = session.getUserId();
 //            MainClass.aClass.screen = new LobbyScreen();
             return true;
         } catch (InterruptedException | ExecutionException e) {

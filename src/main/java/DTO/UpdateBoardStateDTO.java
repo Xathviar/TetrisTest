@@ -1,8 +1,8 @@
-package communication;
+package DTO;
 
 import logic.pieces.*;
 
-public class UpdateBoardState {
+public class UpdateBoardStateDTO {
     public final int opcode = 4;
 
     /**
@@ -32,7 +32,7 @@ public class UpdateBoardState {
      */
     private final int rotation;
 
-    public UpdateBoardState(int droppedPiece, int droppedX, int droppedY, int rotation) {
+    public UpdateBoardStateDTO(int droppedPiece, int droppedX, int droppedY, int rotation) {
         this.droppedPiece = droppedPiece;
         this.droppedX = droppedX;
         this.droppedY = droppedY;

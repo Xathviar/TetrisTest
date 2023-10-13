@@ -1,20 +1,52 @@
 package communication;
 
-import logic.OpponentTetrisField;
+import DTO.ReadyDTO;
+import DTO.UpdateBoardStateDTO;
 import logic.TetrisField;
 import logic.pieces.Tetromino;
 import nakama.com.google.gson.Gson;
 import nakama.com.google.gson.reflect.TypeToken;
+import screens.LobbyWaitingScreen;
 import screens.MainClass;
 import screens.PlayOnlineScreen;
 
 public enum MatchSendHelper {
-    SENDGARBAGE {
+
+    READY(1) {
+        @Override
+        public void sendUpdate(Object... o) {
+            String playerid = (String) o[0];
+            boolean readyState = (boolean) o[1];
+            ReadyDTO payload = new ReadyDTO(playerid, readyState);
+            String json = new Gson().toJson(payload, payload.getClass());
+            MainClass.aClass.socket.sendMatchData(MainClass.aClass.match.getMatchId(), READY.opcode, json.getBytes());
+        }
+
+        @Override
+        public void receiveUpdate(String json) {
+            ReadyDTO payload = new Gson().fromJson(json, new TypeToken<ReadyDTO>() {
+            }.getType());
+            LobbyWaitingScreen.updatePlayerState(payload.getPlayer_id(), payload.isReadyState());
+        }
+    },
+
+    START(2) {
+        @Override
+        public void sendUpdate(Object... o) {
+            MainClass.aClass.socket.sendMatchData(MainClass.aClass.match.getMatchId(), START.opcode, new byte[0]);
+        }
+
+        @Override
+        public void receiveUpdate(String json) {
+
+        }
+    },
+    SENDGARBAGE(3) {
         @Override
         public void sendUpdate(Object... o) {
             Integer lines = (int) o[0];
             String json = new Gson().toJson(lines, lines.getClass());
-            MainClass.aClass.socket.sendMatchData(MainClass.aClass.match.getMatchId(), 3, json.getBytes());
+            MainClass.aClass.socket.sendMatchData(MainClass.aClass.match.getMatchId(), SENDGARBAGE.opcode, json.getBytes());
         }
 
         @Override
@@ -24,10 +56,10 @@ public enum MatchSendHelper {
             TetrisField.garbagePieceHandler.addGarbage(lines);
         }
     },
-    LOOSE {
+    LOOSE(4) {
         @Override
         public void sendUpdate(Object... o) {
-            MainClass.aClass.socket.sendMatchData(MainClass.aClass.match.getMatchId(), 4, new byte[0]);
+            MainClass.aClass.socket.sendMatchData(MainClass.aClass.match.getMatchId(), LOOSE.opcode, new byte[0]);
         }
 
         @Override
@@ -35,7 +67,7 @@ public enum MatchSendHelper {
             PlayOnlineScreen.win = true;
         }
     },
-    UPDATEBOARD {
+    UPDATEBOARD(5) {
         @Override
         public void sendUpdate(Object... o) {
             Tetromino tetromino = (Tetromino) o[0];
@@ -43,38 +75,43 @@ public enum MatchSendHelper {
             int rotation = tetromino.getCurrentRotation();
             int x = tetromino.getX();
             int y = tetromino.getY();
-            UpdateBoardState boardState = new UpdateBoardState(type, x, y, rotation);
+            UpdateBoardStateDTO boardState = new UpdateBoardStateDTO(type, x, y, rotation);
             String json = new Gson().toJson(boardState, boardState.getClass());
-            MainClass.aClass.socket.sendMatchData(MainClass.aClass.match.getMatchId(), 5, json.getBytes());
+            MainClass.aClass.socket.sendMatchData(MainClass.aClass.match.getMatchId(), UPDATEBOARD.opcode, json.getBytes());
         }
 
         @Override
         public void receiveUpdate(String json) {
-            UpdateBoardState boardState = new Gson().fromJson(json, new TypeToken<UpdateBoardState>() {
+            UpdateBoardStateDTO boardState = new Gson().fromJson(json, new TypeToken<UpdateBoardStateDTO>() {
             }.getType());
             Tetromino t = boardState.getTetrominoFromBoardState();
             PlayOnlineScreen.opponentTetrisField.addPiece(t);
         }
     },
 
-    GAMETICK {
+    GAMETICK(6) {
         @Override
         public void sendUpdate(Object... o) {
-
+            MainClass.aClass.socket.sendMatchData(MainClass.aClass.match.getMatchId(), GAMETICK.opcode, new byte[0]);
         }
 
         @Override
         public void receiveUpdate(String json) {
-
+            PlayOnlineScreen.gameTick();
         }
     };
 
+    private int opcode;
+
+    MatchSendHelper(int opcode) {
+        this.opcode = opcode;
+    }
 
     public abstract void sendUpdate(Object... o);
 
     public abstract void receiveUpdate(String json);
 
-    public void receiveUpdate(int opcode, String json) {
+    public static void receiveUpdate(int opcode, String json) {
         switch (opcode) {
             case 3:
                 SENDGARBAGE.receiveUpdate(json);

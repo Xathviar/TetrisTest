@@ -5,9 +5,11 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.heroiclabs.nakama.AbstractSocketListener;
+import com.heroiclabs.nakama.MatchData;
 import com.heroiclabs.nakama.SocketListener;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
+import communication.MatchSendHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
@@ -81,11 +83,14 @@ public class LobbyScreen implements Screen, Runnable {
                     public void onDisconnect(final Throwable t) {
                         log.info("Socket disconnected.");
                     }
+                    @Override
+                    public void onMatchData(MatchData matchData) {
+                        MatchSendHelper.receiveUpdate((int) matchData.getOpCode(), new String(matchData.getData()));
+
+                    }
                 };
                 MainClass.aClass.socket.connect(MainClass.aClass.session, listener).get();
                 log.info("Socket connected.");
-//                result.cancel(true);
-//                exec.shutdownNow();
                 log.info("Before setting runnable to false");
                 synchronized (runnable) {
                     runnable.set(false);
@@ -118,11 +123,10 @@ public class LobbyScreen implements Screen, Runnable {
                     if (c == selected) {
                         try {
                             MainClass.aClass.client.joinGroup(MainClass.aClass.session, group_id).get();
-//                            result.cancel(true);
-//                            exec.shutdownNow();
                             synchronized (runnable) {
                                 runnable.set(false);
                             }
+                            //TODO figure out why this does not go to the next screen
                             LobbyWaitingScreen waitingScreen = new LobbyWaitingScreen(group_id, lobbies.get(group_id), false);
                             waitingScreen.displayOutput(terminal);
                             return waitingScreen;

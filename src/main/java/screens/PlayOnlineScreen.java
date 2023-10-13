@@ -2,13 +2,18 @@ package screens;
 
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
+import com.heroiclabs.nakama.*;
+import com.heroiclabs.nakama.Error;
+import com.heroiclabs.nakama.api.ChannelMessage;
+import com.heroiclabs.nakama.api.NotificationList;
+import communication.MatchSendHelper;
 import logic.OpponentTetrisField;
 import logic.TetrisField;
 
 
 public class PlayOnlineScreen implements Screen {
 
-    private final TetrisField field;
+    private static TetrisField field;
     private final long startTime;
     public boolean loseScreen = false;
     public static boolean win = false;
@@ -19,6 +24,10 @@ public class PlayOnlineScreen implements Screen {
         field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16, true);
         startTime = System.currentTimeMillis();
         opponentTetrisField = new OpponentTetrisField((terminal.getWidthInCharacters()) / 2 + 30, 16);
+    }
+
+    public static void gameTick() {
+        field.gameTick();
     }
 
     @Override
@@ -72,6 +81,5 @@ public class PlayOnlineScreen implements Screen {
     public boolean finishInput() {
         return false;
     }
-
 
 }

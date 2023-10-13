@@ -30,6 +30,7 @@ public class MainClass implements Runnable {
     public Client client;
     public SocketClient socket;
     public String group_id = "";
+    public String user_id = "";
     public Match match;
     public boolean createdGroup;
     private Terminal terminal;
@@ -106,6 +107,5 @@ public class MainClass implements Runnable {
             throw new RuntimeException(e);
         }
     }
-
 
 }

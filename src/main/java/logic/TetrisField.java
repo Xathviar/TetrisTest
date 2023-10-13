@@ -306,42 +306,20 @@ public class TetrisField {
 
     private void drawBoard(TerminalHelper terminal) {
         int height = startY - 1;
-        int width = startX;
-        char leftDown = '#';
-        char leftUp = '#';
-        char rightUp = '#';
-        char rightDown = '#';
-        char straightHorizontally = '#';
-        char straightVertically = '#';
-        String firstline = leftUp +
-                String.valueOf(straightHorizontally).repeat(10) +
-                rightUp;
-        StringBuilder middleLines = new StringBuilder();
-        middleLines.append(straightVertically);
-        middleLines.append("          ");
-        middleLines.append(straightVertically);
-        String bottomLine = leftDown +
-                String.valueOf(straightHorizontally).repeat(10) +
-                rightDown;
-
-        terminal.write(firstline, width, height++);
-        for (int i = 0; i < 20; i++) {
-            terminal.write(middleLines.toString(), width, height++);
-        }
-        terminal.write(bottomLine, width, height);
+        writeBoxAt(terminal, startX - 1, height, 12, 22);
         height = 15;
         // This is the Box which displays the Hold Piece
-        writeBoxAt(terminal, width - 9, height, 9, 7);
+        writeBoxAt(terminal, startX - 9, height, 9, 7);
 
         // This is the Box which displays the scoreboard
-        writeBoxAt(terminal, width - 9, height + 15, 9, 7);
+        writeBoxAt(terminal, startX - 9, height + 15, 9, 7);
 
         // These are the boxes drawn which show th enext four pieces
-        writeBoxAt(terminal, width + 10, height, 8, 6);
-        writeBoxAt(terminal, width + 10, height + 5, 8, 6);
-        writeBoxAt(terminal, width + 10, height + 10, 8, 6);
-        writeBoxAt(terminal, width + 10, height + 15, 8, 6);
-        terminal.write(" ", width + 11, height + 21);
+        writeBoxAt(terminal, startX + 10, height, 8, 6);
+        writeBoxAt(terminal, startX + 10, height + 5, 8, 6);
+        writeBoxAt(terminal, startX + 10, height + 10, 8, 6);
+        writeBoxAt(terminal, startX + 10, height + 15, 8, 6);
+        terminal.write(" ", startX + 11, height + 21);
     }
 
     private void printScoreAndStuff(TerminalHelper terminal) {
