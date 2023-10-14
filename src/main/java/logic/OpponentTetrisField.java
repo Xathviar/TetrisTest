@@ -128,4 +128,20 @@ public class OpponentTetrisField {
         terminal.write(bottomLine, width, height);
     }
 
+    public void addGarbage(int lines, int garbageGap) {
+        for (int y = lines; y < 50; y++) {
+            System.arraycopy(points[y], 0, points[y - lines], 0, 10);
+        }
+        for (int y = 0; y < lines; y++) {
+            for (int x = 0; x < 10; x++) {
+                if (x == garbageGap) {
+                    points[y + 50 - lines][x] = new Point(true, TextColor.ANSI.BLACK);
+                } else {
+                    points[y + 50 - lines][x] = new Point(false, TextColor.ANSI.BLACK_BRIGHT);
+                }
+            }
+        }
+
+    }
+
 }

@@ -1,5 +1,6 @@
 package communication;
 
+import DTO.GarbageDTO;
 import DTO.ReadyDTO;
 import DTO.UpdateBoardStateDTO;
 import logic.TetrisField;
@@ -8,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import nakama.com.google.gson.Gson;
 import nakama.com.google.gson.reflect.TypeToken;
 import screens.LobbyWaitingScreen;
-import screens.LoseScreen;
 import screens.MainClass;
 import screens.PlayOnlineScreen;
 
@@ -103,6 +103,26 @@ public enum MatchSendHelper {
         public void receiveUpdate(String json) {
             PlayOnlineScreen.gameTick();
         }
+    },
+    UPDATEGARBAGE(7) {
+        @Override
+        public void sendUpdate(Object... o) {
+            int lines = (int) o[0];
+            int garbageGap = (int) o[1];
+            GarbageDTO packet = new GarbageDTO(lines, garbageGap);
+            String json = new Gson().toJson(packet, packet.getClass());
+            MainClass.aClass.socket.sendMatchData(MainClass.aClass.match.getMatchId(), UPDATEGARBAGE.opcode, json.getBytes());
+
+        }
+
+        @Override
+        public void receiveUpdate(String json) {
+            GarbageDTO received = new Gson().fromJson(json, new TypeToken<GarbageDTO>() {
+            }.getType());
+            int lines = received.getGarbageHeight();
+            int garbageGap = received.getGarbageGap();
+            PlayOnlineScreen.opponentTetrisField.addGarbage(lines, garbageGap);
+        }
     };
 
     private int opcode;
@@ -136,6 +156,8 @@ public enum MatchSendHelper {
             case 6:
                 GAMETICK.receiveUpdate(json);
                 break;
+            case 7:
+                UPDATEGARBAGE.receiveUpdate(json);
         }
     }
 

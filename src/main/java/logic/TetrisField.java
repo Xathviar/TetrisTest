@@ -162,6 +162,7 @@ public class TetrisField {
                     }
                 }
             }
+            MatchSendHelper.UPDATEGARBAGE.sendUpdate(line, garbagePosition);
         }
     }
 

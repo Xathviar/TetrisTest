@@ -60,7 +60,7 @@ public class LoginScreen implements Screen {
             Client client = new DefaultClient("defaultkey", helper.getTextInput("Server-IP"), 7349, false);
             Session session = client.authenticateEmail(helper.getTextInput("E-Mail"), helper.getTextInput("Password"), helper.getTextInput("Username")).get();
             log.debug(session.toString());
-            log.debug(session.getAuthToken()); // raw JWT token
+            log.debug(session.getAuthToken());
             log.debug(session.getUserId());
             log.debug(session.getUsername());
             log.debug("Session has expired: " + session.isExpired(new Date()));
@@ -68,7 +68,6 @@ public class LoginScreen implements Screen {
             MainClass.aClass.session = session;
             MainClass.aClass.client = client;
             MainClass.aClass.user_id = session.getUserId();
-//            MainClass.aClass.screen = new LobbyScreen();
             return true;
         } catch (InterruptedException | ExecutionException e) {
             errorMessage = e.getMessage();
