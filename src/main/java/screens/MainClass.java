@@ -62,7 +62,7 @@ public class MainClass implements Runnable {
     private void setupTerminal() {
         Font font;
         try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File("/home/af/TetrisTest/src/main/resources/MxPlus_Rainbow100_re_40.ttf"));
+            font = Font.createFont(Font.TRUETYPE_FONT, Thread.currentThread().getContextClassLoader().getResourceAsStream("MxPlus_Rainbow100_re_40.ttf"));
         } catch (FontFormatException | IOException e) {
             throw new RuntimeException(e);
         }

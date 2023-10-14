@@ -73,7 +73,7 @@ public class PlayOnlineScreen implements Screen {
             exitGroupMatch();
             if (isHost)
                 exec.shutdownNow();
-            MainClass.aClass.screen = new LoseScreen(field.getLevel(), field.getScore(), System.currentTimeMillis() - startTime);
+            MainClass.aClass.screen = new OnlineLoseScreen();
             MainClass.aClass.repaint();
             return;
         }

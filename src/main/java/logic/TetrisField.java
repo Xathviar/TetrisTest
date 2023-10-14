@@ -437,11 +437,11 @@ public class TetrisField {
 
 
     public void newActivePiece() {
-        addGrid(getActivePiece().returnPiece());
         if (isOnline) {
             activePiece.setY(activePiece.returnPiece().getY());
             MatchSendHelper.UPDATEBOARD.sendUpdate(activePiece);
         }
+        addGrid(getActivePiece().returnPiece());
         activePiece = generator.getNext();
         if (!activePiece.getGrid()[0].isValidPosition(3, 30)) {
             if (activePiece.getGrid()[0].isValidPosition(3, 29)) {
