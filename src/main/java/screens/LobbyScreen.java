@@ -104,7 +104,6 @@ public class LobbyScreen implements Screen, Runnable {
                             synchronized (runnable) {
                                 runnable.set(false);
                             }
-                            //TODO figure out why this does not go to the next screen
                             LobbyWaitingScreen waitingScreen = new LobbyWaitingScreen(group_id, lobbies.get(group_id), false);
                             waitingScreen.displayOutput(terminal);
                             return waitingScreen;

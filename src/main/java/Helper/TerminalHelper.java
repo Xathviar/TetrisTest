@@ -2,6 +2,7 @@ package Helper;
 
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.terminal.Terminal;
+import nakama.com.google.common.base.Strings;
 
 import java.io.IOException;
 
@@ -148,8 +149,8 @@ public class TerminalHelper {
 
     public static void writeBoxAt(TerminalHelper terminal, int x, int y, int width, int height) {
         char box = '#';
-        String horizontalLines = String.valueOf(box).repeat(width);
-        String boxMiddleLines = box + " ".repeat(width - 2) + box;
+        String horizontalLines = Strings.repeat(String.valueOf(box), width);
+        String boxMiddleLines = box + Strings.repeat(" ", width - 2) + box;
 
         terminal.write(horizontalLines, x, y++);
         for (int i = 0; i < height - 2; i++) {

@@ -83,7 +83,6 @@ public class PlayOnlineScreen implements Screen {
         opponentTetrisField.printTetrisField(terminal);
     }
 
-    // TODO Maybe find a way to make this a more smooth experience, idk...
     @Override
     public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
         switch (key.getKeyType()) {

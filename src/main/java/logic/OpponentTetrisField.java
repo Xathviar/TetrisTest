@@ -104,28 +104,7 @@ public class OpponentTetrisField {
     private void drawBoard(TerminalHelper terminal) {
         int height = startY - 1;
         int width = startX - 1;
-        char leftDown = '#';
-        char leftUp = '#';
-        char rightUp = '#';
-        char rightDown = '#';
-        char straightHorizontally = '#';
-        char straightVertically = '#';
-        String firstline = leftUp +
-                String.valueOf(straightHorizontally).repeat(10) +
-                rightUp;
-        StringBuilder middleLines = new StringBuilder();
-        middleLines.append(straightVertically);
-        middleLines.append("          ");
-        middleLines.append(straightVertically);
-        String bottomLine = leftDown +
-                String.valueOf(straightHorizontally).repeat(10) +
-                rightDown;
-
-        terminal.write(firstline, width, height++);
-        for (int i = 0; i < 20; i++) {
-            terminal.write(middleLines.toString(), width, height++);
-        }
-        terminal.write(bottomLine, width, height);
+        writeBoxAt(terminal, width, height, 12, 22);
     }
 
     public void addGarbage(int lines, int garbageGap) {

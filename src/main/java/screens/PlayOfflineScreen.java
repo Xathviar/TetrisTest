@@ -28,7 +28,6 @@ public class PlayOfflineScreen implements Screen {
         field.printTetrisField(terminal);
     }
 
-    // TODO Maybe find a way to make this a more smooth experience, idk...
     @Override
     public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
         if (loseScreen) {

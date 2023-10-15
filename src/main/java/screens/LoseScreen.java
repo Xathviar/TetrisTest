@@ -37,7 +37,7 @@ public class LoseScreen implements Screen {
             terminal.write(String.format("Level: %s", level), 2, 12);
             terminal.write(String.format("Played Time: %s", time), 2, 13);
         }
-        terminal.write(" ".repeat(20), 17, 10);
+        terminal.write("                              ", 17, 10);
         terminal.write(String.format("Input your Name:%s", name), 2, 10);
     }
 

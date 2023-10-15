@@ -1,6 +1,5 @@
 package screens;
 
-import com.sun.tools.javac.Main;
 import components.Button;
 import components.SelectionHelper;
 import components.TextInput;

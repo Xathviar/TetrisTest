@@ -5,6 +5,7 @@ import com.googlecode.lanterna.TextColor;
 import communication.MatchSendHelper;
 import logic.pieces.Tetromino;
 import lombok.extern.slf4j.Slf4j;
+import nakama.com.google.common.base.Strings;
 import screens.PlayOfflineScreen;
 import screens.PlayOnlineScreen;
 
@@ -327,7 +328,7 @@ public class TetrisField {
         int y = startY + 15;
         terminal.write("LEVEL", startX - 7, y++, TextColor.ANSI.YELLOW);
         terminal.write(String.format("  %03d", level), startX - 8, y++, TextColor.ANSI.WHITE);
-        terminal.write(Character.toString('-').repeat(7), startX - 8, y++, TextColor.ANSI.BLACK_BRIGHT);
+        terminal.write(Strings.repeat(Character.toString('-'), 7), startX - 8, y++, TextColor.ANSI.BLACK_BRIGHT);
         terminal.write(" SCORE ", startX - 8, y++, TextColor.ANSI.YELLOW);
         terminal.write(String.format("%07d", score), startX - 8, y, TextColor.ANSI.WHITE);
     }
