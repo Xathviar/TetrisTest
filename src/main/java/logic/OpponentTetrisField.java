@@ -28,14 +28,6 @@ public class OpponentTetrisField {
     @Getter
     private int startY;
 
-    public void setStartX(int startX) {
-        this.startX = startX;
-    }
-
-    public void setStartY(int startY) {
-        this.startY = startY;
-    }
-
     public OpponentTetrisField(int startX, int startY) {
         for (Point[] point : points) {
             Arrays.fill(point, new Point(true, TextColor.ANSI.BLACK));

@@ -43,23 +43,25 @@ public class LoseScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
-        char c = key.getCharacter();
-        String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_ ";
         if (key.getKeyType() == KeyType.Enter && name.length() > 0) {
             saveHighScore();
             return new StartScreen();
-        }
-        if (c == 127) {
-            if (name.length() > 0) {
-                name = name.substring(0, name.length() - 1);
-            }
-            return this;
-        } else if (letters.indexOf(c) > -1 && name.length() <= 16) {
-            name += c;
-            return this;
         } else if (key.getKeyType() == KeyType.Backspace) {
             if (name.length() > 0) {
                 name = name.substring(0, name.length() - 1);
+            }
+        }
+        if (key.getKeyType() == KeyType.Character) {
+            char c = key.getCharacter();
+            String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_ ";
+            if (c == 127) {
+                if (name.length() > 0) {
+                    name = name.substring(0, name.length() - 1);
+                }
+                return this;
+            } else if (letters.indexOf(c) > -1 && name.length() <= 16) {
+                name += c;
+                return this;
             }
         }
         return this;

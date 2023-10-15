@@ -1,13 +1,13 @@
 package screens;
 
-import components.Button;
-import components.SelectionHelper;
-import components.TextInput;
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
+import components.Button;
+import components.SelectionHelper;
+import components.TextInput;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;

@@ -1,8 +1,5 @@
 package DTO;
 
-import com.googlecode.lanterna.TextColor;
-import logic.OpponentTetrisField;
-import logic.Point;
 import lombok.Getter;
 
 @Getter

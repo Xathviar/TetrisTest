@@ -4,9 +4,6 @@ import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
 import logic.TetrisField;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
 public class PlayOfflineScreen implements Screen {
 
     private final TetrisField field;

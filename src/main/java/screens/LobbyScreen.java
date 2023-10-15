@@ -4,12 +4,8 @@ import Helper.TerminalHelper;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
-import com.heroiclabs.nakama.AbstractSocketListener;
-import com.heroiclabs.nakama.MatchData;
-import com.heroiclabs.nakama.SocketListener;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
-import communication.MatchSendHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
