@@ -17,6 +17,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static Helper.TerminalHelper.writeBoxAt;
+import static Helper.TerminalHelper.writeGarbageLine;
 
 @Slf4j
 public class TetrisField {
@@ -309,6 +310,7 @@ public class TetrisField {
     private void drawBoard(TerminalHelper terminal) {
         int height = startY - 1;
         writeBoxAt(terminal, startX - 1, height, 12, 22);
+
         height = 15;
         // This is the Box which displays the Hold Piece
         writeBoxAt(terminal, startX - 9, height, 9, 7);
@@ -316,12 +318,16 @@ public class TetrisField {
         // This is the Box which displays the scoreboard
         writeBoxAt(terminal, startX - 9, height + 15, 9, 7);
 
-        // These are the boxes drawn which show th enext four pieces
+        // These are the boxes drawn which show the next four pieces
         writeBoxAt(terminal, startX + 10, height, 8, 6);
         writeBoxAt(terminal, startX + 10, height + 5, 8, 6);
         writeBoxAt(terminal, startX + 10, height + 10, 8, 6);
         writeBoxAt(terminal, startX + 10, height + 15, 8, 6);
         terminal.write(" ", startX + 11, height + 21);
+        // This displays incoming Garbage
+        if (isOnline) {
+            writeGarbageLine(terminal, startX - 1, height, 22, garbagePieceHandler);
+        }
     }
 
     private void printScoreAndStuff(TerminalHelper terminal) {

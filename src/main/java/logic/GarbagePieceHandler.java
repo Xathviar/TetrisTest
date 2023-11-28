@@ -44,4 +44,13 @@ public class GarbagePieceHandler {
         tetrisGarbageCollector.removeAll(toRemove);
         return lines;
     }
+
+    public int getWaitingGarbage() {
+        return tetrisGarbageCollector.size();
+    }
+
+    public boolean shouldBeGarbageIndicator(int n) {
+        System.out.println(String.format("%d: %d", tetrisGarbageCollector.size(), n));
+        return tetrisGarbageCollector.size() >= n;
+    }
 }
