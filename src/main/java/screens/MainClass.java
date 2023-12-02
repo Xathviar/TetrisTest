@@ -18,6 +18,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+
+//TODO fix issue that skill issue player has to restart the game
+//TODO fix issue that losing Player doesn't display the game correctly
+//TODO go back the menu...
+//TODO Add Config so that player don't have to input everything all the time
 @Slf4j
 public class MainClass implements Runnable {
     public static MainClass aClass;

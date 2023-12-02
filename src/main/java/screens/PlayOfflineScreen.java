@@ -52,6 +52,7 @@ public class PlayOfflineScreen implements Screen {
                         field.hardDrop();
                         break;
                     case 'z':
+                    case 'y':
                         field.rotateCClockwise();
                         break;
                     case 'x':
