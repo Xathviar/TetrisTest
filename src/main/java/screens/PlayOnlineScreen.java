@@ -2,6 +2,7 @@ package screens;
 
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import communication.MatchSendHelper;
 import logic.OpponentTetrisField;
 import logic.TetrisField;

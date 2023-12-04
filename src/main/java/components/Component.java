@@ -11,4 +11,6 @@ public interface Component {
 
     public boolean isSelected();
 
+    public String getLabel();
+
 }

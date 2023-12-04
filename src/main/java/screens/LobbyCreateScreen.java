@@ -68,6 +68,11 @@ public class LobbyCreateScreen implements Screen {
         }
         return this;
     }
+    @Override
+    public boolean isInsideInputField() {
+        return true;
+    }
+
 
     @Override
     public boolean finishInput() {

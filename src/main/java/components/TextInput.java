@@ -72,11 +72,7 @@ public class TextInput implements Component {
     public boolean isSelected() {
         return isSelected;
     }
-
-    public String getLabel() {
-        return label;
-    }
-
+    
     public String getInput() {
         return input;
     }
@@ -84,4 +80,11 @@ public class TextInput implements Component {
     public void setInput(String input) {
         this.input = input;
     }
+
+    @Override
+    public String getLabel() {
+        return label;
+    }
+
+
 }

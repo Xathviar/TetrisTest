@@ -1,5 +1,6 @@
 package screens;
 
+import Helper.OsUtil;
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.heroiclabs.nakama.Client;
@@ -8,15 +9,19 @@ import com.heroiclabs.nakama.Session;
 import components.Button;
 import components.SelectionHelper;
 import components.TextInput;
+import config.LdataParser;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
 public class LoginScreen implements Screen {
 
     private String errorMessage = "";
+
+    private boolean isInsideInput = false;
 
     private SelectionHelper helper;
 
@@ -28,6 +33,17 @@ public class LoginScreen implements Screen {
                 new TextInput("Username", false, false),
                 new Button("Login", this, new LobbyScreen())
         );
+        readFromConfig();
+    }
+
+    public void readFromConfig() {
+        Map<String, Object> config = LdataParser.loadFrom(OsUtil.getConfigFile("tty-tetris.conf"));
+        String server_ip = (String) config.get("server-ip");
+        String e_mail = (String) config.get("e-mail");
+        String username = (String) config.get("username");
+        ((TextInput) helper.getComponentByLabel("Server-IP")).setInput(server_ip);
+        ((TextInput) helper.getComponentByLabel("E-Mail")).setInput(e_mail);
+        ((TextInput) helper.getComponentByLabel("Username")).setInput(username);
     }
 
     @Override
@@ -73,5 +89,10 @@ public class LoginScreen implements Screen {
             errorMessage = errorMessage.substring(errorMessage.indexOf(" ") + 1);
             return false;
         }
+    }
+
+    @Override
+    public boolean isInsideInputField() {
+        return helper.isTextFieldSelected();
     }
 }

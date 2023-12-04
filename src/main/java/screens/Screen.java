@@ -10,4 +10,9 @@ public interface Screen {
     Screen respondToUserInput(KeyStroke key, TerminalHelper terminal);
 
     boolean finishInput();
+
+    default boolean isInsideInputField() {
+        return false;
+    }
+
 }
