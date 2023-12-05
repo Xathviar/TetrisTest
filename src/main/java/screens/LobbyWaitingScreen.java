@@ -181,4 +181,5 @@ public class LobbyWaitingScreen implements Screen, Runnable {
             opponent.setReady(state);
         }
     }
+
 }

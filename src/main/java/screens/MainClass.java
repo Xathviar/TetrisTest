@@ -1,5 +1,7 @@
 package screens;
 
+import Helper.ClasspathResourceLoader;
+import Helper.OsUtil;
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -8,11 +10,15 @@ import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
 import com.heroiclabs.nakama.*;
 import communication.MatchSendHelper;
+import config.KeyConfig;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.plexus.util.IOUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -52,6 +58,8 @@ public class MainClass implements Runnable {
     }
 
     public static void main(String[] args) {
+        createConfig();
+        KeyConfig.initializeKeymap();
         aClass = new MainClass();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (MainClass.aClass.createdGroup) {
@@ -60,6 +68,15 @@ public class MainClass implements Runnable {
                 MainClass.aClass.client.leaveGroup(MainClass.aClass.session, aClass.group_id);
             }
         }, "Delete all groups"));
+    }
+
+    @SneakyThrows
+    private static void createConfig() {
+        File configFile = OsUtil.getConfigFile("tty-tetris.conf");
+        if (configFile.exists())
+            return;
+        InputStream defaultConfig = ClasspathResourceLoader.of("tty-tetris.conf").getInputStream();
+        IOUtil.copy(defaultConfig, Files.newOutputStream(configFile.toPath()));
     }
 
     private void setupTerminal() {
@@ -103,7 +120,11 @@ public class MainClass implements Runnable {
                     return;
                 if (key.getKeyType() == KeyType.EOF)
                     System.exit(0);
-                screen = screen.respondToUserInput(key, terminalHelper);
+                if (screen.isInsideInputField()) {
+                    screen = screen.respondToUserInput(key, terminalHelper);
+                } else {
+                    screen = KeyConfig.execute(key, screen, terminalHelper);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -2,6 +2,7 @@ package Helper;
 
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.terminal.Terminal;
+import logic.GarbagePieceHandler;
 import nakama.com.google.common.base.Strings;
 
 import java.io.IOException;
@@ -157,6 +158,13 @@ public class TerminalHelper {
             terminal.write(boxMiddleLines, x, y++);
         }
         terminal.write(horizontalLines, x, y);
+    }
+
+    public static void writeGarbageLine(TerminalHelper terminal, int x, int y, int height, GarbagePieceHandler garbagePieceHandler) {
+        for (int i = height - 2; i >= 0; i--) {
+            terminal.write('#', x, y++, garbagePieceHandler.shouldBeGarbageIndicator(i) ? TextColor.ANSI.MAGENTA_BRIGHT : TextColor.ANSI.DEFAULT);
+        }
+
     }
 
 

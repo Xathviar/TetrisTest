@@ -70,12 +70,26 @@ public class SelectionHelper {
         return null;
     }
 
+
     public String getTextInput(String name) {
         for (Component component : components) {
             if (component instanceof TextInput) {
                 if (((TextInput) component).getLabel().equals(name)) {
                     return ((TextInput) component).getInput();
                 }
+            }
+        }
+        return null;
+    }
+
+    public boolean isTextFieldSelected() {
+        return components[selected].isSelected();
+    }
+
+    public Component getComponentByLabel(String label) {
+        for (Component component : components) {
+            if (label.equals(component.getLabel())) {
+                return component;
             }
         }
         return null;

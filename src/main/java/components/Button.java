@@ -35,4 +35,9 @@ public class Button implements Component {
     public boolean isSelected() {
         return false;
     }
+
+    @Override
+    public String getLabel() {
+        return label;
+    }
 }
