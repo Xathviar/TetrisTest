@@ -140,6 +140,8 @@ public class LobbyWaitingScreen implements Screen, Runnable {
             else
                 terminal.writeCenter("-- Wait for the Host to start the game --", terminal.getHeightInCharacters());
 
+        } else {
+            terminal.writeCenter("-- Press [r] to get ready --", terminal.getHeightInCharacters());
         }
     }
 

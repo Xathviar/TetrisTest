@@ -50,7 +50,6 @@ public class GarbagePieceHandler {
     }
 
     public boolean shouldBeGarbageIndicator(int n) {
-        System.out.println(String.format("%d: %d", tetrisGarbageCollector.size(), n));
         return tetrisGarbageCollector.size() >= n;
     }
 }

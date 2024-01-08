@@ -1,5 +1,6 @@
 package screens;
 
+import Helper.ConfigHelper;
 import Helper.OsUtil;
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
@@ -7,12 +8,17 @@ import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
 import components.Button;
+import components.Checkbox;
 import components.SelectionHelper;
 import components.TextInput;
 import config.LdataParser;
+import config.LdataWriter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.FileWriter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -31,16 +37,27 @@ public class LoginScreen implements Screen {
                 new TextInput("E-Mail", false, false),
                 new TextInput("Password", false, true),
                 new TextInput("Username", false, false),
+                new Checkbox("Save Configuration", this),
                 new Button("Login", this, new LobbyScreen())
         );
         readFromConfig();
     }
 
+    public void writeConfig() {
+        if (((Checkbox) helper.getComponentByLabel("Save Configuration")).isState()) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("server-ip", ((TextInput) helper.getComponentByLabel("Server-IP")).getInput());
+            data.put("e-mail", ((TextInput) helper.getComponentByLabel("E-Mail")).getInput());
+            data.put("username", ((TextInput) helper.getComponentByLabel("Username")).getInput());
+            ConfigHelper.tty_config.writeToConfig(data);
+        }
+    }
+
     public void readFromConfig() {
-        Map<String, Object> config = LdataParser.loadFrom(OsUtil.getConfigFile("tty-tetris.conf"));
-        String server_ip = (String) config.get("server-ip");
-        String e_mail = (String) config.get("e-mail");
-        String username = (String) config.get("username");
+//        Map<String, Object> config = LdataParser.loadFrom(OsUtil.getConfigFile("tty-tetris.conf"));
+        String server_ip = (String) ConfigHelper.tty_config.getObject("server-ip");
+        String e_mail = (String) ConfigHelper.tty_config.getObject("e-mail");
+        String username = (String) ConfigHelper.tty_config.getObject("username");
         ((TextInput) helper.getComponentByLabel("Server-IP")).setInput(server_ip);
         ((TextInput) helper.getComponentByLabel("E-Mail")).setInput(e_mail);
         ((TextInput) helper.getComponentByLabel("Username")).setInput(username);
@@ -72,6 +89,7 @@ public class LoginScreen implements Screen {
     @Override
     public boolean finishInput() {
         try {
+            writeConfig();
             Client client = new DefaultClient("defaultkey", helper.getTextInput("Server-IP"), 7349, false);
             Session session = client.authenticateEmail(helper.getTextInput("E-Mail"), helper.getTextInput("Password"), helper.getTextInput("Username")).get();
             log.debug(session.toString());

@@ -3,7 +3,6 @@ package config;
 import Helper.OsUtil;
 import Helper.TerminalHelper;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import screens.PlayOfflineScreen;
 import screens.PlayOnlineScreen;
 import screens.Screen;
@@ -12,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.googlecode.lanterna.input.KeyType.Character;
 import static com.googlecode.lanterna.input.KeyType.*;
 
 public enum KeyConfig {
@@ -81,7 +81,26 @@ public enum KeyConfig {
         public Screen execute(Screen screen, TerminalHelper terminal) {
             return screen.respondToUserInput(new KeyStroke(Enter), terminal);
         }
-    };
+    },
+    REFRESH() {
+        @Override
+        public Screen execute(Screen screen, TerminalHelper terminal) {
+            return screen.respondToUserInput(new KeyStroke('r', false, false), terminal);
+        }
+    },
+    CREATELOBBY() {
+        @Override
+        public Screen execute(Screen screen, TerminalHelper terminal) {
+            return screen.respondToUserInput(new KeyStroke('c', false, false), terminal);
+        }
+    },
+    PLAYOFFLINE() {
+        @Override
+        public Screen execute(Screen screen, TerminalHelper terminal) {
+            return screen.respondToUserInput(new KeyStroke('o', false, false), terminal);
+        }
+    }
+    ;
 
 
     private static Map<String, String> playMap = new HashMap<>();
@@ -108,30 +127,32 @@ public enum KeyConfig {
         System.out.println(playMap);
         System.out.println();
         System.out.println(menuMap);
-
     }
 
 
     public static Screen execute(KeyStroke key, Screen screen, TerminalHelper terminal) {
-        if (!(screen instanceof PlayOnlineScreen || screen instanceof PlayOfflineScreen)) {
-            if (keyStrokeToString(key) == null) {
+        if ((screen instanceof PlayOnlineScreen || screen instanceof PlayOfflineScreen)) {
+            if (playMap.get(keyStrokeToString(key)) == null) {
+                System.out.println("stuck here 1: " + keyStrokeToString(key));
                 return screen;
             }
-            return KeyConfig.valueOf(menuMap.get(keyStrokeToString(key)).toUpperCase()).execute(screen, terminal);
-        } else {
-            if (keyStrokeToString(key) == null) {
-                return screen;
-            }
+            System.out.println("Does it get here 1");
             return KeyConfig.valueOf(playMap.get(keyStrokeToString(key)).toUpperCase()).execute(screen, terminal);
+        } else {
+            if (menuMap.get(keyStrokeToString(key)) == null) {
+                System.out.println("stuck here 2: " + keyStrokeToString(key).getClass());
+                return screen;
+            }
+            System.out.println("Does it get here 2");
+            return KeyConfig.valueOf(menuMap.get(keyStrokeToString(key)).toUpperCase()).execute(screen, terminal);
         }
     }
 
     private static String keyStrokeToString(KeyStroke key) {
         if (key.getKeyType() == Character) {
-            System.out.println(key.getCharacter().toString());
             return key.getCharacter().toString();
         } else {
-            System.out.println(key.getKeyType().toString());
+            System.out.println("SEND FUCKING HEPL PLS: " + key.getKeyType().toString());
             return key.getKeyType().toString();
         }
     }
