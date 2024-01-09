@@ -1,12 +1,12 @@
 package screens;
 
 import Helper.TerminalHelper;
-import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.input.KeyStroke;
+
 import communication.MatchSendHelper;
 import logic.OpponentTetrisField;
 import logic.TetrisField;
 
+import java.awt.event.KeyEvent;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -85,41 +85,48 @@ public class PlayOnlineScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
-        switch (key.getKeyType()) {
-            case ArrowLeft:
-                field.moveLeft();
-                break;
-            case ArrowRight:
-                field.moveRight();
-                break;
-            case ArrowDown:
-                field.softDrop();
-                break;
-            case ArrowUp:
-                field.rotateClockwise();
-                break;
-            case Character:
-                switch (Character.toLowerCase(key.getCharacter())) {
-                    case ' ':
-                        field.hardDrop();
-                        break;
-                    case 'z':
-                    case 'y':
-                        field.rotateCClockwise();
-                        break;
-                    case 'x':
-                        field.swapHold();
-                        break;
-                }
-        }
-
+    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
+//        switch (key.getKeyType()) {
+//            case ArrowLeft:
+//                field.moveLeft();
+//                break;
+//            case ArrowRight:
+//                field.moveRight();
+//                break;
+//            case ArrowDown:
+//                field.softDrop();
+//                break;
+//            case ArrowUp:
+//                field.rotateClockwise();
+//                break;
+//            case Character:
+//                switch (Character.toLowerCase(key.getCharacter())) {
+//                    case ' ':
+//                        field.hardDrop();
+//                        break;
+//                    case 'z':
+//                    case 'y':
+//                        field.rotateCClockwise();
+//                        break;
+//                    case 'x':
+//                        field.swapHold();
+//                        break;
+//                }
+//        }
         return this;
     }
 
     @Override
     public boolean finishInput() {
         return false;
+    }
+
+    public void addKey(KeyEvent key) {
+
+    }
+
+    public void removeKey(KeyEvent key) {
+
     }
 
 }

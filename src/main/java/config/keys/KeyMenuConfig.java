@@ -1,18 +1,19 @@
 package config.keys;
 
 import Helper.OsUtil;
-import asciiPanel.AsciiPanel;
+
 import com.googlecode.lanterna.input.KeyStroke;
 import config.LdataParser;
+import screens.AsciiPanel;
 import screens.PlayOfflineScreen;
 import screens.PlayOnlineScreen;
 import screens.Screen;
 
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.googlecode.lanterna.input.KeyType.Character;
 import static com.googlecode.lanterna.input.KeyType.*;
 
 public enum KeyMenuConfig {
@@ -20,43 +21,43 @@ public enum KeyMenuConfig {
     MENUDOWN() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyStroke('s', false, false), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_DOWN), terminal);
         }
     },
     MENUUP() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyStroke('w', false, false), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_UP), terminal);
         }
     },
     SELECT() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyStroke(' ', false, false), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_SPACE), terminal);
         }
     },
     ENTER() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyStroke(Enter), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_ENTER), terminal);
         }
     },
     REFRESH() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyStroke('r', false, false), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_R), terminal);
         }
     },
     CREATELOBBY() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyStroke('c', false, false), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_C), terminal);
         }
     },
     PLAYOFFLINE() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyStroke('o', false, false), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_O), terminal);
         }
     };
 
@@ -72,13 +73,13 @@ public enum KeyMenuConfig {
         for (String action : _menuMap.keySet()) {
             List<String> keyStrokes = (List) _menuMap.get(action);
             for (String keyStroke : keyStrokes) {
-                menuMap.put(keyStroke, action);
+                menuMap.put(keyStroke.toLowerCase(), action);
             }
         }
     }
 
 
-    public static Screen execute(KeyStroke key, Screen screen, AsciiPanel terminal) {
+    public static Screen execute(KeyEvent key, Screen screen, AsciiPanel terminal) {
         if (!(screen instanceof PlayOnlineScreen || screen instanceof PlayOfflineScreen)) {
             if (menuMap.get(keyStrokeToString(key)) == null) {
                 return screen;
@@ -88,12 +89,8 @@ public enum KeyMenuConfig {
         return screen;
     }
 
-    private static String keyStrokeToString(KeyStroke key) {
-        if (key.getKeyType() == Character) {
-            return key.getCharacter().toString();
-        } else {
-            System.out.println("SEND FUCKING HEPL PLS: " + key.getKeyType().toString());
-            return key.getKeyType().toString();
-        }
+    private static String keyStrokeToString(KeyEvent key) {
+        System.out.println(KeyEvent.getKeyText(key.getKeyCode()).toLowerCase());
+        return KeyEvent.getKeyText(key.getKeyCode()).toLowerCase();
     }
 }

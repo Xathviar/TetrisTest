@@ -3,11 +3,10 @@ package screens;
 import Helper.ClasspathResourceLoader;
 import Helper.OsUtil;
 import asciiPanel.AsciiFont;
-import asciiPanel.AsciiPanel;
 import com.heroiclabs.nakama.*;
 import communication.MatchSendHelper;
 import config.keys.KeyMenuConfig;
-import config.keys.KeyPlayConfig;
+import config.keys.KeyPlay;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.plexus.util.IOUtil;
@@ -44,24 +43,23 @@ public class MainClass extends JFrame implements KeyListener {
     private AsciiPanel terminal;
 
 
+
     public MainClass() {
         super();
-        terminal = new asciiPanel.AsciiPanel(70, 50, new AsciiFont("custom_cp437_20x20.png", 20, 20));
+        terminal = new AsciiPanel(70, 50, new AsciiFont("custom_cp437_20x20.png", 20, 20));
         screen = new PlayOfflineScreen(terminal);
         add(terminal);
-        terminal.addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                AsciiPanel terminal = (AsciiPanel) e.getSource();
-                super.componentResized(e);
-
-            }
-        });
         pack();
         repaint();
         addKeyListener(this);
         ScheduledExecutorService repaint = Executors.newSingleThreadScheduledExecutor();
         repaint.scheduleAtFixedRate(this::repaint, 0, 10, TimeUnit.MILLISECONDS);
+        terminal.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                terminal.resize(terminal.getWidth(), terminal.getHeight());
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -70,8 +68,8 @@ public class MainClass extends JFrame implements KeyListener {
         mainClass.setVisible(true);
         createConfig();
         KeyMenuConfig.initializeKeymap();
-        KeyPlayConfig.initializeKeymap();
-        aClass = new MainClass();
+        KeyPlay.initializeKeymap();
+        aClass = mainClass;
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (MainClass.aClass.createdGroup) {
                 MainClass.aClass.client.deleteGroup(MainClass.aClass.session, aClass.group_id);
@@ -106,6 +104,7 @@ public class MainClass extends JFrame implements KeyListener {
                 public void onDisconnect(final Throwable t) {
                     log.debug("Socket disconnected.");
                 }
+
                 @Override
                 public void onMatchData(MatchData matchData) {
                     if (matchData.getData() != null) {
@@ -125,25 +124,33 @@ public class MainClass extends JFrame implements KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-//        screen = screen.respondToUserInput(e, terminalHelper);
-//        synchronized (MainClass.pressedKeys) {
-//            if (screen instanceof PlayScreen) {
-//                Key keyToAdd = Key.getEnumFromKeyCode(e.getKeyCode());
-//                MainClass.pressedKeys.add(keyToAdd);
-//            }
-//        }
+    public void keyPressed(KeyEvent key) {
+        if (!(screen instanceof PlayOfflineScreen || screen instanceof PlayOnlineScreen)) {
+            if (screen.isInsideInputField()) {
+                screen = screen.respondToUserInput(key, terminal);
+            } else {
+                screen = KeyMenuConfig.execute(key, screen, terminal);
+            }
+        } else if (screen instanceof PlayOfflineScreen){
+            System.out.println(key);
+            ((PlayOfflineScreen) screen).addKey(key);
+        } else {
+            ((PlayOnlineScreen) screen).addKey(key);
+        }
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-
+    public void keyReleased(KeyEvent key) {
+        if (screen instanceof PlayOfflineScreen ) {
+            ((PlayOfflineScreen) screen).removeKey(key);
+        } else if (screen instanceof PlayOnlineScreen) {
+            ((PlayOnlineScreen) screen).removeKey(key);
+        }
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyTyped(KeyEvent key) {
 
     }
-
 
 }

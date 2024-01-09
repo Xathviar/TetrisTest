@@ -2,8 +2,7 @@ package screens;
 
 import Helper.ConfigHelper;
 import Helper.TerminalHelper;
-import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.input.KeyStroke;
+
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
 import com.heroiclabs.nakama.Session;
@@ -13,6 +12,7 @@ import components.SelectionHelper;
 import components.TextInput;
 import lombok.extern.slf4j.Slf4j;
 
+import java.awt.event.KeyEvent;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +71,7 @@ public class LoginScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
+    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
         Screen returnScreen = helper.manageKey(key);
         if (returnScreen != null) {
             LobbyScreen screen = (LobbyScreen) returnScreen;

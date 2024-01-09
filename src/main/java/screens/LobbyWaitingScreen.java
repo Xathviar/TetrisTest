@@ -2,8 +2,7 @@ package screens;
 
 import config.Constants;
 import Helper.TerminalHelper;
-import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.input.KeyStroke;
+
 import com.googlecode.lanterna.input.KeyType;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupUserList;
@@ -14,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import nakama.com.google.common.reflect.TypeToken;
 import nakama.com.google.gson.Gson;
 
+import java.awt.event.KeyEvent;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -137,25 +137,22 @@ public class LobbyWaitingScreen implements Screen, Runnable {
         }
         if (bothPlayersAreReady()) {
             if (me.isHost())
-                terminal.writeCenter("-- Press [Enter] to start the game --", terminal.getHeightInCharacters());
+                terminal.writeCenter("-- Press [Enter] to start the game --", terminal.getHeightInCharacters() - 1);
             else
-                terminal.writeCenter("-- Wait for the Host to start the game --", terminal.getHeightInCharacters());
+                terminal.writeCenter("-- Wait for the Host to start the game --", terminal.getHeightInCharacters() - 1);
 
         } else {
-            terminal.writeCenter("-- Press [r] to get ready --", terminal.getHeightInCharacters());
+            terminal.writeCenter("-- Press [r] to get ready --", terminal.getHeightInCharacters() - 1);
         }
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
-        if (key.getKeyType() == KeyType.Character) {
-            switch (Character.toLowerCase(key.getCharacter())) {
-                case 'r':
-                    me.setReady(!me.isReady());
-                    MatchSendHelper.READY.sendUpdate(me.getPlayerId(), me.isReady());
-            }
+    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
+        if (Character.toLowerCase(key.getKeyChar()) == 'r') {
+            me.setReady(!me.isReady());
+            MatchSendHelper.READY.sendUpdate(me.getPlayerId(), me.isReady());
         }
-        if (key.getKeyType() == KeyType.Enter) {
+        if (key.getKeyCode() == KeyEvent.VK_ENTER) {
             if (bothPlayersAreReady() && me.isHost()) {
                 MatchSendHelper.START.sendUpdate();
                 PlayOnlineScreen screen = new PlayOnlineScreen(terminal, me.isHost());

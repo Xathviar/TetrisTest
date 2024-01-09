@@ -1,8 +1,9 @@
 package components;
 
-import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import screens.Screen;
+
+import java.awt.event.KeyEvent;
 
 public class Button implements Component {
 
@@ -22,8 +23,8 @@ public class Button implements Component {
     }
 
     @Override
-    public Screen handleKeyDown(KeyStroke key) {
-        if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
+    public Screen handleKeyDown(KeyEvent key) {
+        if (key.getKeyCode() == KeyEvent.VK_ENTER || key.getKeyChar() == ' ') {
             if (currentScreen.finishInput()) {
                 return newScreen;
             }

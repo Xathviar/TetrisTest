@@ -1,9 +1,10 @@
 package logic;
 
 import config.Constants;
-import asciiPanel.AsciiPanel;
+
 import logic.pieces.Tetromino;
 import lombok.Getter;
+import screens.AsciiPanel;
 
 import java.util.Arrays;
 

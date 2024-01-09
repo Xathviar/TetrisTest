@@ -1,9 +1,10 @@
 package components;
 
-import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import lombok.Getter;
 import screens.Screen;
+
+import java.awt.event.KeyEvent;
 
 @Getter
 public class Checkbox implements Component {
@@ -24,8 +25,8 @@ public class Checkbox implements Component {
     }
 
     @Override
-    public Screen handleKeyDown(KeyStroke key) {
-        if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
+    public Screen handleKeyDown(KeyEvent key) {
+        if (key.getKeyCode() == KeyEvent.VK_ENTER || key.getKeyChar() == ' ') {
             state = !state;
         }
         return null;
