@@ -1,6 +1,8 @@
 package screens;
 
+import Helper.Constants;
 import Helper.TerminalHelper;
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -8,6 +10,7 @@ import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
 import lombok.extern.slf4j.Slf4j;
 
+import java.awt.*;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -49,15 +52,15 @@ public class LobbyScreen implements Screen, Runnable {
     }
 
     @Override
-    public void displayOutput(TerminalHelper terminal) {
+    public void displayOutput(AsciiPanel terminal) {
         terminal.clear();
-        terminal.writeTetrisLogo();
+        TerminalHelper.writeTetrisLogo(terminal);
         terminal.write(new Date().toString(), 5, 20);
         int y = 10;
         synchronized (lobbies) {
             for (Map.Entry<String, String> value : lobbies.entrySet()) {
                 if (selected == y - 10) {
-                    terminal.write("Lobby: " + value.getValue(), 5, y++, TextColor.ANSI.GREEN);
+                    terminal.write("Lobby: " + value.getValue(), 5, y++, Constants.selectedColor);
                 } else {
                     terminal.write("Lobby: " + value.getValue(), 5, y++);
                 }
@@ -68,7 +71,7 @@ public class LobbyScreen implements Screen, Runnable {
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
         if (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 'c') {
             MainClass.aClass.createSocket();
                 synchronized (runnable) {

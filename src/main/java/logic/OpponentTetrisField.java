@@ -1,10 +1,12 @@
 package logic;
 
 import Helper.TerminalHelper;
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.TextColor;
 import logic.pieces.Tetromino;
 import lombok.Getter;
 
+import java.awt.*;
 import java.util.Arrays;
 
 import static Helper.TerminalHelper.writeBoxAt;
@@ -30,7 +32,7 @@ public class OpponentTetrisField {
 
     public OpponentTetrisField(int startX, int startY) {
         for (Point[] point : points) {
-            Arrays.fill(point, new Point(true, TextColor.ANSI.BLACK));
+            Arrays.fill(point, new Point(true, Color.BLACK));
         }
 
         this.startX = startX;
@@ -81,19 +83,19 @@ public class OpponentTetrisField {
         }
     }
 
-    public void printTetrisField(TerminalHelper terminal) {
+    public void printTetrisField(AsciiPanel terminal) {
         drawBoard(terminal);
         for (int i = 0; i < SCREEN_HEIGHT; i++) {
             for (int j = 0; j < SCREEN_WIDTH; j++) {
                 if (points[i + 30][j].isFree()) {
-                    terminal.write(' ', startX + j, startY + i, TextColor.ANSI.BLACK, TextColor.ANSI.BLACK);
+                    terminal.write(' ', startX + j, startY + i, Color.BLACK, Color.BLACK);
                 } else {
                     terminal.write(BLOCK, startX + j, startY + i, points[i + 30][j].getColor());
                 }
             }
         }
     }
-    private void drawBoard(TerminalHelper terminal) {
+    private void drawBoard(AsciiPanel terminal) {
         int height = startY - 1;
         int width = startX - 1;
         writeBoxAt(terminal, width, height, 12, 22);
@@ -106,9 +108,9 @@ public class OpponentTetrisField {
         for (int y = 0; y < lines; y++) {
             for (int x = 0; x < 10; x++) {
                 if (x == garbageGap) {
-                    points[y + 50 - lines][x] = new Point(true, TextColor.ANSI.BLACK);
+                    points[y + 50 - lines][x] = new Point(true, Color.BLACK);
                 } else {
-                    points[y + 50 - lines][x] = new Point(false, TextColor.ANSI.BLACK_BRIGHT);
+                    points[y + 50 - lines][x] = new Point(false, Color.GRAY);
                 }
             }
         }

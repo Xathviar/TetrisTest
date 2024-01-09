@@ -1,6 +1,7 @@
 package screens;
 
 import Helper.TerminalHelper;
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.heroiclabs.nakama.api.Group;
@@ -18,15 +19,15 @@ public class LobbyCreateScreen implements Screen {
     private String groupName = "";
 
     @Override
-    public void displayOutput(TerminalHelper terminal) {
+    public void displayOutput(AsciiPanel terminal) {
         terminal.clear();
-        terminal.writeTetrisLogo();
+        TerminalHelper.writeTetrisLogo(terminal);
         int y = 10;
         terminal.write("LobbyName: " + groupName, 5, y);
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
         String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890";
         if (key.getKeyType() == KeyType.Character) {
             char c = key.getCharacter();

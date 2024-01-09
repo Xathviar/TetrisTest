@@ -1,12 +1,14 @@
 package screens;
 
 import Helper.TerminalHelper;
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import logic.HighScore;
 import lombok.extern.slf4j.Slf4j;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -50,9 +52,9 @@ public class StartScreen implements Screen {
     }
 
     @Override
-    public void displayOutput(TerminalHelper terminal) {
+    public void displayOutput(AsciiPanel terminal) {
         terminal.clear();
-        terminal.writeTetrisLogo();
+        TerminalHelper.writeTetrisLogo(terminal);
         terminal.write("Press 'o' to play offline Tetris", 1, 12);
         terminal.writeCenter("-- press [enter] to start --", terminal.getHeightInCharacters() - 1);
         int maximum = terminal.getHeightInCharacters() - 30 > 1 ? 10 : terminal.getHeightInCharacters() - 22;
@@ -67,16 +69,16 @@ public class StartScreen implements Screen {
                 }
                 switch (i) {
                     case 0:
-                        terminal.writeCenter(score.toString(), 18 + i, TextColor.ANSI.YELLOW);
+                        terminal.writeCenter(score.toString(), 18 + i, Color.YELLOW);
                         break;
                     case 1:
-                        terminal.writeCenter(score.toString(), 18 + i, TextColor.ANSI.BLACK_BRIGHT);
+                        terminal.writeCenter(score.toString(), 18 + i, Color.GRAY);
                         break;
                     case 2:
-                        terminal.writeCenter(score.toString(), 18 + i, TextColor.ANSI.CYAN);
+                        terminal.writeCenter(score.toString(), 18 + i, Color.CYAN);
                         break;
                     default:
-                        terminal.writeCenter(score.toString(), 18 + i, TextColor.ANSI.DEFAULT);
+                        terminal.writeCenter(score.toString(), 18 + i);
                 }
                 i++;
             }
@@ -84,7 +86,7 @@ public class StartScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
         if (key.getKeyType() == KeyType.Enter) {
             LoginScreen screen = new LoginScreen();
             screen.displayOutput(terminal);

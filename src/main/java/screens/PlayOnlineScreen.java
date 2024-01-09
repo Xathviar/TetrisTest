@@ -1,8 +1,8 @@
 package screens;
 
 import Helper.TerminalHelper;
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import communication.MatchSendHelper;
 import logic.OpponentTetrisField;
 import logic.TetrisField;
@@ -26,7 +26,7 @@ public class PlayOnlineScreen implements Screen {
 
     private boolean isHost;
 
-    public PlayOnlineScreen(TerminalHelper terminal, boolean isHost) {
+    public PlayOnlineScreen(AsciiPanel terminal, boolean isHost) {
         field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16, true);
         startTime = System.currentTimeMillis();
         opponentTetrisField = new OpponentTetrisField((terminal.getWidthInCharacters()) / 2 + 30, 16);
@@ -61,7 +61,7 @@ public class PlayOnlineScreen implements Screen {
     }
 
     @Override
-    public void displayOutput(TerminalHelper terminal) {
+    public void displayOutput(AsciiPanel terminal) {
         if (win) {
             exitGroupMatch();
             if (isHost)
@@ -79,13 +79,13 @@ public class PlayOnlineScreen implements Screen {
             return;
         }
         terminal.clear();
-        terminal.writeTetrisLogo();
+        TerminalHelper.writeTetrisLogo(terminal);
         field.printTetrisField(terminal);
         opponentTetrisField.printTetrisField(terminal);
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
         switch (key.getKeyType()) {
             case ArrowLeft:
                 field.moveLeft();

@@ -4,10 +4,12 @@ import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
 
+import java.awt.*;
+
 public class ZPiece extends Tetromino<ZPiece> {
 
     public ZPiece(TetrisField field) {
-        super("Z-Piece", TextColor.ANSI.RED, field, 6);
+        super("Z-Piece", Color.RED, field, 6);
     }
 
     @Override

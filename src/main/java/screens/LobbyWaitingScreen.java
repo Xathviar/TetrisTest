@@ -1,6 +1,8 @@
 package screens;
 
+import Helper.Constants;
 import Helper.TerminalHelper;
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import nakama.com.google.common.reflect.TypeToken;
 import nakama.com.google.gson.Gson;
 
+import java.awt.*;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -93,27 +96,27 @@ public class LobbyWaitingScreen implements Screen, Runnable {
     }
 
     @Override
-    public void displayOutput(TerminalHelper terminal) {
+    public void displayOutput(AsciiPanel terminal) {
         if (startGame) {
             MainClass.aClass.screen = new PlayOnlineScreen(terminal, me.isHost());
             MainClass.aClass.repaint();
             return;
         }
         terminal.clear();
-        terminal.writeTetrisLogo();
+        TerminalHelper.writeTetrisLogo(terminal);
         int y = 10;
         terminal.writeCenter(String.format("<--- LobbyName: %s --->", lobbyName), y++);
         terminal.write("Current Players waiting in the Lobby", 5, y++);
         y++;
         if (me != null && me.isHost()) {
             if (me.isReady()) {
-                terminal.write(me.getDisplayName(), 5, y++, TextColor.ANSI.GREEN);
+                terminal.write(me.getDisplayName(), 5, y++, Constants.selectedColor);
             } else {
                 terminal.write(me.getDisplayName(), 5, y++);
             }
             if (opponent != null) {
                 if (opponent.isReady()) {
-                    terminal.write(opponent.getDisplayName(), 5, y, TextColor.ANSI.GREEN);
+                    terminal.write(opponent.getDisplayName(), 5, y, Constants.selectedColor);
                 } else {
                     terminal.write(opponent.getDisplayName(), 5, y);
                 }
@@ -121,14 +124,14 @@ public class LobbyWaitingScreen implements Screen, Runnable {
         } else {
             if (opponent != null) {
                 if (opponent.isReady()) {
-                    terminal.write(opponent.getDisplayName(), 5, y++, TextColor.ANSI.GREEN);
+                    terminal.write(opponent.getDisplayName(), 5, y++, Constants.selectedColor);
                 } else {
                     terminal.write(opponent.getDisplayName(), 5, y++);
                 }
             }
             if (me != null) {
                 if (me.isReady()) {
-                    terminal.write(me.getDisplayName(), 5, y, TextColor.ANSI.GREEN);
+                    terminal.write(me.getDisplayName(), 5, y, Constants.selectedColor);
                 } else {
                     terminal.write(me.getDisplayName(), 5, y);
                 }
@@ -146,7 +149,7 @@ public class LobbyWaitingScreen implements Screen, Runnable {
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
         if (key.getKeyType() == KeyType.Character) {
             switch (Character.toLowerCase(key.getCharacter())) {
                 case 'r':

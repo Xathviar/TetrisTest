@@ -4,10 +4,12 @@ import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
 
+import static java.awt.Color.GREEN;
+
 public class SPiece extends Tetromino<SPiece> {
 
     public SPiece(TetrisField field) {
-        super("S-Piece", TextColor.ANSI.GREEN, field, 4);
+        super("S-Piece", GREEN, field, 4);
     }
 
     @Override

@@ -10,7 +10,7 @@ public class IPiece extends Tetromino<IPiece> {
 
 
     public IPiece(TetrisField field) {
-        super("I-Piece", TextColor.ANSI.CYAN, field, 0);
+        super("I-Piece", Color.CYAN, field, 0);
     }
 
     @Override

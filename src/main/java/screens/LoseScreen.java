@@ -1,6 +1,7 @@
 package screens;
 
 import Helper.TerminalHelper;
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 
@@ -27,10 +28,10 @@ public class LoseScreen implements Screen {
     }
 
     @Override
-    public void displayOutput(TerminalHelper terminal) {
+    public void displayOutput(AsciiPanel terminal) {
         if (initialScreen) {
             terminal.clear();
-            terminal.writeTetrisLogo();
+            TerminalHelper.writeTetrisLogo(terminal);
             initialScreen = false;
             terminal.writeCenter("-- press [enter] to start a new Game --", terminal.getHeightInCharacters() - 1);
             terminal.write(String.format("Score: %s", score), 2, 11);
@@ -42,7 +43,7 @@ public class LoseScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
         if (key.getKeyType() == KeyType.Enter && name.length() > 0) {
             saveHighScore();
             return new StartScreen();

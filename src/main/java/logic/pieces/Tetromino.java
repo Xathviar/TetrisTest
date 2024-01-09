@@ -9,7 +9,7 @@ import java.awt.*;
 
 @Getter
 public abstract class Tetromino<T> {
-    final TextColor color;
+    final Color color;
     final Grid[] grid;
     final TetrisField field;
     private final String name;
@@ -21,7 +21,7 @@ public abstract class Tetromino<T> {
 
     private final int pieceId;
 
-    Tetromino(String name, TextColor color, TetrisField field, int pieceId) {
+    Tetromino(String name, Color color, TetrisField field, int pieceId) {
         this.name = name;
         this.color = color;
         this.grid = new Grid[4];
@@ -206,7 +206,7 @@ public abstract class Tetromino<T> {
     }
 
     public void changeColorGrey() {
-        grid[0].setColor(TextColor.ANSI.BLACK_BRIGHT);
+        grid[0].setColor(Color.GRAY);
     }
 
     public void returnNormalColor() {

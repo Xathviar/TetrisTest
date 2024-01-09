@@ -2,16 +2,18 @@ package logic;
 
 import com.googlecode.lanterna.TextColor;
 
+import java.awt.*;
+
 public class Point {
     private boolean isFree;
-    private TextColor color;
+    private Color color;
 
-    public Point(boolean isFree, TextColor color) {
+    public Point(boolean isFree, Color color) {
         this.isFree = isFree;
         this.color = color;
     }
 
-    public TextColor getColor() {
+    public Color getColor() {
         return color;
     }
 
@@ -26,6 +28,6 @@ public class Point {
 
     public void resetPoint() {
         isFree = true;
-        color = TextColor.ANSI.BLACK;
+        color = Color.BLACK;
     }
 }

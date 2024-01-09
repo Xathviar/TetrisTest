@@ -4,10 +4,12 @@ import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
 
+import java.awt.*;
+
 public class LPiece extends Tetromino<LPiece> {
 
     public LPiece(TetrisField field) {
-        super("L-Piece", TextColor.ANSI.RED_BRIGHT, field, 2);
+        super("L-Piece", Color.ORANGE, field, 2);
     }
 
     @Override

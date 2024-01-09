@@ -1,15 +1,16 @@
 package Helper;
 
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.TextColor;
-import com.googlecode.lanterna.terminal.Terminal;
 import logic.GarbagePieceHandler;
+import nakama.com.google.common.base.Ascii;
 import nakama.com.google.common.base.Strings;
 
+import java.awt.*;
 import java.io.IOException;
 
 
 public class TerminalHelper {
-    Terminal terminal;
 
     private static final String[] tetrisLogo = (
             " _________  ________  _________  _______     _____   ______  \n" +
@@ -19,136 +20,17 @@ public class TerminalHelper {
                     "   _| |_    _| |__/ |   _| |_    _| |  \\ \\_  _| |_ | \\____) |\n" +
                     "  |_____|  |________|  |_____|  |____| |___||_____| \\______.'\n").split("\n");
 
-    public TerminalHelper(Terminal terminal) {
-        this.terminal = terminal;
-    }
-
-    public void write(String msg, int x, int y) {
-        try {
-            terminal.setCursorPosition(x, y);
-            terminal.putString(msg);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void hideCursor() {
-        try {
-            terminal.setCursorPosition(this.getWidthInCharacters(), this.getHeightInCharacters());
-            terminal.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 
-    public void write(String msg, int x, int y, TextColor fg) {
-        try {
-            terminal.setForegroundColor(fg);
-            write(msg, x, y);
-            terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public void write(String msg, int x, int y, TextColor fg, TextColor bg) {
-        try {
-            terminal.setForegroundColor(fg);
-            terminal.setBackgroundColor(bg);
-            write(msg, x, y);
-            terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
-            terminal.setBackgroundColor(TextColor.ANSI.DEFAULT);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public void write(char msg, int x, int y) {
-        try {
-            terminal.setCursorPosition(x, y);
-            terminal.putCharacter(msg);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public void write(char msg, int x, int y, TextColor fg) {
-        try {
-            terminal.setForegroundColor(fg);
-            write(msg, x, y);
-            terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public void write(char msg, int x, int y, TextColor fg, TextColor bg) {
-        try {
-            terminal.setForegroundColor(fg);
-            terminal.setBackgroundColor(bg);
-            write(msg, x, y);
-            terminal.setForegroundColor(TextColor.ANSI.DEFAULT);
-            terminal.setBackgroundColor(TextColor.ANSI.DEFAULT);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public int getHeightInCharacters() {
-        try {
-            return terminal.getTerminalSize().getRows();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public int getWidthInCharacters() {
-        try {
-            return terminal.getTerminalSize().getColumns();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void writeCenter(String msg, int y) {
-        int x = getWidthInCharacters() / 2 - (msg.length() / 2);
-        write(msg, x, y);
-    }
-
-    public void writeCenter(String msg, int y, TextColor.ANSI color) {
-        int x = getWidthInCharacters() / 2 - (msg.length() / 2);
-        write(msg, x, y, color);
-    }
-
-    public void clear() {
-        try {
-            terminal.clearScreen();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void writeTetrisLogo() {
+    public static void writeTetrisLogo(AsciiPanel terminal) {
         for (int i = 0; i < tetrisLogo.length; i++) {
-            this.writeCenter(tetrisLogo[i], i + 1);
+            terminal.writeCenter(tetrisLogo[i], i + 1);
         }
     }
 
 
-    public void flush() {
-        try {
-            terminal.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    public static void writeBoxAt(TerminalHelper terminal, int x, int y, int width, int height) {
+    public static void writeBoxAt(AsciiPanel terminal, int x, int y, int width, int height) {
         char box = '#';
         String horizontalLines = Strings.repeat(String.valueOf(box), width);
         String boxMiddleLines = box + Strings.repeat(" ", width - 2) + box;
@@ -160,11 +42,10 @@ public class TerminalHelper {
         terminal.write(horizontalLines, x, y);
     }
 
-    public static void writeGarbageLine(TerminalHelper terminal, int x, int y, int height, GarbagePieceHandler garbagePieceHandler) {
+    public static void writeGarbageLine(AsciiPanel terminal, int x, int y, int height, GarbagePieceHandler garbagePieceHandler) {
         for (int i = height - 2; i >= 0; i--) {
-            terminal.write('#', x, y++, garbagePieceHandler.shouldBeGarbageIndicator(i) ? TextColor.ANSI.MAGENTA_BRIGHT : TextColor.ANSI.DEFAULT);
+            terminal.write("#", x, y++, garbagePieceHandler.shouldBeGarbageIndicator(i) ? Color.MAGENTA : Color.LIGHT_GRAY);
         }
-
     }
 
 

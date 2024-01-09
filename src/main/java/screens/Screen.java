@@ -1,13 +1,13 @@
 package screens;
 
-import Helper.TerminalHelper;
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.input.KeyStroke;
 
 public interface Screen {
 
-    void displayOutput(TerminalHelper terminal);
+    void displayOutput(AsciiPanel terminal);
 
-    Screen respondToUserInput(KeyStroke key, TerminalHelper terminal);
+    Screen respondToUserInput(KeyStroke key, AsciiPanel terminal);
 
     boolean finishInput();
 

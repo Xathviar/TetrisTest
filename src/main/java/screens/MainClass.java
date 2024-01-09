@@ -2,21 +2,19 @@ package screens;
 
 import Helper.ClasspathResourceLoader;
 import Helper.OsUtil;
-import Helper.TerminalHelper;
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
-import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
-import com.googlecode.lanterna.terminal.Terminal;
-import com.googlecode.lanterna.terminal.swing.SwingTerminalFontConfiguration;
+import asciiPanel.AsciiFont;
+import asciiPanel.AsciiPanel;
 import com.heroiclabs.nakama.*;
 import communication.MatchSendHelper;
-import config.KeyConfig;
+import config.keys.KeyMenuConfig;
+import config.keys.KeyPlayConfig;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.plexus.util.IOUtil;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.concurrent.ExecutionException;
@@ -30,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 //TODO go back the menu...
 //TODO Add Config so that player don't have to input everything all the time
 @Slf4j
-public class MainClass implements Runnable {
+public class MainClass extends JFrame implements KeyListener {
     public static MainClass aClass;
 
     public Screen screen;
@@ -41,25 +39,28 @@ public class MainClass implements Runnable {
     public String user_id = "";
     public Match match;
     public boolean createdGroup;
-    private Terminal terminal;
-    private TerminalHelper terminalHelper;
-    private boolean running;
+    private AsciiPanel terminal;
 
 
     public MainClass() {
-        setupTerminal();
+        super();
+        terminal = new asciiPanel.AsciiPanel(70, 50, new AsciiFont("custom_cp437_20x20.png", 20, 20));
         screen = new StartScreen();
+        add(terminal);
+        pack();
         repaint();
+        addKeyListener(this);
         ScheduledExecutorService repaint = Executors.newSingleThreadScheduledExecutor();
-        repaint.scheduleAtFixedRate(this::repaint, 0, 50, TimeUnit.MILLISECONDS);
-        Thread t = new Thread(this);
-        running = true;
-        t.start();
+        repaint.scheduleAtFixedRate(this::repaint, 0, 10, TimeUnit.MILLISECONDS);
     }
 
     public static void main(String[] args) {
+        MainClass mainClass = new MainClass();
+        mainClass.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainClass.setVisible(true);
         createConfig();
-        KeyConfig.initializeKeymap();
+        KeyMenuConfig.initializeKeymap();
+        KeyPlayConfig.initializeKeymap();
         aClass = new MainClass();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (MainClass.aClass.createdGroup) {
@@ -79,56 +80,12 @@ public class MainClass implements Runnable {
         IOUtil.copy(defaultConfig, Files.newOutputStream(configFile.toPath()));
     }
 
-    private void setupTerminal() {
-        Font font;
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, Thread.currentThread().getContextClassLoader().getResourceAsStream("MxPlus_Rainbow100_re_40.ttf"));
-        } catch (FontFormatException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        font = font.deriveFont(20f);
-        DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
-        defaultTerminalFactory.setTerminalEmulatorTitle("Terminal Tetris");
-//        defaultTerminalFactory.setInitialTerminalSize(new TerminalSize(120, 80));
-        defaultTerminalFactory.setPreferTerminalEmulator(true);
-        SwingTerminalFontConfiguration config = SwingTerminalFontConfiguration.newInstance(font);
-
-        defaultTerminalFactory.setTerminalEmulatorFontConfiguration(config);
-        try {
-            terminal = defaultTerminalFactory.createTerminal();
-            terminal.setCursorVisible(false);
-            terminalHelper = new TerminalHelper(terminal);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void repaint() {
         SwingUtilities.invokeLater(() -> {
-            screen.displayOutput(terminalHelper);
-            terminalHelper.flush();
+            screen.displayOutput(terminal);
+            super.repaint();
         });
-    }
-
-    @Override
-    public void run() {
-        KeyStroke key;
-        try {
-            while (running) {
-                key = terminal.readInput();
-                if (key == null)
-                    return;
-                if (key.getKeyType() == KeyType.EOF)
-                    System.exit(0);
-                if (screen.isInsideInputField()) {
-                    screen = screen.respondToUserInput(key, terminalHelper);
-                } else {
-                    screen = KeyConfig.execute(key, screen, terminalHelper);
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void createSocket() {
@@ -157,4 +114,24 @@ public class MainClass implements Runnable {
 
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+//        screen = screen.respondToUserInput(e, terminalHelper);
+//        synchronized (MainClass.pressedKeys) {
+//            if (screen instanceof PlayScreen) {
+//                Key keyToAdd = Key.getEnumFromKeyCode(e.getKeyCode());
+//                MainClass.pressedKeys.add(keyToAdd);
+//            }
+//        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
 }

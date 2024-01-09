@@ -1,8 +1,8 @@
 package screens;
 
 import Helper.ConfigHelper;
-import Helper.OsUtil;
 import Helper.TerminalHelper;
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;
@@ -11,12 +11,8 @@ import components.Button;
 import components.Checkbox;
 import components.SelectionHelper;
 import components.TextInput;
-import config.LdataParser;
-import config.LdataWriter;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.FileWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,19 +60,18 @@ public class LoginScreen implements Screen {
     }
 
     @Override
-    public void displayOutput(TerminalHelper terminal) {
+    public void displayOutput(AsciiPanel terminal) {
         terminal.clear();
-        terminal.writeTetrisLogo();
+        TerminalHelper.writeTetrisLogo(terminal);
         helper.drawAllComponents(terminal, 5, 10);
         if (errorMessage.length() > 0) {
             terminal.write("ERROR: ", 1, 15);
             terminal.write(errorMessage, 4, 16);
         }
-        terminal.hideCursor();
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
         Screen returnScreen = helper.manageKey(key);
         if (returnScreen != null) {
             LobbyScreen screen = (LobbyScreen) returnScreen;

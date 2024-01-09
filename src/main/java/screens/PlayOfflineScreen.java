@@ -1,6 +1,7 @@
 package screens;
 
 import Helper.TerminalHelper;
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.input.KeyStroke;
 import logic.TetrisField;
 
@@ -11,22 +12,22 @@ public class PlayOfflineScreen implements Screen {
     public boolean initScreen = true;
     public boolean loseScreen = false;
 
-    public PlayOfflineScreen(TerminalHelper terminal) {
+    public PlayOfflineScreen(AsciiPanel terminal) {
         field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16, false);
         startTime = System.currentTimeMillis();
     }
 
 
     @Override
-    public void displayOutput(TerminalHelper terminal) {
+    public void displayOutput(AsciiPanel terminal) {
         terminal.clear();
-        terminal.writeTetrisLogo();
+        TerminalHelper.writeTetrisLogo(terminal);
         initScreen = false;
         field.printTetrisField(terminal);
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, TerminalHelper terminal) {
+    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
         if (loseScreen) {
             MainClass.aClass.screen = new LoseScreen(field.getLevel(), field.getScore(), System.currentTimeMillis() - startTime);
             field.shutdownThread();

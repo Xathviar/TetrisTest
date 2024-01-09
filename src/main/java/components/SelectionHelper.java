@@ -1,7 +1,7 @@
 package components;
 
-import Helper.TerminalHelper;
-import com.googlecode.lanterna.TextColor;
+import Helper.Constants;
+import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import screens.Screen;
@@ -34,11 +34,11 @@ public class SelectionHelper {
         return components[selected];
     }
 
-    public void drawComponent(TerminalHelper terminal, int x, int y, int index) {
-        terminal.write(components[index].drawComponent(), x, y, index == selected ? components[index].isSelected() ? TextColor.ANSI.GREEN : TextColor.ANSI.CYAN : TextColor.ANSI.BLACK_BRIGHT);
+    public void drawComponent(AsciiPanel terminal, int x, int y, int index) {
+        terminal.write(components[index].drawComponent(), x, y, index == selected ? components[index].isSelected() ? Constants.selectedColor : Constants.inputColor : Constants.characterColor);
     }
 
-    public void drawAllComponents(TerminalHelper terminal, int x, int y) {
+    public void drawAllComponents(AsciiPanel terminal, int x, int y) {
         for (int i = 0; i < components.length; i++) {
             drawComponent(terminal, x, y + i, i);
         }
