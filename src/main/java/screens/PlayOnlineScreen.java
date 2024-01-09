@@ -3,17 +3,20 @@ package screens;
 import Helper.TerminalHelper;
 
 import communication.MatchSendHelper;
+import config.keys.KeyPlay;
 import logic.OpponentTetrisField;
 import logic.TetrisField;
 
 import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-public class PlayOnlineScreen implements Screen {
+public class PlayOnlineScreen implements Screen, Runnable {
 
     private static TetrisField field;
     private final long startTime;
@@ -26,6 +29,8 @@ public class PlayOnlineScreen implements Screen {
 
     private boolean isHost;
 
+    private final Set<KeyPlay> pressedKeys = new HashSet<>();
+
     public PlayOnlineScreen(AsciiPanel terminal, boolean isHost) {
         field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16, true);
         startTime = System.currentTimeMillis();
@@ -35,6 +40,9 @@ public class PlayOnlineScreen implements Screen {
         if (isHost) {
             exec.scheduleAtFixedRate(PlayOnlineScreen::tickMaster, 0, 1, TimeUnit.SECONDS);
         }
+        ScheduledExecutorService repaint = Executors.newSingleThreadScheduledExecutor();
+        repaint.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
+
     }
 
     public static void gameTick() {
@@ -121,12 +129,21 @@ public class PlayOnlineScreen implements Screen {
         return false;
     }
 
-    public void addKey(KeyEvent key) {
-
+    public void addKey(KeyEvent keyEvent) {
+        if (KeyPlay.getKey(keyEvent) != null)
+            pressedKeys.add(KeyPlay.getKey(keyEvent));
     }
 
-    public void removeKey(KeyEvent key) {
-
+    public void removeKey(KeyEvent keyEvent) {
+        if (KeyPlay.getKey(keyEvent) != null)
+            pressedKeys.remove(KeyPlay.getKey(keyEvent));
     }
 
+    @Override
+    public void run() {
+        for (KeyPlay pressedKey : pressedKeys) {
+            pressedKey.execute(field);
+            pressedKey.incrementCounter();
+        }
+    }
 }

@@ -45,7 +45,7 @@ public enum KeyPlay {
         @Override
         public void execute(TetrisField field) {
             if (this.counter % 250 == 0) {
-                field.rotateClockwise();
+                field.rotateCClockwise();
             }
         }
     },
