@@ -1,16 +1,14 @@
 package screens;
 
-import Helper.Constants;
+import config.Constants;
 import Helper.TerminalHelper;
 import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -1,14 +1,13 @@
 package logic;
 
-import Helper.TerminalHelper;
+import config.Constants;
 import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.TextColor;
 import logic.pieces.Tetromino;
 import lombok.Getter;
 
-import java.awt.*;
 import java.util.Arrays;
 
+import static config.Constants.backgroundColor;
 import static Helper.TerminalHelper.writeBoxAt;
 
 @Getter
@@ -32,7 +31,7 @@ public class OpponentTetrisField {
 
     public OpponentTetrisField(int startX, int startY) {
         for (Point[] point : points) {
-            Arrays.fill(point, new Point(true, Color.BLACK));
+            Arrays.fill(point, new Point(true, backgroundColor));
         }
 
         this.startX = startX;
@@ -88,7 +87,7 @@ public class OpponentTetrisField {
         for (int i = 0; i < SCREEN_HEIGHT; i++) {
             for (int j = 0; j < SCREEN_WIDTH; j++) {
                 if (points[i + 30][j].isFree()) {
-                    terminal.write(' ', startX + j, startY + i, Color.BLACK, Color.BLACK);
+                    terminal.write(' ', startX + j, startY + i, backgroundColor, backgroundColor);
                 } else {
                     terminal.write(BLOCK, startX + j, startY + i, points[i + 30][j].getColor());
                 }
@@ -108,9 +107,9 @@ public class OpponentTetrisField {
         for (int y = 0; y < lines; y++) {
             for (int x = 0; x < 10; x++) {
                 if (x == garbageGap) {
-                    points[y + 50 - lines][x] = new Point(true, Color.BLACK);
+                    points[y + 50 - lines][x] = new Point(true, backgroundColor);
                 } else {
-                    points[y + 50 - lines][x] = new Point(false, Color.GRAY);
+                    points[y + 50 - lines][x] = new Point(false, Constants.disabledColor);
                 }
             }
         }

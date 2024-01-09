@@ -1,6 +1,6 @@
 package logic.pieces;
 
-import com.googlecode.lanterna.TextColor;
+import config.Constants;
 import logic.Grid;
 import logic.TetrisField;
 import lombok.Getter;
@@ -206,7 +206,7 @@ public abstract class Tetromino<T> {
     }
 
     public void changeColorGrey() {
-        grid[0].setColor(Color.GRAY);
+        grid[0].setColor(Constants.disabledColor);
     }
 
     public void returnNormalColor() {

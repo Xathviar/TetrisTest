@@ -1,9 +1,8 @@
 package screens;
 
-import Helper.Constants;
+import config.Constants;
 import Helper.TerminalHelper;
 import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.heroiclabs.nakama.api.Group;
@@ -15,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import nakama.com.google.common.reflect.TypeToken;
 import nakama.com.google.gson.Gson;
 
-import java.awt.*;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;

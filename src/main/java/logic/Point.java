@@ -1,6 +1,6 @@
 package logic;
 
-import com.googlecode.lanterna.TextColor;
+import config.Constants;
 
 import java.awt.*;
 
@@ -28,6 +28,6 @@ public class Point {
 
     public void resetPoint() {
         isFree = true;
-        color = Color.BLACK;
+        color = Constants.backgroundColor;
     }
 }

@@ -1,13 +1,9 @@
 package Helper;
 
 import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.TextColor;
+import config.Constants;
 import logic.GarbagePieceHandler;
-import nakama.com.google.common.base.Ascii;
 import nakama.com.google.common.base.Strings;
-
-import java.awt.*;
-import java.io.IOException;
 
 
 public class TerminalHelper {
@@ -44,7 +40,7 @@ public class TerminalHelper {
 
     public static void writeGarbageLine(AsciiPanel terminal, int x, int y, int height, GarbagePieceHandler garbagePieceHandler) {
         for (int i = height - 2; i >= 0; i--) {
-            terminal.write("#", x, y++, garbagePieceHandler.shouldBeGarbageIndicator(i) ? Color.MAGENTA : Color.LIGHT_GRAY);
+            terminal.write("#", x, y++, garbagePieceHandler.shouldBeGarbageIndicator(i) ? Constants.garbageColor : Constants.wallColor);
         }
     }
 

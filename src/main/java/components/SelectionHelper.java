@@ -1,6 +1,6 @@
 package components;
 
-import Helper.Constants;
+import config.Constants;
 import asciiPanel.AsciiPanel;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;

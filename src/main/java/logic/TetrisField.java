@@ -1,9 +1,7 @@
 package logic;
 
-import Helper.Constants;
-import Helper.TerminalHelper;
+import config.Constants;
 import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.TextColor;
 import communication.MatchSendHelper;
 import logic.pieces.Tetromino;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +9,6 @@ import nakama.com.google.common.base.Strings;
 import screens.PlayOfflineScreen;
 import screens.PlayOnlineScreen;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -25,13 +22,11 @@ import static Helper.TerminalHelper.writeGarbageLine;
 public class TetrisField {
     public static final int SCREEN_HEIGHT = 20;
     public static final int SCREEN_WIDTH = 10;
-    public static final char BLOCK = '#';
 
     private int startX;
 
     private int startY;
 
-    public static final String BLOCKCHAIN = "" + BLOCK + BLOCK + BLOCK + BLOCK;
     private static final int LINE_THRESHOLD = 10;
     private final Point[][] points = new Point[50][10];
     private final RandomGenerator generator;
@@ -162,7 +157,7 @@ public class TetrisField {
                     if (x == garbagePosition) {
                         points[y + 50 - line][x] = new Point(true, Constants.backgroundColor);
                     } else {
-                        points[y + 50 - line][x] = new Point(false, Color.GRAY);
+                        points[y + 50 - line][x] = new Point(false, Constants.disabledColor);
                     }
                 }
             }
@@ -297,7 +292,7 @@ public class TetrisField {
                 if (points[i + 30][j].isFree()) {
                     terminal.write(' ', startX + j, startY + i, Constants.backgroundColor, Constants.backgroundColor);
                 } else {
-                    terminal.write(BLOCK, startX + j, startY + i, points[i + 30][j].getColor());
+                    terminal.write(Constants.BLOCK, startX + j, startY + i, points[i + 30][j].getColor());
                 }
             }
         }
@@ -334,10 +329,10 @@ public class TetrisField {
 
     private void printScoreAndStuff(AsciiPanel terminal) {
         int y = startY + 15;
-        terminal.write("LEVEL", startX - 7, y++, Color.YELLOW);
+        terminal.write("LEVEL", startX - 7, y++, Constants.importantText);
         terminal.write(String.format("  %03d", level), startX - 8, y++, Constants.characterColor);
         terminal.write(Strings.repeat(Character.toString('-'), 7), startX - 8, y++, Constants.wallColor);
-        terminal.write(" SCORE ", startX - 8, y++, Color.YELLOW);
+        terminal.write(" SCORE ", startX - 8, y++, Constants.importantText);
         terminal.write(String.format("%07d", score), startX - 8, y, Constants.characterColor);
     }
 
@@ -349,8 +344,8 @@ public class TetrisField {
         for (int y = 0; y < gridPoints.length; y++) {
             for (int x = 0; x < gridPoints[y].length; x++) {
                 if (gridPoints[y][x]) {
-                    terminal.write(BLOCK, startX + x + helperPieceGrid.x, startY + y + helperPieceGrid.y - 30, Color.GRAY, Constants.backgroundColor);
-                    terminal.write(BLOCK, startX + x + activePieceGrid.x, startY + y + activePieceGrid.y - 30, activePieceGrid.getColor());
+                    terminal.write(Constants.BLOCK, startX + x + helperPieceGrid.x, startY + y + helperPieceGrid.y - 30, Constants.disabledColor, Constants.backgroundColor);
+                    terminal.write(Constants.BLOCK, startX + x + activePieceGrid.x, startY + y + activePieceGrid.y - 30, activePieceGrid.getColor());
                 }
             }
         }
@@ -360,13 +355,13 @@ public class TetrisField {
         synchronized (holdPiece) {
             Grid holdPieceGrid = holdPiece.getGrid()[0];
             Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
-            terminal.write(BLOCKCHAIN, startX - 7, startY + 1, Constants.backgroundColor);
-            terminal.write(BLOCKCHAIN, startX - 7, startY + 2, Constants.backgroundColor);
-            terminal.write(BLOCKCHAIN, startX - 7, startY + 3, Constants.backgroundColor);
+            terminal.write(Constants.BLOCKCHAIN, startX - 7, startY + 1, Constants.backgroundColor);
+            terminal.write(Constants.BLOCKCHAIN, startX - 7, startY + 2, Constants.backgroundColor);
+            terminal.write(Constants.BLOCKCHAIN, startX - 7, startY + 3, Constants.backgroundColor);
             for (int y = 0; y < gridPoints.length; y++) {
                 for (int x = 0; x < gridPoints[y].length; x++) {
                     if (gridPoints[y][x]) {
-                        terminal.write(BLOCK, startX - 7 + x, startY + 1 + y, holdPieceGrid.getColor());
+                        terminal.write(Constants.BLOCK, startX - 7 + x, startY + 1 + y, holdPieceGrid.getColor());
                     }
                 }
             }
@@ -377,13 +372,13 @@ public class TetrisField {
         for (int i = 0; i < nextPieces.size(); i++) {
             Grid holdPieceGrid = nextPieces.get(i).getGrid()[0];
             Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
-            terminal.write(BLOCKCHAIN, startX + 12, startY + 1 + i * 5, Constants.backgroundColor);
-            terminal.write(BLOCKCHAIN, startX + 12, startY + 2 + i * 5, Constants.backgroundColor);
-            terminal.write(BLOCKCHAIN, startX + 12, startY + 3 + i * 5, Constants.backgroundColor);
+            terminal.write(Constants.BLOCKCHAIN, startX + 12, startY + 1 + i * 5, Constants.backgroundColor);
+            terminal.write(Constants.BLOCKCHAIN, startX + 12, startY + 2 + i * 5, Constants.backgroundColor);
+            terminal.write(Constants.BLOCKCHAIN, startX + 12, startY + 3 + i * 5, Constants.backgroundColor);
             for (int y = 0; y < gridPoints.length; y++) {
                 for (int x = 0; x < gridPoints[y].length; x++) {
                     if (gridPoints[y][x]) {
-                        terminal.write(BLOCK, startX + 12 + x, startY + 1 + y + i * 5, holdPieceGrid.getColor());
+                        terminal.write(Constants.BLOCK, startX + 12 + x, startY + 1 + y + i * 5, holdPieceGrid.getColor());
                     }
                 }
             }

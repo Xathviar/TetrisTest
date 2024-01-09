@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.codehaus.plexus.util.IOUtil;
 
 import javax.swing.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
@@ -45,8 +47,16 @@ public class MainClass extends JFrame implements KeyListener {
     public MainClass() {
         super();
         terminal = new asciiPanel.AsciiPanel(70, 50, new AsciiFont("custom_cp437_20x20.png", 20, 20));
-        screen = new StartScreen();
+        screen = new PlayOfflineScreen(terminal);
         add(terminal);
+        terminal.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                AsciiPanel terminal = (AsciiPanel) e.getSource();
+                super.componentResized(e);
+
+            }
+        });
         pack();
         repaint();
         addKeyListener(this);
@@ -134,4 +144,6 @@ public class MainClass extends JFrame implements KeyListener {
     public void keyReleased(KeyEvent e) {
 
     }
+
+
 }

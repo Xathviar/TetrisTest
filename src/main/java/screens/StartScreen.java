@@ -1,14 +1,13 @@
 package screens;
 
+import config.Constants;
 import Helper.TerminalHelper;
 import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import logic.HighScore;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -69,13 +68,13 @@ public class StartScreen implements Screen {
                 }
                 switch (i) {
                     case 0:
-                        terminal.writeCenter(score.toString(), 18 + i, Color.YELLOW);
+                        terminal.writeCenter(score.toString(), 18 + i, Constants.firstPlayer);
                         break;
                     case 1:
-                        terminal.writeCenter(score.toString(), 18 + i, Color.GRAY);
+                        terminal.writeCenter(score.toString(), 18 + i, Constants.secondPlayer);
                         break;
                     case 2:
-                        terminal.writeCenter(score.toString(), 18 + i, Color.CYAN);
+                        terminal.writeCenter(score.toString(), 18 + i, Constants.thirdPlayer);
                         break;
                     default:
                         terminal.writeCenter(score.toString(), 18 + i);
