@@ -92,7 +92,6 @@ public class PlayOnlineScreen implements Screen, Runnable {
         opponentTetrisField.printTetrisField(terminal);
     }
 
-    /// ASDfjkldszblhjkgfsdlf kgjdslfgkjhfsdkgjhsdfkg
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
 //        switch (key.getKeyType()) {
