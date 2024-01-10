@@ -1,9 +1,10 @@
 package Helper;
 
-import asciiPanel.AsciiPanel;
+
 import config.Constants;
 import logic.GarbagePieceHandler;
 import nakama.com.google.common.base.Strings;
+import screens.AsciiPanel;
 
 
 public class TerminalHelper {

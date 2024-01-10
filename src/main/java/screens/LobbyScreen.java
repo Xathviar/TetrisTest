@@ -2,13 +2,13 @@ package screens;
 
 import config.Constants;
 import Helper.TerminalHelper;
-import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.input.KeyStroke;
+
 import com.googlecode.lanterna.input.KeyType;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
 import lombok.extern.slf4j.Slf4j;
 
+import java.awt.event.KeyEvent;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -69,8 +69,8 @@ public class LobbyScreen implements Screen, Runnable {
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
-        if (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 'c') {
+    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
+        if (Character.toLowerCase(key.getKeyChar()) == 'c') {
             MainClass.aClass.createSocket();
                 synchronized (runnable) {
                     runnable.set(false);
@@ -79,16 +79,16 @@ public class LobbyScreen implements Screen, Runnable {
                 screen.displayOutput(terminal);
                 return screen;
         }
-        if (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 'r') {
+        if (Character.toLowerCase(key.getKeyCode()) == 'r') {
             this.fetchLobbies();
         }
-        if (key.getKeyType() == KeyType.ArrowUp || (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 'w')) {
+        if (key.getKeyCode() == KeyEvent.VK_UP || Character.toLowerCase(key.getKeyChar()) == 'w') {
             this.selectAbove();
-        } else if (key.getKeyType() == KeyType.ArrowDown || (key.getCharacter() != null && Character.toLowerCase(key.getCharacter()) == 's')) {
+        } else if (key.getKeyCode() == KeyEvent.VK_DOWN || Character.toLowerCase(key.getKeyChar()) == 's') {
             this.selectBelow();
         }
         try {
-            if (key.getKeyType() == KeyType.Enter || key.getCharacter() == ' ') {
+            if (key.getKeyCode() == KeyEvent.VK_ENTER || key.getKeyChar() == ' ') {
                 if (selected == -1) {
                     return this;
                 }

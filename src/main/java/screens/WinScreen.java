@@ -1,9 +1,10 @@
 package screens;
 
 import Helper.TerminalHelper;
-import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.input.KeyStroke;
+
 import com.googlecode.lanterna.input.KeyType;
+
+import java.awt.event.KeyEvent;
 
 public class WinScreen implements Screen {
     public WinScreen() {
@@ -19,8 +20,8 @@ public class WinScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
-        if (key.getKeyType() == KeyType.Enter) {
+    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
+        if (key.getKeyCode() == KeyEvent.VK_ENTER) {
             LobbyScreen screen = new LobbyScreen();
             screen.displayOutput(terminal);
             return screen;

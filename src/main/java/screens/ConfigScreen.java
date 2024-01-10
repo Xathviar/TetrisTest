@@ -1,7 +1,7 @@
 package screens;
 
-import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.input.KeyStroke;
+
+import java.awt.event.KeyEvent;
 
 public class ConfigScreen implements Screen{
     @Override
@@ -10,7 +10,7 @@ public class ConfigScreen implements Screen{
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
+    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
         return null;
     }
 

@@ -69,7 +69,7 @@ public class OsUtil
         }
 
         if(applicationName==null || CONFIG_HOME==null) return CONFIG_HOME;
-
+        System.out.println(CONFIG_HOME+"/"+applicationName);
         return CONFIG_HOME+"/"+applicationName;
     }
 
@@ -146,7 +146,6 @@ public class OsUtil
         }
 
         if(applicationName==null || DATA_HOME==null) return DATA_HOME;
-
         return DATA_HOME+"/"+applicationName;
     }
 

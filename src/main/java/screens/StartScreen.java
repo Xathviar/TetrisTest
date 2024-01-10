@@ -2,12 +2,12 @@ package screens;
 
 import config.Constants;
 import Helper.TerminalHelper;
-import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.input.KeyStroke;
+
 import com.googlecode.lanterna.input.KeyType;
 import logic.HighScore;
 import lombok.extern.slf4j.Slf4j;
 
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -85,18 +85,18 @@ public class StartScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
-        if (key.getKeyType() == KeyType.Enter) {
+    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
+        if (key.getKeyCode() == KeyEvent.VK_ENTER) {
             LoginScreen screen = new LoginScreen();
             screen.displayOutput(terminal);
             return screen;
         }
-        if (key.getKeyType() == KeyType.Character && Character.toLowerCase(key.getCharacter()) == 'o') {
+        if (key.getKeyChar() != KeyEvent.CHAR_UNDEFINED && Character.toLowerCase(key.getKeyChar()) == 'o') {
             PlayOfflineScreen screen = new PlayOfflineScreen(terminal);
             screen.displayOutput(terminal);
             return screen;
         }
-        if (key.getKeyType() == KeyType.Character && Character.toLowerCase(key.getCharacter()) == 'e') {
+        if (key.getKeyChar() != KeyEvent.CHAR_UNDEFINED && Character.toLowerCase(key.getKeyChar()) == 'e') {
             PlayOnlineScreen screen = new PlayOnlineScreen(terminal, false);
             screen.displayOutput(terminal);
             return screen;

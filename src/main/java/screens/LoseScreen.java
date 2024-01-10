@@ -1,10 +1,10 @@
 package screens;
 
 import Helper.TerminalHelper;
-import asciiPanel.AsciiPanel;
-import com.googlecode.lanterna.input.KeyStroke;
+
 import com.googlecode.lanterna.input.KeyType;
 
+import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,17 +43,17 @@ public class LoseScreen implements Screen {
     }
 
     @Override
-    public Screen respondToUserInput(KeyStroke key, AsciiPanel terminal) {
-        if (key.getKeyType() == KeyType.Enter && name.length() > 0) {
+    public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
+        if (key.getKeyCode() == KeyEvent.VK_ENTER && name.length() > 0) {
             saveHighScore();
             return new StartScreen();
-        } else if (key.getKeyType() == KeyType.Backspace) {
+        } else if (key.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
             if (name.length() > 0) {
                 name = name.substring(0, name.length() - 1);
             }
         }
-        if (key.getKeyType() == KeyType.Character) {
-            char c = key.getCharacter();
+        else {
+            char c = key.getKeyChar();
             String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_ ";
             if (c == 127) {
                 if (name.length() > 0) {

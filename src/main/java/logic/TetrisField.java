@@ -1,11 +1,12 @@
 package logic;
 
 import config.Constants;
-import asciiPanel.AsciiPanel;
+
 import communication.MatchSendHelper;
 import logic.pieces.Tetromino;
 import lombok.extern.slf4j.Slf4j;
 import nakama.com.google.common.base.Strings;
+import screens.AsciiPanel;
 import screens.PlayOfflineScreen;
 import screens.PlayOnlineScreen;
 
@@ -516,5 +517,10 @@ public class TetrisField {
                 locationChanged = false;
             }
         }
+    }
+
+    public void instantsdf() {
+        int counter = activePiece.hardDrop();
+        score += (counter) >> 1;
     }
 }

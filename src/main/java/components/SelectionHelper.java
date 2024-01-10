@@ -1,10 +1,13 @@
 package components;
 
 import config.Constants;
-import asciiPanel.AsciiPanel;
+
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
+import screens.AsciiPanel;
 import screens.Screen;
+
+import java.awt.event.KeyEvent;
 
 public class SelectionHelper {
     private Component[] components;
@@ -56,16 +59,16 @@ public class SelectionHelper {
         return selected;
     }
 
-    public Screen manageKey(KeyStroke keyStroke) {
+    public Screen manageKey(KeyEvent keyEvent) {
         if (components[selected].isSelected()) {
-            return components[selected].handleKeyDown(keyStroke);
+            return components[selected].handleKeyDown(keyEvent);
         }
-        if (keyStroke.getKeyType() == KeyType.ArrowUp || (keyStroke.getCharacter() != null && Character.toLowerCase(keyStroke.getCharacter()) == 'w')) {
+        if (keyEvent.getKeyCode() == KeyEvent.VK_UP || (keyEvent.getKeyChar() != KeyEvent.CHAR_UNDEFINED && Character.toLowerCase(keyEvent.getKeyChar()) == 'w')) {
             this.selectAbove();
-        } else if (keyStroke.getKeyType() == KeyType.ArrowDown || (keyStroke.getCharacter() != null && Character.toLowerCase(keyStroke.getCharacter()) == 's')) {
+        } else if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN || (keyEvent.getKeyChar() != KeyEvent.CHAR_UNDEFINED && Character.toLowerCase(keyEvent.getKeyChar()) == 's')) {
             this.selectBelow();
         } else {
-            return components[selected].handleKeyDown(keyStroke);
+            return components[selected].handleKeyDown(keyEvent);
         }
         return null;
     }
