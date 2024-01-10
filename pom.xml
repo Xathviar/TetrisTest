@@ -13,34 +13,79 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
-                    <source>17</source>
-                    <target>17</target>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>screens.MainClass</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <configuration>
+                    <transformers>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+                            <resource>.SF</resource>
+                        </transformer>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+                            <resource>.DSA</resource>
+                        </transformer>
+
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/LICENSE</resource>
+                        </transformer>
+                    </transformers>
+                    <finalName>${project.artifactId}-${project.version}-shaded-full</finalName>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <finalName>${project.artifactId}-shaded</finalName>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <Main-Class>screens.MainClass</Main-Class>
-                                        <Build-Number>${project.version}</Build-Number>
-                                    </manifestEntries>
-                                </transformer>
-                            </transformers>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
+            <!--            Message #programming-->
+
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-shade-plugin</artifactId>-->
+            <!--                <version>3.2.4</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <phase>package</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>shade</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <finalName>${project.artifactId}-shaded</finalName>-->
+            <!--                            <transformers>-->
+            <!--                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
+            <!--                                    <manifestEntries>-->
+            <!--                                        <Main-Class>screens.MainClass</Main-Class>-->
+            <!--                                        <Build-Number>${project.version}</Build-Number>-->
+            <!--                                    </manifestEntries>-->
+            <!--                                </transformer>-->
+            <!--                            </transformers>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -73,13 +118,13 @@
                                         binary="true">
                                     <fileset file="${project.basedir}/src/main/dist/stub.sh"/>
                                     <fileset
-                                            file="${project.build.directory}/${project.artifactId}-shaded.jar"/>
+                                            file="${project.build.directory}/${project.artifactId}-${project.version}-shaded-full.jar"/>
                                 </concat>
                                 <concat destfile="${project.build.directory}/bin/${project.artifactId}-${project.version}.bat"
                                         binary="true">
                                     <fileset file="${project.basedir}/src/main/dist/stub.bat"/>
                                     <fileset
-                                            file="${project.build.directory}/${project.artifactId}-shaded.jar"/>
+                                            file="${project.build.directory}/${project.artifactId}-${project.version}-shaded-full.jar"/>
                                 </concat>
 
                                 <chmod perm="ugo+rx">
@@ -91,108 +136,12 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>appassembler-maven-plugin</artifactId>
-                <version>1.10</version>
-                <configuration>
-                    <configurationSourceDirectory>src/main/dist/conf</configurationSourceDirectory>
-                    <configurationDirectory>conf</configurationDirectory>
-                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
-                    <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
-                    <useWildcardClassPath>true</useWildcardClassPath>
-                    <endorsedDir>ext</endorsedDir>
-                    <repositoryName>lib</repositoryName>
-                    <assembleDirectory>${project.build.directory}/${artifactId}-assemble</assembleDirectory>
-                    <extraJvmArguments>-Xms512m</extraJvmArguments>
-                    <repositoryLayout>flat</repositoryLayout>
-                    <logsDirectory>logs</logsDirectory>
-                    <platforms>
-                        <platform>unix</platform>
-                        <platform>windows</platform>
-                    </platforms>
-                    <programs>
-                        <program>
-                            <mainClass>screens.MainClass</mainClass>
-                            <id>${artifactId}</id>
-                        </program>
-                    </programs>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>assemble</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>maven-replacer-plugin</artifactId>
-                <version>1.4.0</version>
-                <executions>
-                    <execution>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                        <configuration>
-                            <file>src/main/izpack/install.xml</file>
-                            <outputFile>target/install.xml</outputFile>
-                            <replacements>
-                                <replacement>
-                                    <token>@basedir@</token>
-                                    <value>${project.build.directory}/${artifactId}-assemble</value>
-                                </replacement>
-                                <replacement>
-                                    <token>@version@</token>
-                                    <value>${project.version}</value>
-                                </replacement>
-                                <replacement>
-                                    <token>@appname@</token>
-                                    <value>${project.artifactId}</value>
-                                </replacement>
-                                <replacement>
-                                    <token>@exename@</token>
-                                    <value>${project.artifactId}</value>
-                                </replacement>
-                            </replacements>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.izpack</groupId>
-                <artifactId>izpack-maven-plugin</artifactId>
-                <version>5.1.3</version>
-                <extensions>true</extensions>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>izpack</goal>
-                        </goals>
-                        <configuration>
-                            <baseDir>${project.build.directory}/${artifactId}-assemble</baseDir>
-                            <installFile>${project.build.directory}/install.xml</installFile>
-                            <outputDirectory>${project.build.directory}/izpack</outputDirectory>
-                            <finalName>${artifactId}-setup-${version}</finalName>
-                            <mkdirs>true</mkdirs>
-                            <autoIncludeUrl>false</autoIncludeUrl>
-                            <autoIncludeDevelopers>false</autoIncludeDevelopers>
-                            <enableAttachArtifact>false</enableAttachArtifact>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
     </properties>
     <repositories>
         <repository>
@@ -203,16 +152,41 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.trystan</groupId>
-            <artifactId>AsciiPanel</artifactId>
-            <version>94388d2</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.heroiclabs.nakama-java</groupId>
             <artifactId>nakama-java-all</artifactId>
             <version>04bf397</version>
             <type>jar</type>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.3</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.lanterna</groupId>
+            <artifactId>lanterna</artifactId>
+            <version>3.1.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-utils -->
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.trystan</groupId>
+            <artifactId>AsciiPanel</artifactId>
+            <version>94388d2</version>
+        </dependency>
+
     </dependencies>
 
 </project>

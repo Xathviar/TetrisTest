@@ -1,9 +1,12 @@
 package screens;
 
-import asciiPanel.AsciiPanel;
-import logic.HighScore;
+import config.Constants;
+import Helper.TerminalHelper;
 
-import java.awt.*;
+import com.googlecode.lanterna.input.KeyType;
+import logic.HighScore;
+import lombok.extern.slf4j.Slf4j;
+
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -14,13 +17,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
-import static screens.PlayScreen.tetrisLogo;
-import static screens.PlayScreen.writeBoxAt;
+import static Helper.TerminalHelper.writeBoxAt;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
+@Slf4j
 public class StartScreen implements Screen {
-    private boolean initScreen = true;
-
     public final Set<HighScore> scores;
 
     public StartScreen() {
@@ -51,40 +52,62 @@ public class StartScreen implements Screen {
 
     @Override
     public void displayOutput(AsciiPanel terminal) {
-        if (initScreen) {
-            terminal.clear();
-            for (int i = 0; i < tetrisLogo.length; i++) {
-                terminal.write(tetrisLogo[i], 5, i + 1);
-            }
-            terminal.writeCenter("-- press [enter] to start --", terminal.getHeightInCharacters() - 1);
-            writeBoxAt(terminal, 15, 15, 41, 14);
-            terminal.write("      Name      | Level | Score | Time ", 16, 16);
-            terminal.write("---------------------------------------", 16, 17);
+        terminal.clear();
+        TerminalHelper.writeTetrisLogo(terminal);
+        terminal.write("Press 'o' to play offline Tetris", 1, 12);
+        terminal.writeCenter("-- press [enter] to start --", terminal.getHeightInCharacters() - 1);
+        int maximum = terminal.getHeightInCharacters() - 30 > 1 ? 10 : terminal.getHeightInCharacters() - 22;
+        if (maximum > -1) {
+            writeBoxAt(terminal, terminal.getWidthInCharacters() / 2 - 20, 15, 41, maximum + 5);
+            terminal.writeCenter("      Name      | Level | Score | Time ", 16);
+            terminal.writeCenter("---------------------------------------", 17);
             int i = 0;
             for (HighScore score : scores) {
-                if (i == 10) {
+                if (i == maximum + 1) {
                     break;
                 }
-                Color brown = new Color(150,116,68);
                 switch (i) {
-                    case 0 -> terminal.write(score.toString(), 16, 18 + i, Color.YELLOW);
-                    case 1 -> terminal.write(score.toString(), 16, 18 + i, Color.GRAY);
-                    case 2 -> terminal.write(score.toString(), 16, 18 + i, brown);
-                    default -> terminal.write(score.toString(), 16, 18 + i, Color.LIGHT_GRAY);
+                    case 0:
+                        terminal.writeCenter(score.toString(), 18 + i, Constants.firstPlayer);
+                        break;
+                    case 1:
+                        terminal.writeCenter(score.toString(), 18 + i, Constants.secondPlayer);
+                        break;
+                    case 2:
+                        terminal.writeCenter(score.toString(), 18 + i, Constants.thirdPlayer);
+                        break;
+                    default:
+                        terminal.writeCenter(score.toString(), 18 + i);
                 }
                 i++;
             }
-            initScreen = false;
         }
     }
 
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
         if (key.getKeyCode() == KeyEvent.VK_ENTER) {
-            PlayScreen screen = new PlayScreen();
+            LoginScreen screen = new LoginScreen();
             screen.displayOutput(terminal);
             return screen;
         }
+        if (key.getKeyChar() != KeyEvent.CHAR_UNDEFINED && Character.toLowerCase(key.getKeyChar()) == 'o') {
+            PlayOfflineScreen screen = new PlayOfflineScreen(terminal);
+            screen.displayOutput(terminal);
+            return screen;
+        }
+        if (key.getKeyChar() != KeyEvent.CHAR_UNDEFINED && Character.toLowerCase(key.getKeyChar()) == 'e') {
+            PlayOnlineScreen screen = new PlayOnlineScreen(terminal, false);
+            screen.displayOutput(terminal);
+            return screen;
+        }
+
         return this;
+    }
+
+    @Override
+    public boolean finishInput() {
+        MainClass.aClass.screen = new LoginScreen();
+        return true;
     }
 }

@@ -1,15 +1,17 @@
 package logic.pieces;
 
+import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
 
-import java.awt.*;
+import static java.awt.Color.GREEN;
 
-public class SPiece extends Tetromino <SPiece>{
+public class SPiece extends Tetromino<SPiece> {
 
     public SPiece(TetrisField field) {
-        super("S-Piece", Color.GREEN, field);
+        super("S-Piece", GREEN, field, 4);
     }
+
     @Override
     public void initGrid() {
         Boolean[][] position = new Boolean[][]{{false, true, true}, {true, true, false}, {false, false, false}};

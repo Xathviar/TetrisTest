@@ -1,17 +1,19 @@
 package logic;
 
+import lombok.Getter;
+
 import java.awt.*;
 
+@Getter
 public class Grid {
     private final Boolean[][] setPoints;
+    private final TetrisField field;
     /**
      * The Horizontal Coordinate
      */
     public int x;
     public int y;
     private Color color;
-
-    private final TetrisField field;
 
     public Grid(Boolean[][] setPoints, Color color, TetrisField field, int x, int y) {
         this.setPoints = setPoints;
@@ -70,6 +72,14 @@ public class Grid {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
 }

@@ -1,65 +1,61 @@
 package logic;
 
-import asciiPanel.AsciiPanel;
-import logic.pieces.Tetromino;
-import screens.PlayScreen;
+import config.Constants;
 
-import java.awt.Color;
+import communication.MatchSendHelper;
+import logic.pieces.Tetromino;
+import lombok.extern.slf4j.Slf4j;
+import nakama.com.google.common.base.Strings;
+import screens.AsciiPanel;
+import screens.PlayOfflineScreen;
+import screens.PlayOnlineScreen;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static Helper.TerminalHelper.writeBoxAt;
+import static Helper.TerminalHelper.writeGarbageLine;
+
+@Slf4j
 public class TetrisField {
     public static final int SCREEN_HEIGHT = 20;
     public static final int SCREEN_WIDTH = 10;
-    public static final char BLOCK = 219;
 
-    public static final String BLOCKCHAIN = "" + BLOCK + BLOCK + BLOCK + BLOCK;
+    private int startX;
 
-    public static final char BACKGROUND = 1;
-
-    private final Point[][] points = new Point[50][10];
-
-    private final RandomGenerator generator;
-
-    private Tetromino activePiece;
-
-    private Tetromino holdPiece;
-
-    private Tetromino helperPiece;
-
-    private long score;
-
-    private int level;
-
-    private int numberofLinesToClear;
+    private int startY;
 
     private static final int LINE_THRESHOLD = 10;
+    private final Point[][] points = new Point[50][10];
+    private final RandomGenerator generator;
+    private PlayOfflineScreen offlineScreen;
+    private PlayOnlineScreen onlineScreen;
 
+    private Tetromino activePiece;
+    private Tetromino holdPiece;
+    private Tetromino helperPiece;
+    private long score;
+    private int level;
+    private int numberofLinesToClear;
     private int currentMillis = 1000;
-
     private boolean allowSwap;
-
     private int combo = -1;
-
     private boolean storeB2B;
-
     private boolean isTspin;
-
-
     private ScheduledExecutorService exec;
-
     private java.util.List<Tetromino> nextPieces;
+    public static GarbagePieceHandler garbagePieceHandler;
 
-    private final PlayScreen screen;
+    private final boolean isOnline;
 
-    private GarbagePieceHandler garbagePieceHandler;
-
-    public TetrisField(int level, PlayScreen screen) {
+    public TetrisField(int level, PlayOfflineScreen screen, int startX, int startY, boolean isOnline) {
+        this.startX = startX;
+        this.startY = startY;
         for (Point[] point : points) {
-            Arrays.fill(point, new Point(true, Color.BLACK));
+            Arrays.fill(point, new Point(true, Constants.backgroundColor));
         }
         generator = new RandomGenerator(this);
         activePiece = generator.getNext();
@@ -73,13 +69,38 @@ public class TetrisField {
             currentMillis -= this.currentMillis / 10;
         }
         exec = Executors.newSingleThreadScheduledExecutor();
-        exec.scheduleAtFixedRate(this::gameTick, 0, currentMillis, TimeUnit.MILLISECONDS);
+        if (!isOnline)
+            exec.scheduleAtFixedRate(this::gameTick, 0, currentMillis, TimeUnit.MILLISECONDS);
         numberofLinesToClear = LINE_THRESHOLD;
-        this.screen = screen;
+        this.offlineScreen = screen;
         garbagePieceHandler = new GarbagePieceHandler();
-        garbagePieceHandler.addGarbage(1);
-        garbagePieceHandler.addGarbage(1);
-        garbagePieceHandler.addGarbage(1);
+        this.isOnline = isOnline;
+    }
+
+    public TetrisField(int level, PlayOnlineScreen screen, int startX, int startY, boolean isOnline) {
+        this.startX = startX;
+        this.startY = startY;
+        for (Point[] point : points) {
+            Arrays.fill(point, new Point(true, Constants.backgroundColor));
+        }
+        generator = new RandomGenerator(this);
+        activePiece = generator.getNext();
+        calculateNewHelperPiecePosition();
+        nextPieces = generator.peek(4);
+        holdPiece = null;
+        allowSwap = true;
+        score = 0;
+        this.level = level;
+        for (int i = 0; i < level - 1; i++) {
+            currentMillis -= this.currentMillis / 10;
+        }
+        exec = Executors.newSingleThreadScheduledExecutor();
+        if (!isOnline)
+            exec.scheduleAtFixedRate(this::gameTick, 0, currentMillis, TimeUnit.MILLISECONDS);
+        numberofLinesToClear = LINE_THRESHOLD;
+        this.onlineScreen = screen;
+        garbagePieceHandler = new GarbagePieceHandler();
+        this.isOnline = isOnline;
     }
 
 
@@ -130,19 +151,18 @@ public class TetrisField {
             int garbagePosition = (int) (Math.random() * 9);
             int line = garbage.getLines();
             for (int y = line; y < 50; y++) {
-                for (int x = 0; x < 10; x++) {
-                    points[y - line][x] = points[y][x];
-                }
+                System.arraycopy(points[y], 0, points[y - line], 0, 10);
             }
             for (int y = 0; y < line; y++) {
                 for (int x = 0; x < 10; x++) {
                     if (x == garbagePosition) {
-                        points[y + 50 - line][x] = new Point(true, Color.BLACK);
+                        points[y + 50 - line][x] = new Point(true, Constants.backgroundColor);
                     } else {
-                        points[y + 50 - line][x] = new Point(false, Color.GRAY);
+                        points[y + 50 - line][x] = new Point(false, Constants.disabledColor);
                     }
                 }
             }
+            MatchSendHelper.UPDATEGARBAGE.sendUpdate(line, garbagePosition);
         }
     }
 
@@ -165,18 +185,21 @@ public class TetrisField {
         if (numberOfClearedLines != 0) {
             combo++;
             int rawSendCapacity = sentLinesTotal(numberOfClearedLines);
-            System.out.println("Lines Sent: " + rawSendCapacity);
+            log.debug("Lines Sent: " + rawSendCapacity);
             score += 10 * Math.pow(rawSendCapacity, 2) * Math.pow(level, 2);
 
             numberofLinesToClear -= numberOfClearedLines;
             if (numberofLinesToClear < 1) {
                 level++;
                 currentMillis -= currentMillis / 10;
-                rescheduleScheduler();
+                if (!isOnline)
+                    rescheduleScheduler();
                 numberofLinesToClear = LINE_THRESHOLD;
             }
             int garbageToSend = garbagePieceHandler.removeGarbageLines(sentLinesTotal(numberOfClearedLines));
-            //TODO Schick Gameserver wv. Garbage gesendet wird...
+            if (garbageToSend > 0 && isOnline) {
+                MatchSendHelper.SENDGARBAGE.sendUpdate(garbageToSend);
+            }
         } else {
             combo = -1;
             receiveGarbage();
@@ -208,14 +231,25 @@ public class TetrisField {
     }
 
     private int sentLinesByCombo() {
-        return switch (combo) {
-            case -1, 0 -> 0;
-            case 1, 2 -> 1;
-            case 3, 4 -> 2;
-            case 5, 6 -> 3;
-            case 7, 8, 9 -> 4;
-            default -> 5;
-        };
+        switch (combo) {
+            case -1:
+            case 0:
+                return 0;
+            case 1:
+            case 2:
+                return 1;
+            case 3:
+            case 4:
+                return 2;
+            case 5:
+            case 6:
+                return 3;
+            case 7:
+            case 8:
+            case 9:
+                return 4;
+        }
+        return 5;
     }
 
     private int evaluateBackToBack() {
@@ -244,7 +278,7 @@ public class TetrisField {
 
     private int isAllClear() {
         for (Point point : points[points.length - 1]) {
-            if (point.getColor() != Color.BLACK) {
+            if (point.getColor() != Constants.backgroundColor) {
                 return 0;
             }
         }
@@ -253,12 +287,13 @@ public class TetrisField {
 
 
     public void printTetrisField(AsciiPanel terminal) {
+        drawBoard(terminal);
         for (int i = 0; i < SCREEN_HEIGHT; i++) {
             for (int j = 0; j < SCREEN_WIDTH; j++) {
                 if (points[i + 30][j].isFree()) {
-                    terminal.write(BACKGROUND, 30 + j, 16 + i, Color.GRAY, Color.BLACK);
+                    terminal.write(' ', startX + j, startY + i, Constants.backgroundColor, Constants.backgroundColor);
                 } else {
-                    terminal.write(BLOCK, 30 + j, 16 + i, points[i + 30][j].getColor());
+                    terminal.write(Constants.BLOCK, startX + j, startY + i, points[i + 30][j].getColor());
                 }
             }
         }
@@ -270,13 +305,36 @@ public class TetrisField {
         printScoreAndStuff(terminal);
     }
 
+    private void drawBoard(AsciiPanel terminal) {
+        int height = startY - 1;
+        writeBoxAt(terminal, startX - 1, height, 12, 22);
+
+        height = 15;
+        // This is the Box which displays the Hold Piece
+        writeBoxAt(terminal, startX - 9, height, 9, 7);
+
+        // This is the Box which displays the scoreboard
+        writeBoxAt(terminal, startX - 9, height + 15, 9, 7);
+
+        // These are the boxes drawn which show the next four pieces
+        writeBoxAt(terminal, startX + 10, height, 8, 6);
+        writeBoxAt(terminal, startX + 10, height + 5, 8, 6);
+        writeBoxAt(terminal, startX + 10, height + 10, 8, 6);
+        writeBoxAt(terminal, startX + 10, height + 15, 8, 6);
+        terminal.write(" ", startX + 11, height + 21);
+        // This displays incoming Garbage
+        if (isOnline) {
+            writeGarbageLine(terminal, startX - 1, height, 22, garbagePieceHandler);
+        }
+    }
+
     private void printScoreAndStuff(AsciiPanel terminal) {
-        int y = 23;
-        terminal.write("LEVEL", 22, y++, Color.YELLOW);
-        terminal.write(String.format("  %03d", level), 21, y++, Color.WHITE);
-        terminal.write(Character.toString(196).repeat(7), 21, y++, Color.LIGHT_GRAY);
-        terminal.write("SCORE", 21, y++, Color.YELLOW);
-        terminal.write(String.format("%07d", score), 21, y, Color.WHITE);
+        int y = startY + 15;
+        terminal.write("LEVEL", startX - 7, y++, Constants.importantText);
+        terminal.write(String.format("  %03d", level), startX - 8, y++, Constants.characterColor);
+        terminal.write(Strings.repeat(Character.toString('-'), 7), startX - 8, y++, Constants.wallColor);
+        terminal.write(" SCORE ", startX - 8, y++, Constants.importantText);
+        terminal.write(String.format("%07d", score), startX - 8, y, Constants.characterColor);
     }
 
     private void printCurrentPiece(AsciiPanel terminal) {
@@ -287,8 +345,8 @@ public class TetrisField {
         for (int y = 0; y < gridPoints.length; y++) {
             for (int x = 0; x < gridPoints[y].length; x++) {
                 if (gridPoints[y][x]) {
-                    terminal.write(BLOCK, 30 + x + helperPieceGrid.x, 16 + y + helperPieceGrid.y - 30, Color.LIGHT_GRAY, Color.BLACK);
-                    terminal.write(BLOCK, 30 + x + activePieceGrid.x, 16 + y + activePieceGrid.y - 30, activePieceGrid.getColor());
+                    terminal.write(Constants.BLOCK, startX + x + helperPieceGrid.x, startY + y + helperPieceGrid.y - 30, Constants.disabledColor, Constants.backgroundColor);
+                    terminal.write(Constants.BLOCK, startX + x + activePieceGrid.x, startY + y + activePieceGrid.y - 30, activePieceGrid.getColor());
                 }
             }
         }
@@ -298,13 +356,13 @@ public class TetrisField {
         synchronized (holdPiece) {
             Grid holdPieceGrid = holdPiece.getGrid()[0];
             Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
-            terminal.write(BLOCKCHAIN, 23, 17, Color.BLACK);
-            terminal.write(BLOCKCHAIN, 23, 18, Color.BLACK);
-            terminal.write(BLOCKCHAIN, 23, 19, Color.BLACK);
+            terminal.write(Constants.BLOCKCHAIN, startX - 7, startY + 1, Constants.backgroundColor);
+            terminal.write(Constants.BLOCKCHAIN, startX - 7, startY + 2, Constants.backgroundColor);
+            terminal.write(Constants.BLOCKCHAIN, startX - 7, startY + 3, Constants.backgroundColor);
             for (int y = 0; y < gridPoints.length; y++) {
                 for (int x = 0; x < gridPoints[y].length; x++) {
                     if (gridPoints[y][x]) {
-                        terminal.write(BLOCK, 23 + x, 17 + y, holdPieceGrid.getColor());
+                        terminal.write(Constants.BLOCK, startX - 7 + x, startY + 1 + y, holdPieceGrid.getColor());
                     }
                 }
             }
@@ -315,13 +373,13 @@ public class TetrisField {
         for (int i = 0; i < nextPieces.size(); i++) {
             Grid holdPieceGrid = nextPieces.get(i).getGrid()[0];
             Boolean[][] gridPoints = holdPieceGrid.getSetPoints();
-            terminal.write(BLOCKCHAIN, 43, 17 + i * 5, Color.BLACK);
-            terminal.write(BLOCKCHAIN, 43, 18 + i * 5, Color.BLACK);
-            terminal.write(BLOCKCHAIN, 43, 19 + i * 5, Color.BLACK);
+            terminal.write(Constants.BLOCKCHAIN, startX + 12, startY + 1 + i * 5, Constants.backgroundColor);
+            terminal.write(Constants.BLOCKCHAIN, startX + 12, startY + 2 + i * 5, Constants.backgroundColor);
+            terminal.write(Constants.BLOCKCHAIN, startX + 12, startY + 3 + i * 5, Constants.backgroundColor);
             for (int y = 0; y < gridPoints.length; y++) {
                 for (int x = 0; x < gridPoints[y].length; x++) {
                     if (gridPoints[y][x]) {
-                        terminal.write(BLOCK, 43 + x, 17 + y + i * 5, holdPieceGrid.getColor());
+                        terminal.write(Constants.BLOCK, startX + 12 + x, startY + 1 + y + i * 5, holdPieceGrid.getColor());
                     }
                 }
             }
@@ -369,11 +427,25 @@ public class TetrisField {
         int counter = activePiece.hardDrop();
         score += (counter) >> 1;
         newActivePiece();
-//        printCurrentField();
+//        debugTetrisField();
+    }
+
+    private void debugTetrisField() {
+        for (Point[] point : points) {
+            System.out.print("#");
+            for (Point point1 : point) {
+                System.out.printf("%3s", point1.isFree() ? " " : "x");
+            }
+            System.out.println("#");
+        }
     }
 
 
     public void newActivePiece() {
+        if (isOnline) {
+            activePiece.setY(activePiece.returnPiece().getY());
+            MatchSendHelper.UPDATEBOARD.sendUpdate(activePiece);
+        }
         addGrid(getActivePiece().returnPiece());
         activePiece = generator.getNext();
         if (!activePiece.getGrid()[0].isValidPosition(3, 30)) {
@@ -381,8 +453,12 @@ public class TetrisField {
                 activePiece.setY(29);
             } else {
                 exec.shutdownNow();
-                screen.shutdownThread();
-                screen.loseScreen = true;
+                if (isOnline) {
+                    MatchSendHelper.LOOSE.sendUpdate();
+                    onlineScreen.loseScreen = true;
+                } else {
+                    offlineScreen.loseScreen = true;
+                }
             }
         }
         nextPieces = generator.peek(4);
@@ -419,5 +495,32 @@ public class TetrisField {
 
     public void shutdownThread() {
         exec.shutdownNow();
+    }
+
+    public void dasLeft() {
+        boolean locationChanged = true;
+        while (locationChanged) {
+            int oldX = activePiece.getX();
+            moveLeft();
+            if (oldX == activePiece.getX()) {
+                locationChanged = false;
+            }
+        }
+    }
+
+    public void dasRight() {
+        boolean locationChanged = true;
+        while (locationChanged) {
+            int oldX = activePiece.getX();
+            moveRight();
+            if (oldX == activePiece.getX()) {
+                locationChanged = false;
+            }
+        }
+    }
+
+    public void instantsdf() {
+        int counter = activePiece.hardDrop();
+        score += (counter) >> 1;
     }
 }

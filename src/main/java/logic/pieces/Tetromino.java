@@ -1,27 +1,27 @@
 package logic.pieces;
 
+import config.Constants;
 import logic.Grid;
 import logic.TetrisField;
+import lombok.Getter;
 
 import java.awt.*;
 
-public abstract class Tetromino <T> {
-    private final String name;
+@Getter
+public abstract class Tetromino<T> {
     final Color color;
     final Grid[] grid;
-
-    private int currentRotation;
-
     final TetrisField field;
-
+    private final String name;
     Point[][] wallKicks;
-
     int x;
     int y;
-
+    private int currentRotation;
     private boolean readyToFix;
 
-    Tetromino(String name, Color color, TetrisField field) {
+    private final int pieceId;
+
+    Tetromino(String name, Color color, TetrisField field, int pieceId) {
         this.name = name;
         this.color = color;
         this.grid = new Grid[4];
@@ -32,6 +32,49 @@ public abstract class Tetromino <T> {
         wallKicks = new Point[4][5];
         initGrid();
         initWallKicks();
+        this.pieceId = pieceId;
+    }
+
+    public static Point[][] wallKicksAllButI() {
+        Point[][] wallKicks = new Point[4][5];
+        Point test1 = new Point(0, 0);
+        Point test2 = new Point(-1, 0);
+        Point test3 = new Point(-1, -1);
+        Point test4 = new Point(0, 2);
+        Point test5 = new Point(-1, 2);
+        wallKicks[0][0] = test1;
+        wallKicks[0][1] = test2;
+        wallKicks[0][2] = test3;
+        wallKicks[0][3] = test4;
+        wallKicks[0][4] = test5;
+        test2 = new Point(1, 0);
+        test3 = new Point(1, 1);
+        test4 = new Point(0, -2);
+        test5 = new Point(1, -2);
+        wallKicks[1][0] = test1;
+        wallKicks[1][1] = test2;
+        wallKicks[1][2] = test3;
+        wallKicks[1][3] = test4;
+        wallKicks[1][4] = test5;
+        test2 = new Point(1, 0);
+        test3 = new Point(1, -1);
+        test4 = new Point(0, 2);
+        test5 = new Point(1, 2);
+        wallKicks[2][0] = test1;
+        wallKicks[2][1] = test2;
+        wallKicks[2][2] = test3;
+        wallKicks[2][3] = test4;
+        wallKicks[2][4] = test5;
+        test2 = new Point(-1, 0);
+        test3 = new Point(-1, 1);
+        test4 = new Point(0, -2);
+        test5 = new Point(-1, -2);
+        wallKicks[3][0] = test1;
+        wallKicks[3][1] = test2;
+        wallKicks[3][2] = test3;
+        wallKicks[3][3] = test4;
+        wallKicks[3][4] = test5;
+        return wallKicks;
     }
 
     public abstract void initGrid();
@@ -40,7 +83,6 @@ public abstract class Tetromino <T> {
      * Implement SRS here
      */
     public abstract void initWallKicks();
-
 
     public void rotateCClockwise() {
         int tempRotation;
@@ -94,7 +136,6 @@ public abstract class Tetromino <T> {
         updateGrids();
     }
 
-
     public void movePieceRight() {
         if (grid[currentRotation].moveRight()) {
             readyToFix = false;
@@ -108,7 +149,7 @@ public abstract class Tetromino <T> {
         while (true) {
             boolean moved = grid[currentRotation].moveDown();
             if (moved) {
-                counter ++;
+                counter++;
             } else {
                 break;
             }
@@ -116,7 +157,7 @@ public abstract class Tetromino <T> {
         return counter;
     }
 
-    public void softDrop()  {
+    public void softDrop() {
         grid[currentRotation].moveDown();
         this.y = grid[currentRotation].y;
         updateGrids();
@@ -124,7 +165,6 @@ public abstract class Tetromino <T> {
 
     public boolean gameTick() {
         if (!grid[currentRotation].moveDown()) {
-            System.out.println("HELLO");
             if (readyToFix) {
                 readyToFix = false;
                 return true;
@@ -146,7 +186,7 @@ public abstract class Tetromino <T> {
 
     @Override
     public String toString() {
-        return name;
+        return String.format("%s: - %d|%d", name, x, y);
     }
 
     public void resetPosition() {
@@ -154,10 +194,6 @@ public abstract class Tetromino <T> {
         this.y = 30;
         this.currentRotation = 0;
         updateGrids();
-    }
-
-    public Grid[] getGrid() {
-        return grid;
     }
 
     public Tetromino clonePiece() {
@@ -170,15 +206,11 @@ public abstract class Tetromino <T> {
     }
 
     public void changeColorGrey() {
-        grid[0].setColor(Color.GRAY);
+        grid[0].setColor(Constants.disabledColor);
     }
 
     public void returnNormalColor() {
         grid[0].setColor(color);
-    }
-
-    public int getCurrentRotation() {
-        return currentRotation;
     }
 
     public void setCurrentRotation(int currentRotation) {
@@ -187,53 +219,18 @@ public abstract class Tetromino <T> {
 
     public abstract T newPiece(TetrisField field);
 
-    public static Point[][] wallKicksAllButI() {
-        Point[][] wallKicks = new Point[4][5];
-        Point test1 = new Point(0, 0);
-        Point test2 = new Point(-1, 0);
-        Point test3 = new Point(-1, -1);
-        Point test4 = new Point(0, 2);
-        Point test5 = new Point(-1, 2);
-        wallKicks[0][0] = test1;
-        wallKicks[0][1] = test2;
-        wallKicks[0][2] = test3;
-        wallKicks[0][3] = test4;
-        wallKicks[0][4] = test5;
-        test2 = new Point(1, 0);
-        test3 = new Point(1, 1);
-        test4 = new Point(0, -2);
-        test5 = new Point(1, -2);
-        wallKicks[1][0] = test1;
-        wallKicks[1][1] = test2;
-        wallKicks[1][2] = test3;
-        wallKicks[1][3] = test4;
-        wallKicks[1][4] = test5;
-        test2 = new Point(1, 0);
-        test3 = new Point(1, -1);
-        test4 = new Point(0, 2);
-        test5 = new Point(1, 2);
-        wallKicks[2][0] = test1;
-        wallKicks[2][1] = test2;
-        wallKicks[2][2] = test3;
-        wallKicks[2][3] = test4;
-        wallKicks[2][4] = test5;
-        test2 = new Point(-1, 0);
-        test3 = new Point(-1, 1);
-        test4 = new Point(0, -2);
-        test5 = new Point(-1, -2);
-        wallKicks[3][0] = test1;
-        wallKicks[3][1] = test2;
-        wallKicks[3][2] = test3;
-        wallKicks[3][3] = test4;
-        wallKicks[3][4] = test5;
-        return wallKicks;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public void setY(int y) {
         this.y = y;
+        for (Grid grid1 : grid) {
+            grid1.setY(y);
+        }
     }
+
+    public void setX(int x) {
+        this.x = x;
+        for (Grid grid1 : grid) {
+            grid1.setX(x);
+        }
+    }
+
 }

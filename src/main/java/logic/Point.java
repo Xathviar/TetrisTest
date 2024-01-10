@@ -1,5 +1,7 @@
 package logic;
 
+import config.Constants;
+
 import java.awt.*;
 
 public class Point {
@@ -26,6 +28,6 @@ public class Point {
 
     public void resetPoint() {
         isFree = true;
-        color = Color.BLACK;
+        color = Constants.backgroundColor;
     }
 }
