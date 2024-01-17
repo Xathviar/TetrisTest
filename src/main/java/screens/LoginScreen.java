@@ -106,6 +106,6 @@ public class LoginScreen implements Screen {
 
     @Override
     public boolean isInsideInputField() {
-        return helper.isTextFieldSelected();
+        return helper.isSelected();
     }
 }

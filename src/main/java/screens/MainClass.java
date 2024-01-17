@@ -28,22 +28,71 @@ import java.util.concurrent.TimeUnit;
 //TODO fix issue that losing Player doesn't display the game correctly
 //TODO go back the menu...
 //TODO Add Config so that player don't have to input everything all the time
+//TODO There is still one Misconfiguration of the Drops
+//TODO also fix the way how loosing is implemented
+
+/**
+ * This class is the Main Class from which the complete Code is being run
+ * It uses AsciiPanel which depends on Java Swing to display the Output and it uses Nakama for Communication between multiple Clients
+ */
 @Slf4j
 public class MainClass extends JFrame implements KeyListener {
+
+    /**
+     * This is used as a Reference so that the Screens are able to get the session, screen, etc.
+     */
     public static MainClass aClass;
 
+    /**
+     * This Variable stores the current Screen
+     */
     public Screen screen;
+
+    /**
+     * This Variable stores the current Session
+     */
     public Session session;
+
+    /**
+     * This Variable stores the current Client
+     */
     public Client client;
+
+    /**
+     * This Variable stores the current Socket
+     */
     public SocketClient socket;
+
+    /**
+     * This Variable stores the group_id, which is used to join a group
+     */
     public String group_id = "";
+
+    /**
+     * This Variable stores the user_id, which is used to check if the Player is the Host of a Lobby
+     */
     public String user_id = "";
+
+    /**
+     * This Variable stores if the Player is currently in a Match
+     */
     public Match match;
+
+    /**
+     * This Variable stores if the Player created the Group/Lobby
+     */
     public boolean createdGroup;
+
+    /**
+     * This Variable stores the terminal which is used by the Screens to display the output
+     */
     private final AsciiPanel terminal;
 
-
-
+    /**
+     * Constructor for MainClass
+     * Creates the AsciiPanel, a Thread, and a Listener
+     * One Thread which updates the AsciiPanel and a Listener which handles Resizing of the App
+     */
     public MainClass() {
         super();
         terminal = new AsciiPanel(80, 50, new AsciiFont("custom_cp437_20x20.png", 20, 20));
@@ -62,6 +111,10 @@ public class MainClass extends JFrame implements KeyListener {
         });
     }
 
+    /**
+     * PSVM...
+     * @param args ignored
+     */
     public static void main(String[] args) {
         MainClass mainClass = new MainClass();
         mainClass.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,6 +132,12 @@ public class MainClass extends JFrame implements KeyListener {
         }, "Delete all groups"));
     }
 
+    /**
+     * If the Config File doesn't exist it creates them in the following directory depending on the OS:
+     * Linux: ~/.config/tty-tetris/tty-tetris.conf
+     * Windows: %appdata%/tty-tetris/tty-tetris.conf
+     * Mac: idk
+     */
     @SneakyThrows
     private static void createConfig() {
         File configFile = OsUtil.getConfigFile("tty-tetris.conf");
@@ -89,6 +148,9 @@ public class MainClass extends JFrame implements KeyListener {
     }
 
 
+    /**
+     * This is called in a Thread and updates the App Display-output
+     */
     public void repaint() {
         SwingUtilities.invokeLater(() -> {
             screen.displayOutput(terminal);
@@ -96,6 +158,9 @@ public class MainClass extends JFrame implements KeyListener {
         });
     }
 
+    /**
+     * This creates the Socket which is used for Communcation with Nakama
+     */
     public void createSocket() {
         try {
             this.socket = this.client.createSocket();
@@ -123,6 +188,13 @@ public class MainClass extends JFrame implements KeyListener {
 
     }
 
+    /**
+     * Depending on the current Screen, this Method handles KeyEvents differently
+     * When the Screen is currently either a {@link PlayOnlineScreen} or a {@link PlayOfflineScreen}, then it executes {@link PlayOnlineScreen#addKey(KeyEvent)}
+     * When the Screen is not one of these two Screens, and if the Screen is not currently inside an InputField then it sends the KeyEvent to {@link KeyMenuConfig#execute(KeyEvent, Screen, AsciiPanel)}
+     * If the Event is currently inside an InputField then it currently forwards the KeyEvent to {@link Screen#respondToUserInput(KeyEvent, AsciiPanel)}
+     * @param key the event to be processed
+     */
     @Override
     public void keyPressed(KeyEvent key) {
         if (!(screen instanceof PlayOfflineScreen || screen instanceof PlayOnlineScreen)) {
@@ -132,13 +204,17 @@ public class MainClass extends JFrame implements KeyListener {
                 screen = KeyMenuConfig.execute(key, screen, terminal);
             }
         } else if (screen instanceof PlayOfflineScreen){
-            System.out.println(key);
             ((PlayOfflineScreen) screen).addKey(key);
         } else {
             ((PlayOnlineScreen) screen).addKey(key);
         }
     }
 
+    /**
+     * Depending on the current Screen, this Method handles KeyEvents differently
+     * When the Screen is currently either a {@link PlayOnlineScreen} or a {@link PlayOfflineScreen}, then it executes {@link PlayOnlineScreen#removeKey(KeyEvent)}
+     * @param key the event to be processed
+     */
     @Override
     public void keyReleased(KeyEvent key) {
         if (screen instanceof PlayOfflineScreen ) {
@@ -148,9 +224,12 @@ public class MainClass extends JFrame implements KeyListener {
         }
     }
 
+    /**
+     * Ignored...
+     * @param key the event to be processed
+     */
     @Override
     public void keyTyped(KeyEvent key) {
-
     }
 
 }

@@ -67,7 +67,7 @@ public class PlayOnlineScreen implements Screen, Runnable {
         }
 
     }
-//l asdjkfghklasdhg ljksdhgj sdf gjk hsdlfkjgl
+
     @Override
     public void displayOutput(AsciiPanel terminal) {
         if (win) {
@@ -94,33 +94,7 @@ public class PlayOnlineScreen implements Screen, Runnable {
 
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
-//        switch (key.getKeyType()) {
-//            case ArrowLeft:
-//                field.moveLeft();
-//                break;
-//            case ArrowRight:
-//                field.moveRight();
-//                break;
-//            case ArrowDown:
-//                field.softDrop();
-//                break;
-//            case ArrowUp:
-//                field.rotateClockwise();
-//                break;
-//            case Character:
-//                switch (Character.toLowerCase(key.getCharacter())) {
-//                    case ' ':
-//                        field.hardDrop();
-//                        break;
-//                    case 'z':
-//                    case 'y':
-//                        field.rotateCClockwise();
-//                        break;
-//                    case 'x':
-//                        field.swapHold();
-//                        break;
-//                }
-//        }
+
         return this;
     }
 

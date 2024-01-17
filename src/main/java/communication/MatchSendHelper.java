@@ -12,9 +12,23 @@ import screens.LobbyWaitingScreen;
 import screens.MainClass;
 import screens.PlayOnlineScreen;
 
+/**
+ * This Enum stores which Events are being sent and is used to sent and receive them <br><br>
+ * List of all Enums: <br>
+ * {@link MatchSendHelper#READY} <br>
+ * {@link MatchSendHelper#START} <br>
+ * {@link MatchSendHelper#SENDGARBAGE} <br>
+ * {@link MatchSendHelper#LOOSE} <br>
+ * {@link MatchSendHelper#UPDATEBOARD} <br>
+ * {@link MatchSendHelper#GAMETICK} <br>
+ * {@link MatchSendHelper#UPDATEGARBAGE} <br>
+ */
 @Slf4j
 public enum MatchSendHelper {
 
+    /**
+     * READY is sent when either of the two Players are currently in the LobbyWaiting and either are getting ready or unreadying
+     */
     READY(1) {
         @Override
         public void sendUpdate(Object... o) {
@@ -35,6 +49,9 @@ public enum MatchSendHelper {
 
     // TODO Implement Starting the Game Logic
     // TODO Counting down from three?
+    /**
+     * START is sent when the Game finally starts. The Host has to send this
+     */
     START(2) {
         @Override
         public void sendUpdate(Object... o) {
@@ -46,6 +63,10 @@ public enum MatchSendHelper {
             LobbyWaitingScreen.startGame();
         }
     },
+
+    /**
+     * SENDGARBAGE is sent when a Player sends Garbage... Who would've guessed
+     */
     SENDGARBAGE(3) {
         @Override
         public void sendUpdate(Object... o) {
@@ -61,6 +82,9 @@ public enum MatchSendHelper {
             TetrisField.garbagePieceHandler.addGarbage(lines);
         }
     },
+    /**
+     * LOOSE is sent when the Player looses the Game
+     */
     LOOSE(4) {
         @Override
         public void sendUpdate(Object... o) {
@@ -72,6 +96,9 @@ public enum MatchSendHelper {
             PlayOnlineScreen.win = true;
         }
     },
+    /**
+     * UPDATEBOARD is called when the Player placed a Piece. It is used to update the Boardstate for the Opponent
+     */
     UPDATEBOARD(5) {
         @Override
         public void sendUpdate(Object... o) {
@@ -94,6 +121,9 @@ public enum MatchSendHelper {
         }
     },
 
+    /**
+     * GAMETICK is sent by the Host and it
+     */
     GAMETICK(6) {
         @Override
         public void sendUpdate(Object... o) {
@@ -105,6 +135,9 @@ public enum MatchSendHelper {
             PlayOnlineScreen.gameTick();
         }
     },
+    /**
+     * UPDATEGARBAGE is used to update the OpponentBoard so that the Garbage is also displayed on it
+     */
     UPDATEGARBAGE(7) {
         @Override
         public void sendUpdate(Object... o) {
@@ -126,16 +159,37 @@ public enum MatchSendHelper {
         }
     };
 
+    /**
+     * The Opcode is used as an ID to distinguish between the different IDs
+     */
     private final int opcode;
+
+    /**
+     * The constructor for MatchSendHelper
+     * @param opcode {@link MatchSendHelper#opcode}
+     */
 
     MatchSendHelper(int opcode) {
         this.opcode = opcode;
     }
 
+    /**
+     * This Method is used to send the different Events {@link MatchSendHelper}
+     * @param o An Ellipse of Objects so that everything can be sent
+     */
     public abstract void sendUpdate(Object... o);
 
+    /**
+     * This Method is used to receive the different Events {@link MatchSendHelper} and is called by {@link MatchSendHelper#receiveUpdate(int, String)}
+     * @param json
+     */
     public abstract void receiveUpdate(String json);
 
+    /**
+     * This Method decides which Event was received depending on the Opcode
+     * @param opcode The OPCode that was received
+     * @param json The Data that was received
+     */
     public static void receiveUpdate(int opcode, String json) {
         log.debug(String.format("Received Opcode %d with Message: \n%s", opcode, json));
         switch (opcode) {
@@ -161,5 +215,4 @@ public enum MatchSendHelper {
                 UPDATEGARBAGE.receiveUpdate(json);
         }
     }
-
 }
