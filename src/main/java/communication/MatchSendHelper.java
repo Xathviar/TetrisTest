@@ -34,6 +34,7 @@ public enum MatchSendHelper {
     },
 
     // TODO Implement Starting the Game Logic
+    // TODO Counting down from three?
     START(2) {
         @Override
         public void sendUpdate(Object... o) {
