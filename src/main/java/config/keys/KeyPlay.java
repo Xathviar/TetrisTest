@@ -1,6 +1,6 @@
 package config.keys;
 
-import Helper.OsUtil;
+import helper.OsUtil;
 import config.LdataParser;
 import logic.TetrisField;
 

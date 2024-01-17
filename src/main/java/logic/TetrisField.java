@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static Helper.TerminalHelper.*;
+import static helper.TerminalHelper.*;
 
 @Slf4j
 public class TetrisField {
@@ -185,7 +185,7 @@ public class TetrisField {
             combo++;
             int rawSendCapacity = sentLinesTotal(numberOfClearedLines);
             log.debug("Lines Sent: " + rawSendCapacity);
-            score += 10 * Math.pow(rawSendCapacity, 2) * Math.pow(level, 2);
+            score += (long) (10 * Math.pow(rawSendCapacity, 2) * Math.pow(level, 2));
 
             numberofLinesToClear -= numberOfClearedLines;
             if (numberofLinesToClear < 1) {

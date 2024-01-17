@@ -1,8 +1,8 @@
 package communication;
 
-import DTO.GarbageDTO;
-import DTO.ReadyDTO;
-import DTO.UpdateBoardStateDTO;
+import dto.GarbageDTO;
+import dto.ReadyDTO;
+import dto.UpdateBoardStateDTO;
 import logic.TetrisField;
 import logic.pieces.Tetromino;
 import lombok.extern.slf4j.Slf4j;

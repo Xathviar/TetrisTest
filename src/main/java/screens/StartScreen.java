@@ -1,7 +1,7 @@
 package screens;
 
 import config.Constants;
-import Helper.TerminalHelper;
+import helper.TerminalHelper;
 
 import logic.HighScore;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
-import static Helper.TerminalHelper.writeBoxAt;
+import static helper.TerminalHelper.writeBoxAt;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 @Slf4j

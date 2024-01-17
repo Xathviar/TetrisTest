@@ -1,6 +1,6 @@
 package screens;
 
-import Helper.TerminalHelper;
+import helper.TerminalHelper;
 import config.keys.KeyPlay;
 import logic.TetrisField;
 

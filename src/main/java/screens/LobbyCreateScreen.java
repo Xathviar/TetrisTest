@@ -1,6 +1,6 @@
 package screens;
 
-import Helper.TerminalHelper;
+import helper.TerminalHelper;
 
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.Rpc;

@@ -1,4 +1,4 @@
-package DTO;
+package dto;
 
 import logic.pieces.*;
 import lombok.Getter;

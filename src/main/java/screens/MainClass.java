@@ -1,7 +1,7 @@
 package screens;
 
-import Helper.ClasspathResourceLoader;
-import Helper.OsUtil;
+import helper.ClasspathResourceLoader;
+import helper.OsUtil;
 import asciiPanel.AsciiFont;
 import com.heroiclabs.nakama.*;
 import communication.MatchSendHelper;

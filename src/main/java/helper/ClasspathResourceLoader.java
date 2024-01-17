@@ -1,4 +1,4 @@
-package Helper;
+package helper;
 
 import java.io.InputStream;
 

@@ -1,6 +1,6 @@
 package screens;
 
-import Helper.TerminalHelper;
+import helper.TerminalHelper;
 
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;

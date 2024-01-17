@@ -1,4 +1,4 @@
-package Helper;
+package helper;
 
 import config.LdataParser;
 import config.LdataWriter;

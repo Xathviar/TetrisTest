@@ -1,7 +1,7 @@
 package screens;
 
-import Helper.ConfigHelper;
-import Helper.TerminalHelper;
+import helper.ConfigHelper;
+import helper.TerminalHelper;
 
 import com.heroiclabs.nakama.Client;
 import com.heroiclabs.nakama.DefaultClient;

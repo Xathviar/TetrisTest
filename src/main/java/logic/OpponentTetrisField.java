@@ -9,7 +9,7 @@ import screens.AsciiPanel;
 import java.util.Arrays;
 
 import static config.Constants.backgroundColor;
-import static Helper.TerminalHelper.writeBoxAt;
+import static helper.TerminalHelper.writeBoxAt;
 
 @Getter
 public class OpponentTetrisField {

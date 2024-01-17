@@ -1,6 +1,6 @@
 package screens;
 
-import Helper.TerminalHelper;
+import helper.TerminalHelper;
 
 import communication.MatchSendHelper;
 import config.keys.KeyPlay;
