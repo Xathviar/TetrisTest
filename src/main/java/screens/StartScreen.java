@@ -3,7 +3,6 @@ package screens;
 import config.Constants;
 import Helper.TerminalHelper;
 
-import com.googlecode.lanterna.input.KeyType;
 import logic.HighScore;
 import lombok.extern.slf4j.Slf4j;
 

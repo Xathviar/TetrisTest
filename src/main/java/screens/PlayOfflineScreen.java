@@ -5,7 +5,6 @@ import config.keys.KeyPlay;
 import logic.TetrisField;
 
 import java.awt.event.KeyEvent;
-import java.security.KeyPair;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;

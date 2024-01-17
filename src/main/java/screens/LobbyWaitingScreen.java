@@ -3,7 +3,6 @@ package screens;
 import config.Constants;
 import Helper.TerminalHelper;
 
-import com.googlecode.lanterna.input.KeyType;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupUserList;
 import com.heroiclabs.nakama.api.UserGroupList;

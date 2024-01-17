@@ -114,7 +114,7 @@ public class CustomStreamTokenizer {
     /**
      * Internal character meanings, 0 implies TOKEN_ORDINARY
      */
-    private byte tokenTypes[] = new byte[256];
+    private final byte[] tokenTypes = new byte[256];
 
     private static final byte TOKEN_COMMENT = 1;
 
@@ -1056,5 +1056,5 @@ public class CustomStreamTokenizer {
         return digit;
     }
 
-    private Map<String,Character> _AGL = new HashMap<>();
+    private final Map<String,Character> _AGL = new HashMap<>();
 }

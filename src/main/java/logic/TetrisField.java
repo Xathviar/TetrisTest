@@ -16,17 +16,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static Helper.TerminalHelper.writeBoxAt;
-import static Helper.TerminalHelper.writeGarbageLine;
+import static Helper.TerminalHelper.*;
 
 @Slf4j
 public class TetrisField {
     public static final int SCREEN_HEIGHT = 20;
     public static final int SCREEN_WIDTH = 10;
 
-    private int startX;
+    private final int startX;
 
-    private int startY;
+    private final int startY;
 
     private static final int LINE_THRESHOLD = 10;
     private final Point[][] points = new Point[50][10];
@@ -291,7 +290,7 @@ public class TetrisField {
         for (int i = 0; i < SCREEN_HEIGHT; i++) {
             for (int j = 0; j < SCREEN_WIDTH; j++) {
                 if (points[i + 30][j].isFree()) {
-                    terminal.write(' ', startX + j, startY + i, Constants.backgroundColor, Constants.backgroundColor);
+                    terminal.write(Constants.BACKGROUND, startX + j, startY + i, Constants.disabledColor, Constants.backgroundColor);
                 } else {
                     terminal.write(Constants.BLOCK, startX + j, startY + i, points[i + 30][j].getColor());
                 }

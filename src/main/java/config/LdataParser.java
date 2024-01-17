@@ -175,7 +175,7 @@ public class LdataParser {
             throw new IllegalArgumentException(String.format("unfinished here document starting on line %d", _lineno));
         }
 
-        return _sb.toString().substring(_sb.toString().indexOf('\n')+1);
+        return _sb.substring(_sb.toString().indexOf('\n')+1);
     }
 
     @SneakyThrows
@@ -197,7 +197,7 @@ public class LdataParser {
                 case CustomStreamTokenizer.TOKEN_TYPE_WORD: _ret.add(_tokener.tokenAsString()); break;
                 case CustomStreamTokenizer.TOKEN_TYPE_CARDINAL: _ret.add(_tokener.tokenAsCardinal()); break;
                 case CustomStreamTokenizer.TOKEN_TYPE_NUMBER: _ret.add(_tokener.tokenAsNumber()); break;
-                default: throw new IllegalArgumentException(String.format("Illegal Token '%s' in line %d", Character.toString((char) _token), _tokener.lineno()));
+                default: throw new IllegalArgumentException(String.format("Illegal Token '%s' in line %d", (char) _token, _tokener.lineno()));
             }
         }
         return _ret;

@@ -2,7 +2,7 @@ package logic;
 
 public class GarbagePiece {
     private int lines;
-    private long timestamp;
+    private final long timestamp;
 
     public GarbagePiece(int lines) {
         this.lines = lines;

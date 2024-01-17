@@ -2,8 +2,6 @@ package screens;
 
 import Helper.TerminalHelper;
 
-import com.googlecode.lanterna.input.KeyType;
-
 import java.awt.event.KeyEvent;
 
 public class WinScreen implements Screen {

@@ -101,7 +101,7 @@ public class LdataWriter
         else
         if(_data.getClass().isArray())
         {
-            writeTo(_altAssign, _level, (List) Arrays.asList((Object[])_data), _out);
+            writeTo(_altAssign, _level, Arrays.asList((Object[])_data), _out);
         }
         else
         {

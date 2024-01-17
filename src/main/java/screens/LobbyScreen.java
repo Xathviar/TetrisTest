@@ -3,7 +3,6 @@ package screens;
 import config.Constants;
 import Helper.TerminalHelper;
 
-import com.googlecode.lanterna.input.KeyType;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.GroupList;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class LobbyScreen implements Screen, Runnable {
-    private static Map<String, String> lobbies = new LinkedHashMap<>();
+    private static final Map<String, String> lobbies = new LinkedHashMap<>();
     private final ScheduledExecutorService exec;
     public volatile AtomicBoolean runnable;
     ScheduledFuture<?> result;

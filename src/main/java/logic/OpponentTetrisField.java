@@ -26,9 +26,9 @@ public class OpponentTetrisField {
     private final Point[][] points = new Point[50][10];
 
     @Getter
-    private int startX;
+    private final int startX;
     @Getter
-    private int startY;
+    private final int startY;
 
     public OpponentTetrisField(int startX, int startY) {
         for (Point[] point : points) {

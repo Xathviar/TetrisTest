@@ -2,7 +2,6 @@ package screens;
 
 import Helper.TerminalHelper;
 
-import com.googlecode.lanterna.input.KeyType;
 import com.heroiclabs.nakama.api.Group;
 import com.heroiclabs.nakama.api.Rpc;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 @Slf4j
 public class LobbyCreateScreen implements Screen {
-    private int selected = 0;
+    private final int selected = 0;
     private String groupName = "";
 
     @Override

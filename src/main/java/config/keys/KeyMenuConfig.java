@@ -2,7 +2,6 @@ package config.keys;
 
 import Helper.OsUtil;
 
-import com.googlecode.lanterna.input.KeyStroke;
 import config.LdataParser;
 import screens.AsciiPanel;
 import screens.PlayOfflineScreen;
@@ -14,55 +13,53 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.googlecode.lanterna.input.KeyType.*;
-
 public enum KeyMenuConfig {
 
     MENUDOWN() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_DOWN), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0L, 0, KeyEvent.VK_DOWN), terminal);
         }
     },
     MENUUP() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_UP), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0L, 0, KeyEvent.VK_UP), terminal);
         }
     },
     SELECT() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_SPACE), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0L, 0, KeyEvent.VK_SPACE), terminal);
         }
     },
     ENTER() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_ENTER), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0L, 0, KeyEvent.VK_ENTER), terminal);
         }
     },
     REFRESH() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_R), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0L, 0, KeyEvent.VK_R), terminal);
         }
     },
     CREATELOBBY() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_C), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0L, 0, KeyEvent.VK_C), terminal);
         }
     },
     PLAYOFFLINE() {
         @Override
         public Screen execute(Screen screen, AsciiPanel terminal) {
-            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0l, 0, KeyEvent.VK_O), terminal);
+            return screen.respondToUserInput(new KeyEvent(terminal, 0, 0L, 0, KeyEvent.VK_O), terminal);
         }
     };
 
 
-    private static Map<String, String> menuMap = new HashMap<>();
+    private static final Map<String, String> menuMap = new HashMap<>();
 
 
     public abstract Screen execute(Screen screen, AsciiPanel terminal);

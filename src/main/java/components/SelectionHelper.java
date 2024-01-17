@@ -2,15 +2,13 @@ package components;
 
 import config.Constants;
 
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import screens.AsciiPanel;
 import screens.Screen;
 
 import java.awt.event.KeyEvent;
 
 public class SelectionHelper {
-    private Component[] components;
+    private final Component[] components;
     private int selected;
 
     public SelectionHelper(Component... components) {
@@ -77,7 +75,7 @@ public class SelectionHelper {
     public String getTextInput(String name) {
         for (Component component : components) {
             if (component instanceof TextInput) {
-                if (((TextInput) component).getLabel().equals(name)) {
+                if (component.getLabel().equals(name)) {
                     return ((TextInput) component).getInput();
                 }
             }

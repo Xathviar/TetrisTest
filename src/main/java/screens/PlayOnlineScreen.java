@@ -25,9 +25,9 @@ public class PlayOnlineScreen implements Screen, Runnable {
 
     public static OpponentTetrisField opponentTetrisField;
 
-    private ScheduledExecutorService exec;
+    private final ScheduledExecutorService exec;
 
-    private boolean isHost;
+    private final boolean isHost;
 
     private final Set<KeyPlay> pressedKeys = new HashSet<>();
 

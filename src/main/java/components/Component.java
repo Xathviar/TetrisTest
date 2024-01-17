@@ -6,12 +6,12 @@ import java.awt.event.KeyEvent;
 
 public interface Component {
 
-    public String drawComponent();
+    String drawComponent();
 
-    public Screen handleKeyDown(KeyEvent key);
+    Screen handleKeyDown(KeyEvent key);
 
-    public boolean isSelected();
+    boolean isSelected();
 
-    public String getLabel();
+    String getLabel();
 
 }

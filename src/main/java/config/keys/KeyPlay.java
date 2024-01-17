@@ -3,13 +3,8 @@ package config.keys;
 import Helper.OsUtil;
 import config.LdataParser;
 import logic.TetrisField;
-import screens.AsciiPanel;
-import screens.PlayOfflineScreen;
-import screens.PlayOnlineScreen;
-import screens.Screen;
 
 import java.awt.event.KeyEvent;
-import java.io.Serializable;
 import java.util.*;
 
 public enum KeyPlay {
@@ -52,7 +47,7 @@ public enum KeyPlay {
     SOFTDROP() {
         @Override
         public void execute(TetrisField field) {
-            if (sdfFPS < 0) {
+            if (sdfFPS < 0 && counter == 0) {
                 field.instantsdf();
             } else if (this.counter % (sdfFPS * 10) == 0) {
                 field.softDrop();
@@ -85,7 +80,7 @@ public enum KeyPlay {
 
     public abstract void execute(TetrisField field);
 
-    private static Map<String, String> playMap = new HashMap<>();
+    private static final Map<String, String> playMap = new HashMap<>();
 
     public static void initializeKeymap() {
         Map<String, Object> config = LdataParser.loadFrom(OsUtil.getConfigFile("tty-tetris.conf"));
@@ -96,7 +91,7 @@ public enum KeyPlay {
                 playMap.put(keyStroke, action);
             }
         }
-        Map<String, Object> gameplay = (Map) ((Map) config.get("gameplay"));
+        Map<String, Object> gameplay = (Map) config.get("gameplay");
         arrMS = (long) gameplay.get("ARR");
         dasMS = (long) gameplay.get("DAS");
         sdfFPS = (long) gameplay.get("SDF");

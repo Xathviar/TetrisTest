@@ -125,7 +125,7 @@ public enum MatchSendHelper {
         }
     };
 
-    private int opcode;
+    private final int opcode;
 
     MatchSendHelper(int opcode) {
         this.opcode = opcode;

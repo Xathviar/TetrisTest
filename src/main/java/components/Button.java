@@ -1,15 +1,14 @@
 package components;
 
-import com.googlecode.lanterna.input.KeyType;
 import screens.Screen;
 
 import java.awt.event.KeyEvent;
 
 public class Button implements Component {
 
-    private String label;
-    private Screen currentScreen;
-    private Screen newScreen;
+    private final String label;
+    private final Screen currentScreen;
+    private final Screen newScreen;
 
     public Button(String label, Screen currentScreen, Screen newScreen) {
         this.label = label;

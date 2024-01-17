@@ -11,9 +11,9 @@ import java.util.Map;
 public class ConfigHelper {
 
     public static ConfigHelper tty_config = new ConfigHelper(OsUtil.getConfigFile("tty-tetris.conf"));
-    private Map<String, Object> configuration;
+    private final Map<String, Object> configuration;
 
-    private File configuration_location;
+    private final File configuration_location;
 
     public ConfigHelper(File filename) {
         this.configuration_location = filename;

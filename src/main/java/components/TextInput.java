@@ -1,6 +1,5 @@
 package components;
 
-import com.googlecode.lanterna.input.KeyType;
 import screens.Screen;
 
 import java.awt.event.KeyEvent;
@@ -8,11 +7,11 @@ import java.awt.event.KeyEvent;
 public class TextInput implements Component {
     private final String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890@.";
     private final String password = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890!<>,.:;()[]{}@#$%^&*-=+_\\|\"'/?~";
-    private String label;
+    private final String label;
     private String input;
     private boolean isSelected;
-    private boolean onlyDigits;
-    private boolean isPassword;
+    private final boolean onlyDigits;
+    private final boolean isPassword;
 
 
     public TextInput(String label, boolean onlyDigits, boolean isPassword) {

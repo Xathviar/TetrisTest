@@ -40,7 +40,7 @@ public class MainClass extends JFrame implements KeyListener {
     public String user_id = "";
     public Match match;
     public boolean createdGroup;
-    private AsciiPanel terminal;
+    private final AsciiPanel terminal;
 
 
 

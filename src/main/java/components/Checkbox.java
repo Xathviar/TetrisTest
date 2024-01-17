@@ -1,6 +1,5 @@
 package components;
 
-import com.googlecode.lanterna.input.KeyType;
 import lombok.Getter;
 import screens.Screen;
 
@@ -8,10 +7,10 @@ import java.awt.event.KeyEvent;
 
 @Getter
 public class Checkbox implements Component {
-    private String label;
+    private final String label;
     private boolean state;
 
-    private Screen currentscreen;
+    private final Screen currentscreen;
 
     public Checkbox(String label, Screen currentscreen) {
         this.label = label;

@@ -1,6 +1,5 @@
 package logic.pieces;
 
-import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
 

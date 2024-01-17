@@ -23,9 +23,9 @@ public class LoginScreen implements Screen {
 
     private String errorMessage = "";
 
-    private boolean isInsideInput = false;
+    private final boolean isInsideInput = false;
 
-    private SelectionHelper helper;
+    private final SelectionHelper helper;
 
     public LoginScreen() {
         helper = new SelectionHelper(

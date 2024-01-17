@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 
 public class OsUtil
 {
-    private static String OS = System.getProperty("os.name").toLowerCase();
+    private static final String OS = System.getProperty("os.name").toLowerCase();
 
     static public boolean isAndroid = System.getProperty("java.runtime.name").contains("Android");
     static public boolean isMac = !isAndroid && OS.contains("mac");
