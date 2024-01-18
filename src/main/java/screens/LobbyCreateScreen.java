@@ -14,9 +14,17 @@ import java.util.concurrent.ExecutionException;
 
 @Slf4j
 public class LobbyCreateScreen implements Screen {
-    private final int selected = 0;
+
+    /**
+     * The Name of the Group that should be created
+     */
     private String groupName = "";
 
+    /**
+     * Clears the terminal, writes the tetris logo, and displays the lobby name.
+     *
+     * @param terminal The AsciiPanel terminal
+     */
     @Override
     public void displayOutput(AsciiPanel terminal) {
         terminal.clear();
@@ -25,6 +33,13 @@ public class LobbyCreateScreen implements Screen {
         terminal.write("LobbyName: " + groupName, 5, y);
     }
 
+    /**
+     * Responds to the user input.
+     *
+     * @param key      The KeyEvent object representing the user input key
+     * @param terminal The AsciiPanel terminal object
+     * @return The next screen to be displayed
+     */
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
         String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890";
@@ -67,12 +82,21 @@ public class LobbyCreateScreen implements Screen {
         return this;
     }
 
+    /**
+     * Determines if the user's input is currently inside an input field.
+     *
+     * @return {@code true} if the user's input is inside an input field, {@code false} otherwise
+     */
     @Override
     public boolean isInsideInputField() {
         return true;
     }
 
-
+    /**
+     * Indicates that the input has been finished.
+     *
+     * @return true if the input has been successfully finished, false otherwise
+     */
     @Override
     public boolean finishInput() {
         return false;

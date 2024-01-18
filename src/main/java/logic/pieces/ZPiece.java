@@ -5,8 +5,18 @@ import logic.TetrisField;
 
 import java.awt.*;
 
+/**
+ * Represents the Z-Piece in a Tetris game.
+ * Inherits from the Tetromino class.
+ */
 public class ZPiece extends Tetromino<ZPiece> {
 
+    /**
+     * Represents the Z-Piece in a Tetris game.
+     * Inherits from the Tetromino class.
+     *
+     * @param field the TetrisField object to which the Z-Piece belongs
+     */
     public ZPiece(TetrisField field) {
         super("Z-Piece", Color.RED, field, 6);
     }

@@ -32,7 +32,7 @@ public class PlayOnlineScreen implements Screen, Runnable {
     private final Set<KeyPlay> pressedKeys = new HashSet<>();
 
     public PlayOnlineScreen(AsciiPanel terminal, boolean isHost) {
-        field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16, true);
+        field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16);
         startTime = System.currentTimeMillis();
         opponentTetrisField = new OpponentTetrisField((terminal.getWidthInCharacters()) / 2 + 30, 16);
         exec = Executors.newSingleThreadScheduledExecutor();

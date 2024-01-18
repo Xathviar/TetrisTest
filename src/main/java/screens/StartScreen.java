@@ -18,16 +18,33 @@ import java.util.concurrent.TimeUnit;
 
 import static helper.TerminalHelper.writeBoxAt;
 
+/**
+ * The StartScreen class represents the initial screen of the game.
+ * It displays the logo, high scores, and options to start the game.
+ * It also handles user input to navigate to different screens.
+ */
 @SuppressWarnings("ResultOfMethodCallIgnored")
 @Slf4j
 public class StartScreen implements Screen {
+    /**
+     * This variable represents a set of high scores.
+     */
     public final Set<HighScore> scores;
 
+    /**
+     * The StartScreen class is responsible for initializing the start screen of the application.
+     * It creates a new instance of StartScreen and sets up the necessary data for the screen.
+     */
     public StartScreen() {
         scores = new TreeSet<>();
         readHighScores();
     }
 
+    /**
+     * Reads the high scores from a file and populates the scores list.
+     * If the file does not exist, it creates a new file.
+     * If an exception occurs while reading or creating the file, a RuntimeException is thrown.
+     */
     private void readHighScores() {
         try {
             List<String> lines = Files.readAllLines(Paths.get("highscores.txt"));
@@ -49,6 +66,11 @@ public class StartScreen implements Screen {
         }
     }
 
+    /**
+     * Clears the terminal and displays the output for the Tetris game.
+     *
+     * @param terminal the AsciiPanel object representing the terminal
+     */
     @Override
     public void displayOutput(AsciiPanel terminal) {
         terminal.clear();
@@ -83,6 +105,13 @@ public class StartScreen implements Screen {
         }
     }
 
+    /**
+     * Responds to user input by checking the key pressed and returning the appropriate screen.
+     *
+     * @param key      the KeyEvent object representing the key pressed by the user
+     * @param terminal the AsciiPanel object representing the terminal
+     * @return the next screen to be displayed
+     */
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
         if (key.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -104,6 +133,11 @@ public class StartScreen implements Screen {
         return this;
     }
 
+    /**
+     * This method finishes the input process and sets the screen to a new LoginScreen instance.
+     *
+     * @return true if the input process is finished successfully, false otherwise.
+     */
     @Override
     public boolean finishInput() {
         MainClass.aClass.screen = new LoginScreen();

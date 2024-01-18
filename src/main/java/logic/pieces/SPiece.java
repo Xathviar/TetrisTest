@@ -5,8 +5,18 @@ import logic.TetrisField;
 
 import static java.awt.Color.GREEN;
 
+/**
+ * Represents the S-Piece in a Tetris game.
+ * Inherits from the Tetromino class.
+ */
 public class SPiece extends Tetromino<SPiece> {
 
+    /**
+     * Represents the S-Piece in a Tetris game.
+     * Inherits from the Tetromino class.
+     *
+     * @param field the TetrisField object to which the S-Piece belongs
+     */
     public SPiece(TetrisField field) {
         super("S-Piece", GREEN, field, 4);
     }

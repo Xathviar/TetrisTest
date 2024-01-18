@@ -5,9 +5,19 @@ import logic.TetrisField;
 
 import java.awt.*;
 
+/**
+ * Represents the I-Piece in a Tetris game.
+ * Inherits from the Tetromino class.
+ */
 public class IPiece extends Tetromino<IPiece> {
 
 
+    /**
+     * Represents the I-Piece in a Tetris game.
+     * Inherits from the Tetromino class.
+     *
+     * @param field the TetrisField object to which the I-Piece belongs
+     */
     public IPiece(TetrisField field) {
         super("I-Piece", Color.CYAN, field, 0);
     }

@@ -18,15 +18,44 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * The LoginScreen class represents a screen for user login in a terminal-based application.
+ * It implements the Screen interface.
+ */
 @Slf4j
 public class LoginScreen implements Screen {
 
+    /**
+     * Represents the error message.
+     *
+     * <p>
+     * The {@code errorMessage} variable is used to store the error message
+     * associated with
+     */
     private String errorMessage = "";
 
-    private final boolean isInsideInput = false;
-
+    /**
+     * Represents a helper object for selection functionality.
+     * This helper object is used internally within the class and can only be accessed within the class.
+     * It is marked as final meaning its value cannot be changed once initialized.
+     */
     private final SelectionHelper helper;
 
+    /**
+     * Represents a login screen for the application.
+     * <p>
+     * This screen allows users to enter their server IP, email, password, username, and configure
+     * whether to save login configuration. It also provides a login button to initiate the login process.
+     * </p>
+     * <p>
+     * The login screen is initialized with default configuration values. The server IP is set to "127.0.0.1".
+     * </p>
+     * <p>
+     * The login screen also reads login configuration from a configuration file if available.
+     * </p>
+     *
+     * @since 1.0
+     */
     public LoginScreen() {
         helper = new SelectionHelper(
                 new TextInput("Server-IP", false, false).setDefaultInput("127.0.0.1"),
@@ -39,6 +68,13 @@ public class LoginScreen implements Screen {
         readFromConfig();
     }
 
+    /**
+     * Writes the configuration data to the config file if the "Save Configuration" checkbox is selected.
+     * The method retrieves the relevant data from the UI components and saves it in a {@code Map} object.
+     * The data is then passed to the {@code writeToConfig} method in the {@code tty_config} object of the {@code ConfigHelper} class.
+     * <p>
+     * Note: If the "Save Configuration" checkbox is not selected, nothing is written to the config file.
+     */
     public void writeConfig() {
         if (((Checkbox) helper.getComponentByLabel("Save Configuration")).isState()) {
             Map<String, Object> data = new HashMap<>();
@@ -49,8 +85,13 @@ public class LoginScreen implements Screen {
         }
     }
 
+    /**
+     * Reads configuration values from a config file and sets them in the appropriate components.
+     * The configuration values are read using the ConfigHelper class and stored in local variables.
+     * The corresponding components are then found using the helper object and their values are set
+     * based on the configuration values.
+     */
     public void readFromConfig() {
-//        Map<String, Object> config = LdataParser.loadFrom(OsUtil.getConfigFile("tty-tetris.conf"));
         String server_ip = (String) ConfigHelper.tty_config.getObject("server-ip");
         String e_mail = (String) ConfigHelper.tty_config.getObject("e-mail");
         String username = (String) ConfigHelper.tty_config.getObject("username");
@@ -59,6 +100,14 @@ public class LoginScreen implements Screen {
         ((TextInput) helper.getComponentByLabel("Username")).setInput(username);
     }
 
+    /**
+     * Clears the terminal window and displays the Tetris logo and all the components
+     * at position (5, 10) in the AsciiPanel.
+     * If an error message is set, it will be displayed at position (1, 15) with the
+     * prefix "ERROR: ".
+     *
+     * @param terminal the AsciiPanel instance to display the output
+     */
     @Override
     public void displayOutput(AsciiPanel terminal) {
         terminal.clear();
@@ -70,6 +119,13 @@ public class LoginScreen implements Screen {
         }
     }
 
+    /**
+     * Responds to the user's input and returns the next screen to display.
+     *
+     * @param key      the KeyEvent object representing the key pressed by the user
+     * @param terminal the AsciiPanel object representing the terminal
+     * @return the next screen to display
+     */
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
         Screen returnScreen = helper.manageKey(key);
@@ -81,6 +137,10 @@ public class LoginScreen implements Screen {
         return this;
     }
 
+    /**
+     * Finishes the user input by writing the configuration, authenticating the client, and setting the session.
+     *
+     * @return true if the input is successfully finished,*/
     @Override
     public boolean finishInput() {
         try {
@@ -104,6 +164,11 @@ public class LoginScreen implements Screen {
         }
     }
 
+    /**
+     * Checks if the current element is inside an input field.
+     *
+     * @return true if the element is inside an input field, false otherwise.
+     */
     @Override
     public boolean isInsideInputField() {
         return helper.isSelected();
