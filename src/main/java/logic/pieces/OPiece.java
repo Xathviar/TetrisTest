@@ -1,6 +1,5 @@
 package logic.pieces;
 
-import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
 
@@ -9,8 +8,18 @@ import java.util.Arrays;
 
 import static java.awt.Color.YELLOW;
 
+/**
+ * Represents the O-Piece in a Tetris game.
+ * Inherits from the Tetromino class.
+ */
 public class OPiece extends Tetromino<OPiece> {
 
+    /**
+     * Represents the O-Piece in a Tetris game.
+     * Inherits from the Tetromino class.
+     *
+     * @param field the TetrisField object to which the O-Piece belongs
+     */
     public OPiece(TetrisField field) {
         super("O-Piece", YELLOW, field, 3);
     }

@@ -1,20 +1,53 @@
 package components;
 
-import com.googlecode.lanterna.input.KeyType;
+import lombok.Getter;
+import lombok.Setter;
 import screens.Screen;
 
 import java.awt.event.KeyEvent;
 
+@Getter
+@Setter
+/**
+ * This is a Part of a Component which is used to create a TextInput
+ */
 public class TextInput implements Component {
+    /**
+     * This stores all characters that are available to be typed in a normal TextInput Field
+     */
     private final String letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890@.";
+    /**
+     * This stores all characters that are available to be typed in a password TextInput Field
+     */
     private final String password = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890!<>,.:;()[]{}@#$%^&*-=+_\\|\"'/?~";
-    private String label;
+    /**
+     * This stores the Name of the TextInput
+     */
+    private final String label;
+    /**
+     * This stores the text that was typed inside the text input
+     */
     private String input;
+    /**
+     * This stores if the TextInput is currently selected
+     */
     private boolean isSelected;
-    private boolean onlyDigits;
-    private boolean isPassword;
+    /**
+     * This stores if the TextInput should only allow Digits
+     */
+    private final boolean onlyDigits;
+    /**
+     * This stores if the TextInput is a Password Input Field
+     */
+    private final boolean isPassword;
 
 
+    /**
+     * This is the Constructor for the TextInput Class
+     * @param label {@link TextInput#label}
+     * @param onlyDigits If this is set to true, then only Digits are allowed to be entered into this field
+     * @param isPassword If this is set to true, then the input will be hidden
+     */
     public TextInput(String label, boolean onlyDigits, boolean isPassword) {
         this.label = label;
         this.input = "";
@@ -23,11 +56,19 @@ public class TextInput implements Component {
         this.isPassword = isPassword;
     }
 
+    /**
+     * This can be used to manually set the Input of the TextInput
+     * @param input The String which should be used as the new TextInput
+     * @return itself
+     */
     public TextInput setDefaultInput(String input) {
         this.input = input;
         return this;
     }
 
+    /**
+     * This Method is used to delete the last letter of the TextInput
+     */
     public void deleteLastLetter() {
         if (input.length() > 0) {
             input = input.substring(0, input.length() - 1);
@@ -71,14 +112,6 @@ public class TextInput implements Component {
     @Override
     public boolean isSelected() {
         return isSelected;
-    }
-    
-    public String getInput() {
-        return input;
-    }
-
-    public void setInput(String input) {
-        this.input = input;
     }
 
     @Override

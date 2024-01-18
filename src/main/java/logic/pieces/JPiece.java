@@ -1,13 +1,22 @@
 package logic.pieces;
 
-import com.googlecode.lanterna.TextColor;
 import logic.Grid;
 import logic.TetrisField;
 
 import java.awt.*;
 
+/**
+ * Represents the J-Piece in a Tetris game.
+ * Inherits from the Tetromino class.
+ */
 public class JPiece extends Tetromino<JPiece> {
 
+    /**
+     * Represents the J-Piece in a Tetris game.
+     * Inherits from the Tetromino class.
+     *
+     * @param field the TetrisField object to which the J-Piece belongs
+     */
     public JPiece(TetrisField field) {
         super("J-Piece", Color.BLUE, field, 1);
     }

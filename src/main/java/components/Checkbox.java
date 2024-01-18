@@ -1,18 +1,36 @@
 package components;
 
-import com.googlecode.lanterna.input.KeyType;
 import lombok.Getter;
 import screens.Screen;
 
 import java.awt.event.KeyEvent;
 
+/**
+ * This is a Part of a Component which is used to create a Checkbox
+ */
 @Getter
 public class Checkbox implements Component {
-    private String label;
+
+    /**
+     * This stores the Name of the Button
+     */
+    private final String label;
+
+    /**
+     * This stores the state of the Checkbox
+     */
     private boolean state;
 
-    private Screen currentscreen;
+    /**
+     * This stores the current Screen
+     */
+    private final Screen currentscreen;
 
+    /**
+     * This is the Constructor for the Checkbox Class
+     * @param label {@link Checkbox#label}
+     * @param currentscreen {@link Checkbox#currentscreen}
+     */
     public Checkbox(String label, Screen currentscreen) {
         this.label = label;
         this.state = false;

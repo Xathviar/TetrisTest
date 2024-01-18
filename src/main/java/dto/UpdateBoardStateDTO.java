@@ -1,10 +1,15 @@
-package DTO;
+package dto;
 
 import logic.pieces.*;
 import lombok.Getter;
 
 @Getter
 public class UpdateBoardStateDTO {
+
+    /**
+     * This variable represents the opcode for updating the board state.
+     * The opcode value is 4.
+     */
     public final int opcode = 4;
 
     /**
@@ -34,6 +39,13 @@ public class UpdateBoardStateDTO {
      */
     private final int rotation;
 
+    /**
+     * Creates a UpdateBoardStateDTO object with the given Arguments.
+     * @param droppedPiece which piece was dropped {@link UpdateBoardStateDTO#droppedPiece}
+     * @param droppedX at which X-Position it was dropped
+     * @param droppedY at which Y-Position it was dropped
+     * @param rotation which Rotation this Piece has
+     */
     public UpdateBoardStateDTO(int droppedPiece, int droppedX, int droppedY, int rotation) {
         this.droppedPiece = droppedPiece;
         this.droppedX = droppedX;
@@ -41,6 +53,11 @@ public class UpdateBoardStateDTO {
         this.rotation = rotation;
     }
 
+    /**
+     * Retrieves the Tetromino object from the board state.
+     *
+     * @return The Tetromino object representing the dropped piece on the board.
+     */
     public Tetromino getTetrominoFromBoardState() {
         Tetromino t;
         switch (droppedPiece) {

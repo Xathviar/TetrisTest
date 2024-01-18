@@ -1,6 +1,6 @@
 package screens;
 
-import Helper.TerminalHelper;
+import helper.TerminalHelper;
 
 import communication.MatchSendHelper;
 import config.keys.KeyPlay;
@@ -25,14 +25,14 @@ public class PlayOnlineScreen implements Screen, Runnable {
 
     public static OpponentTetrisField opponentTetrisField;
 
-    private ScheduledExecutorService exec;
+    private final ScheduledExecutorService exec;
 
-    private boolean isHost;
+    private final boolean isHost;
 
     private final Set<KeyPlay> pressedKeys = new HashSet<>();
 
     public PlayOnlineScreen(AsciiPanel terminal, boolean isHost) {
-        field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16, true);
+        field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16);
         startTime = System.currentTimeMillis();
         opponentTetrisField = new OpponentTetrisField((terminal.getWidthInCharacters()) / 2 + 30, 16);
         exec = Executors.newSingleThreadScheduledExecutor();
@@ -67,7 +67,7 @@ public class PlayOnlineScreen implements Screen, Runnable {
         }
 
     }
-//l asdjkfghklasdhg ljksdhgj sdf gjk hsdlfkjgl
+
     @Override
     public void displayOutput(AsciiPanel terminal) {
         if (win) {
@@ -94,33 +94,7 @@ public class PlayOnlineScreen implements Screen, Runnable {
 
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
-//        switch (key.getKeyType()) {
-//            case ArrowLeft:
-//                field.moveLeft();
-//                break;
-//            case ArrowRight:
-//                field.moveRight();
-//                break;
-//            case ArrowDown:
-//                field.softDrop();
-//                break;
-//            case ArrowUp:
-//                field.rotateClockwise();
-//                break;
-//            case Character:
-//                switch (Character.toLowerCase(key.getCharacter())) {
-//                    case ' ':
-//                        field.hardDrop();
-//                        break;
-//                    case 'z':
-//                    case 'y':
-//                        field.rotateCClockwise();
-//                        break;
-//                    case 'x':
-//                        field.swapHold();
-//                        break;
-//                }
-//        }
+
         return this;
     }
 
