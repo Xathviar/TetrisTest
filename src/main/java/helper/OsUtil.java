@@ -97,7 +97,6 @@ public class OsUtil {
         }
 
         if(applicationName==null || CONFIG_HOME==null) return CONFIG_HOME;
-        System.out.println(CONFIG_HOME+"/"+applicationName);
         return CONFIG_HOME+"/"+applicationName;
     }
 

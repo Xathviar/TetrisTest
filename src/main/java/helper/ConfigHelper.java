@@ -35,7 +35,6 @@ public class ConfigHelper {
     public ConfigHelper(File filename) {
         this.configuration_location = filename;
         configuration = LdataParser.loadFrom(filename);
-        System.out.println(configuration);
     }
 
     /**

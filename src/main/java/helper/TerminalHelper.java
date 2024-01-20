@@ -45,15 +45,20 @@ public class TerminalHelper {
      * @param height   The height of the box.
      */
     public static void writeBoxAt(AsciiPanel terminal, int x, int y, int width, int height) {
-        char box = '#';
-        String horizontalLines = Strings.repeat(String.valueOf(box), width);
-        String boxMiddleLines = box + Strings.repeat(" ", width - 2) + box;
-
-        terminal.write(horizontalLines, x, y++);
+        char down = (char) 186;
+        char topright = (char) 187;
+        char bottomright = (char) 188;
+        char bottomleft = (char) 200;
+        char topleft = (char) 201;
+        char across = (char) 205;
+        String topLines = topleft + Strings.repeat(String.valueOf(across), width - 2) + topright;
+        String boxMiddleLines = down + Strings.repeat(" ", width - 2) + down;
+        String bottomLines = bottomleft + Strings.repeat(String.valueOf(across), width - 2) + bottomright;
+        terminal.write(topLines, x, y++);
         for (int i = 0; i < height - 2; i++) {
             terminal.write(boxMiddleLines, x, y++);
         }
-        terminal.write(horizontalLines, x, y);
+        terminal.write(bottomLines, x, y);
     }
 
     /**
@@ -70,5 +75,4 @@ public class TerminalHelper {
             terminal.write("#", x, y++, garbagePieceHandler.shouldBeGarbageIndicator(i) ? Constants.garbageColor : Constants.wallColor);
         }
     }
-
 }

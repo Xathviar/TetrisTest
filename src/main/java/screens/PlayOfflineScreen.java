@@ -64,7 +64,6 @@ public class PlayOfflineScreen implements Screen, Runnable {
         startTime = System.currentTimeMillis();
         ScheduledExecutorService repaint = Executors.newSingleThreadScheduledExecutor();
         repaint.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
-
     }
 
 
@@ -86,7 +85,8 @@ public class PlayOfflineScreen implements Screen, Runnable {
      * Responds to the user's input by performing various actions depending on the key pressed,
      * and returns the corresponding screen to be displayed.
      *
-     * @param key      the KeyEvent object representing*/
+     * @param key the KeyEvent object representing
+     */
     @Override
     public Screen respondToUserInput(KeyEvent key, AsciiPanel terminal) {
         if (loseScreen) {
@@ -115,8 +115,9 @@ public class PlayOfflineScreen implements Screen, Runnable {
      * @param keyEvent the KeyEvent object representing the key pressed by the user
      */
     public void addKey(KeyEvent keyEvent) {
-        if (KeyPlay.getKey(keyEvent) != null)
+        if (KeyPlay.getKey(keyEvent) != null) {
             pressedKeys.add(KeyPlay.getKey(keyEvent));
+        }
     }
 
     /**
@@ -136,9 +137,11 @@ public class PlayOfflineScreen implements Screen, Runnable {
      */
     @Override
     public void run() {
-        for (KeyPlay pressedKey : pressedKeys) {
-            pressedKey.execute(field);
-            pressedKey.incrementCounter();
+        synchronized (pressedKeys) {
+            for (KeyPlay pressedKey : pressedKeys) {
+                pressedKey.execute(field);
+                pressedKey.incrementCounter();
+            }
         }
     }
 }

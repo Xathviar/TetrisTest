@@ -145,7 +145,6 @@ public enum KeyMenuConfig {
      */
 
     private static String keyStrokeToString(KeyEvent key) {
-        System.out.println(KeyEvent.getKeyText(key.getKeyCode()).toLowerCase());
         return KeyEvent.getKeyText(key.getKeyCode()).toLowerCase();
     }
 }

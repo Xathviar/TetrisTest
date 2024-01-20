@@ -690,6 +690,7 @@ public class TetrisField {
      */
     public void gameTick() {
         if (getActivePiece().gameTick()) {
+            addGrid(getActivePiece().returnPiece());
             newActivePiece();
         }
     }
@@ -700,10 +701,10 @@ public class TetrisField {
      * Creates a new active piece after the hard drop.
      */
     public void hardDrop() {
-        int counter = activePiece.hardDrop();
+        int counter = helperPiece.getY() - activePiece.getY();
+        addGrid(helperPiece.returnPiece());
         score += (counter) >> 1;
         newActivePiece();
-//        debugTetrisField();
     }
 
 
@@ -718,7 +719,6 @@ public class TetrisField {
             activePiece.setY(activePiece.returnPiece().getY());
             MatchSendHelper.UPDATEBOARD.sendUpdate(activePiece);
         }
-        addGrid(getActivePiece().returnPiece());
         activePiece = generator.getNext();
         if (!activePiece.getGrid()[0].isValidPosition(3, 30)) {
             if (activePiece.getGrid()[0].isValidPosition(3, 29)) {

@@ -3,6 +3,7 @@ package config.keys;
 import helper.OsUtil;
 import config.LdataParser;
 import logic.TetrisField;
+import lombok.extern.slf4j.Slf4j;
 
 import java.awt.event.KeyEvent;
 import java.util.*;
@@ -16,6 +17,7 @@ import java.util.*;
  * Class also contains the initialization of the keymap (which binds keys to respective operations)
  * and count increment and reset methods which are part of the implementation of the repeat action function.
  */
+@Slf4j
 public enum KeyPlay {
 
     /**
@@ -25,8 +27,10 @@ public enum KeyPlay {
         @Override
         public void execute(TetrisField field) {
             if (this.counter == 0) {
+                log.debug("Move Left");
                 field.moveLeft();
             } else if (this.counter >= dasMS && this.counter % arrMS == 0) {
+                log.debug("DAS Left");
                 field.dasLeft();
             }
         }
@@ -38,8 +42,10 @@ public enum KeyPlay {
         @Override
         public void execute(TetrisField field) {
             if (this.counter == 0) {
+                log.debug("Move Right");
                 field.moveRight();
             } else if (this.counter >= dasMS && this.counter % arrMS == 0) {
+                log.debug("DAS Right");
                 field.dasRight();
             }
         }
@@ -51,6 +57,7 @@ public enum KeyPlay {
         @Override
         public void execute(TetrisField field) {
             if (this.counter % 250 == 0) {
+                log.debug("Rotate Clockwise");
                 field.rotateClockwise();
             }
         }
@@ -62,6 +69,7 @@ public enum KeyPlay {
         @Override
         public void execute(TetrisField field) {
             if (this.counter % 250 == 0) {
+                log.debug("Rotate Counterclockwise");
                 field.rotateCClockwise();
             }
         }
@@ -73,8 +81,10 @@ public enum KeyPlay {
         @Override
         public void execute(TetrisField field) {
             if (sdfFPS < 0 && counter == 0) {
+                log.debug("Instant Softdrop");
                 field.instantsdf();
             } else if (this.counter % (sdfFPS * 10) == 0) {
+                log.debug("Soft Drop");
                 field.softDrop();
             }
         }
@@ -85,9 +95,10 @@ public enum KeyPlay {
     HARDDROP() {
         @Override
         public void execute(TetrisField field) {
-            if (counter == 0)
+            if (counter == 0) {
+                log.debug("Hard Drop");
                 field.hardDrop();
-
+            }
         }
     },
     /**
@@ -150,9 +161,6 @@ public enum KeyPlay {
         arrMS = (long) gameplay.get("ARR");
         dasMS = (long) gameplay.get("DAS");
         sdfFPS = (long) gameplay.get("SDF");
-        System.out.println(arrMS);
-        System.out.println(dasMS);
-        System.out.println(sdfFPS);
     }
 
     /**
@@ -181,7 +189,6 @@ public enum KeyPlay {
      */
     public static KeyPlay getKey(KeyEvent key) {
         if (playMap.get(keyStrokeToString(key)) != null) {
-            System.out.println(playMap.get(keyStrokeToString(key)).toUpperCase());
             return KeyPlay.valueOf(playMap.get(keyStrokeToString(key)).toUpperCase()).resetCounter();
         }
         return null;
@@ -197,4 +204,8 @@ public enum KeyPlay {
         return KeyEvent.getKeyText(key.getKeyCode()).toLowerCase();
     }
 
+    @Override
+    public String toString() {
+        return this.name() + ": " + counter;
+    }
 }
