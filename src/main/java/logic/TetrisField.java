@@ -837,7 +837,7 @@ public class TetrisField {
      * The score will be increased based on the number of rows the tetromino was dropped.
      */
     public void instantsdf() {
-        int counter = activePiece.hardDrop();
+        int counter = activePiece.instantSDF();
         score += (counter) >> 1;
     }
 }

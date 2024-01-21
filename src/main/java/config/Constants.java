@@ -77,4 +77,15 @@ public class Constants {
      */
     public static final Color importantText = Color.YELLOW;
 
+    /**
+     * This Variable defines the delay in ms that the KeyListener Thread, which is run from the two PlayScreens, has
+     */
+    public static final int KEYLISTENERTIMER = 4;
+
+    /**
+     * This Variable defines the delay between each Rotation in milliseconds
+     */
+    public static final int ROTATIONDELAY = 250 / KEYLISTENERTIMER;
+
+
 }

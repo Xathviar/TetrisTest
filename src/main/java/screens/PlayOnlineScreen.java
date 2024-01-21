@@ -1,5 +1,6 @@
 package screens;
 
+import config.Constants;
 import helper.TerminalHelper;
 
 import communication.MatchSendHelper;
@@ -41,7 +42,7 @@ public class PlayOnlineScreen implements Screen, Runnable {
             exec.scheduleAtFixedRate(PlayOnlineScreen::tickMaster, 0, 1, TimeUnit.SECONDS);
         }
         ScheduledExecutorService repaint = Executors.newSingleThreadScheduledExecutor();
-        repaint.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
+        repaint.scheduleAtFixedRate(this, 0, Constants.KEYLISTENERTIMER, TimeUnit.MILLISECONDS);
 
     }
 
@@ -104,13 +105,13 @@ public class PlayOnlineScreen implements Screen, Runnable {
     }
 
     public void addKey(KeyEvent keyEvent) {
-        if (KeyPlay.getKey(keyEvent) != null)
-            pressedKeys.add(KeyPlay.getKey(keyEvent));
+        if (KeyPlay.getKey(keyEvent, false) != null)
+            pressedKeys.add(KeyPlay.getKey(keyEvent, false));
     }
 
     public void removeKey(KeyEvent keyEvent) {
-        if (KeyPlay.getKey(keyEvent) != null)
-            pressedKeys.remove(KeyPlay.getKey(keyEvent));
+        if (KeyPlay.getKey(keyEvent, false) != null)
+            pressedKeys.remove(KeyPlay.getKey(keyEvent, true));
     }
 
     @Override

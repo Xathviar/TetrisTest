@@ -287,6 +287,22 @@ public abstract class Tetromino<T> {
         return counter;
     }
 
+    public int instantSDF() {
+        int counter = 0;
+        while (true) {
+            boolean moved = grid[currentRotation].moveDown();
+            if (moved) {
+                counter++;
+            } else {
+                break;
+            }
+        }
+        this.x = grid[currentRotation].x;
+        this.y = grid[currentRotation].y;
+        updateGrids();
+        return counter;
+    }
+
     /**
      * Moves the Tetromino piece one row down.
      *
@@ -331,7 +347,7 @@ public abstract class Tetromino<T> {
      * Updates the position of the Tetromino grid. Each grid in the Tetromino is updated with the current x and y coordinates of the Tetromino.
      * This method is called after the x and y coordinates of the Tetromino are modified.
      */
-    void updateGrids() {
+    public void updateGrids() {
         for (Grid grid1 : grid) {
             grid1.x = this.x;
             grid1.y = this.y;

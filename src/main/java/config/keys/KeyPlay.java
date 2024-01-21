@@ -1,5 +1,6 @@
 package config.keys;
 
+import config.Constants;
 import helper.OsUtil;
 import config.LdataParser;
 import logic.TetrisField;
@@ -25,12 +26,10 @@ public enum KeyPlay {
      */
     MOVELEFT() {
         @Override
-        public void execute(TetrisField field) {
+        public synchronized void execute(TetrisField field) {
             if (this.counter == 0) {
-                log.debug("Move Left");
                 field.moveLeft();
             } else if (this.counter >= dasMS && this.counter % arrMS == 0) {
-                log.debug("DAS Left");
                 field.dasLeft();
             }
         }
@@ -40,12 +39,10 @@ public enum KeyPlay {
      */
     MOVERIGHT() {
         @Override
-        public void execute(TetrisField field) {
+        public synchronized void execute(TetrisField field) {
             if (this.counter == 0) {
-                log.debug("Move Right");
                 field.moveRight();
             } else if (this.counter >= dasMS && this.counter % arrMS == 0) {
-                log.debug("DAS Right");
                 field.dasRight();
             }
         }
@@ -55,9 +52,8 @@ public enum KeyPlay {
      */
     ROTATECLOCKWISE() {
         @Override
-        public void execute(TetrisField field) {
-            if (this.counter % 250 == 0) {
-                log.debug("Rotate Clockwise");
+        public synchronized void execute(TetrisField field) {
+            if (this.counter % Constants.ROTATIONDELAY == 0) {
                 field.rotateClockwise();
             }
         }
@@ -67,9 +63,8 @@ public enum KeyPlay {
      */
     ROTATECCLOCKWISE() {
         @Override
-        public void execute(TetrisField field) {
-            if (this.counter % 250 == 0) {
-                log.debug("Rotate Counterclockwise");
+        public synchronized void execute(TetrisField field) {
+            if (this.counter % Constants.ROTATIONDELAY == 0) {
                 field.rotateCClockwise();
             }
         }
@@ -79,12 +74,12 @@ public enum KeyPlay {
      */
     SOFTDROP() {
         @Override
-        public void execute(TetrisField field) {
-            if (sdfFPS < 0 && counter == 0) {
-                log.debug("Instant Softdrop");
-                field.instantsdf();
+        public synchronized void execute(TetrisField field) {
+            if (sdfFPS < 0) {
+                if (counter == 0) {
+                    field.instantsdf();
+                }
             } else if (this.counter % (sdfFPS * 10) == 0) {
-                log.debug("Soft Drop");
                 field.softDrop();
             }
         }
@@ -94,9 +89,8 @@ public enum KeyPlay {
      */
     HARDDROP() {
         @Override
-        public void execute(TetrisField field) {
+        public synchronized void execute(TetrisField field) {
             if (counter == 0) {
-                log.debug("Hard Drop");
                 field.hardDrop();
             }
         }
@@ -106,8 +100,9 @@ public enum KeyPlay {
      */
     HOLD() {
         @Override
-        public void execute(TetrisField field) {
-            field.swapHold();
+        public synchronized void execute(TetrisField field) {
+            if (counter == 0)
+                field.swapHold();
         }
     };
     /**
@@ -145,6 +140,10 @@ public enum KeyPlay {
      */
     public abstract void execute(TetrisField field);
 
+//    public abstract void initialExecute(TetrisField field);
+//
+//    public abstract void repeatedExecute(TetrisField field);
+
     /**
      * Initializes the keymap from a configuration file using the LdataParser.
      */
@@ -158,9 +157,12 @@ public enum KeyPlay {
             }
         }
         Map<String, Object> gameplay = (Map) config.get("gameplay");
-        arrMS = (long) gameplay.get("ARR");
-        dasMS = (long) gameplay.get("DAS");
-        sdfFPS = (long) gameplay.get("SDF");
+        arrMS = ((long) gameplay.get("ARR")) / Constants.KEYLISTENERTIMER;
+        dasMS = ((long) gameplay.get("DAS")) / Constants.KEYLISTENERTIMER;
+        sdfFPS = ((long) gameplay.get("SDF"));
+        if (sdfFPS > 0) {
+            sdfFPS = sdfFPS / Constants.KEYLISTENERTIMER;
+        }
     }
 
     /**
@@ -187,9 +189,13 @@ public enum KeyPlay {
      * @param key The KeyEvent to be looked up in keyMap
      * @return The associated KeyPlay value from the keyMap, null if not found.
      */
-    public static KeyPlay getKey(KeyEvent key) {
+    public static KeyPlay getKey(KeyEvent key, boolean shouldReset) {
         if (playMap.get(keyStrokeToString(key)) != null) {
-            return KeyPlay.valueOf(playMap.get(keyStrokeToString(key)).toUpperCase()).resetCounter();
+            if (shouldReset) {
+                return KeyPlay.valueOf(playMap.get(keyStrokeToString(key)).toUpperCase()).resetCounter();
+            } else {
+                return KeyPlay.valueOf(playMap.get(keyStrokeToString(key)).toUpperCase());
+            }
         }
         return null;
     }

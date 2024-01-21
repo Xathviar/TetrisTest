@@ -1,5 +1,6 @@
 package screens;
 
+import config.Constants;
 import helper.TerminalHelper;
 import config.keys.KeyPlay;
 import logic.TetrisField;
@@ -7,6 +8,7 @@ import logic.TetrisField;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +45,10 @@ public class PlayOfflineScreen implements Screen, Runnable {
      */
     public boolean loseScreen = false;
 
+    public static int executeCounter;
+
+    public static long firstExecution;
+
     /**
      * The `pressedKeys` variable represents the set of keys that are currently being pressed.
      * It is a private final variable of type Set<KeyPlay>.
@@ -51,7 +57,8 @@ public class PlayOfflineScreen implements Screen, Runnable {
      * Different keys can be added or removed from the set using the addKey() and removeKey() methods respectively.
      * The run() method iterates over the pressedKeys set and executes the corresponding actions for each key.
      */
-    private final Set<KeyPlay> pressedKeys = new HashSet<>();
+    private final Set<KeyPlay> pressedKeys = new TreeSet<>();
+    private boolean isFirstTime = true;
 
     /**
      * Constructs a PlayOfflineScreen object with the given AsciiPanel terminal.
@@ -63,7 +70,8 @@ public class PlayOfflineScreen implements Screen, Runnable {
         field = new TetrisField(1, this, (terminal.getWidthInCharacters() - 12) / 2, 16);
         startTime = System.currentTimeMillis();
         ScheduledExecutorService repaint = Executors.newSingleThreadScheduledExecutor();
-        repaint.scheduleAtFixedRate(this, 0, 1, TimeUnit.MILLISECONDS);
+        repaint.scheduleAtFixedRate(this, 0, Constants.KEYLISTENERTIMER, TimeUnit.MILLISECONDS);
+        executeCounter = 0;
     }
 
 
@@ -115,8 +123,9 @@ public class PlayOfflineScreen implements Screen, Runnable {
      * @param keyEvent the KeyEvent object representing the key pressed by the user
      */
     public void addKey(KeyEvent keyEvent) {
-        if (KeyPlay.getKey(keyEvent) != null) {
-            pressedKeys.add(KeyPlay.getKey(keyEvent));
+        // First Press
+        if (KeyPlay.getKey(keyEvent, false) != null) {
+            pressedKeys.add(KeyPlay.getKey(keyEvent, false));
         }
     }
 
@@ -126,8 +135,8 @@ public class PlayOfflineScreen implements Screen, Runnable {
      * @param keyEvent the KeyEvent object representing the key pressed by the user
      */
     public void removeKey(KeyEvent keyEvent) {
-        if (KeyPlay.getKey(keyEvent) != null)
-            pressedKeys.remove(KeyPlay.getKey(keyEvent));
+        if (KeyPlay.getKey(keyEvent,false) != null)
+            pressedKeys.remove(KeyPlay.getKey(keyEvent, true));
     }
 
     /**
@@ -137,11 +146,17 @@ public class PlayOfflineScreen implements Screen, Runnable {
      */
     @Override
     public void run() {
+        if (isFirstTime) {
+            Thread.currentThread().setName("KeyListener in PlayOfflineScreen");
+            isFirstTime = false;
+            firstExecution = System.currentTimeMillis();
+        }
         synchronized (pressedKeys) {
             for (KeyPlay pressedKey : pressedKeys) {
                 pressedKey.execute(field);
                 pressedKey.incrementCounter();
             }
         }
+        executeCounter++;
     }
 }

@@ -113,6 +113,7 @@ public class MainClass extends JFrame implements KeyListener {
 
     /**
      * PSVM...
+     *
      * @param args ignored
      */
     public static void main(String[] args) {
@@ -124,11 +125,17 @@ public class MainClass extends JFrame implements KeyListener {
         KeyPlay.initializeKeymap();
         aClass = mainClass;
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            int executions = PlayOfflineScreen.executeCounter;
+            long shutdownTime = System.currentTimeMillis();
+            long starTime = PlayOfflineScreen.firstExecution;
+            long executions_second = executions / ((shutdownTime - starTime) / 1000);
+            System.out.printf("Start: %d\nEnd: %d\nExecutions/s: %d\n", starTime, shutdownTime, executions_second);
             if (MainClass.aClass.createdGroup) {
                 MainClass.aClass.client.deleteGroup(MainClass.aClass.session, aClass.group_id);
             } else {
                 MainClass.aClass.client.leaveGroup(MainClass.aClass.session, aClass.group_id);
             }
+
         }, "Delete all groups"));
     }
 
@@ -190,9 +197,10 @@ public class MainClass extends JFrame implements KeyListener {
 
     /**
      * Depending on the current Screen, this Method handles KeyEvents differently
-     * When the Screen is currently either a {@link PlayOnlineScreen} or a {@link PlayOfflineScreen}, then it executes {@link PlayOnlineScreen#addKey(KeyEvent)}
+     * When the Screen is currently either a {@link PlayOnlineScreen} or a {@link PlayOfflineScreen}, it executes {@link PlayOnlineScreen#addKey(KeyEvent)}
      * When the Screen is not one of these two Screens, and if the Screen is not currently inside an InputField then it sends the KeyEvent to {@link KeyMenuConfig#execute(KeyEvent, Screen, AsciiPanel)}
      * If the Event is currently inside an InputField then it currently forwards the KeyEvent to {@link Screen#respondToUserInput(KeyEvent, AsciiPanel)}
+     *
      * @param key the event to be processed
      */
     @Override
@@ -203,8 +211,9 @@ public class MainClass extends JFrame implements KeyListener {
             } else {
                 screen = KeyMenuConfig.execute(key, screen, terminal);
             }
-        } else if (screen instanceof PlayOfflineScreen){
-            ((PlayOfflineScreen) screen).addKey(key);
+        } else if (screen instanceof PlayOfflineScreen) {
+            PlayOfflineScreen screen1 = ((PlayOfflineScreen) screen);
+            screen1.addKey(key);
         } else {
             ((PlayOnlineScreen) screen).addKey(key);
         }
@@ -213,11 +222,12 @@ public class MainClass extends JFrame implements KeyListener {
     /**
      * Depending on the current Screen, this Method handles KeyEvents differently
      * When the Screen is currently either a {@link PlayOnlineScreen} or a {@link PlayOfflineScreen}, then it executes {@link PlayOnlineScreen#removeKey(KeyEvent)}
+     *
      * @param key the event to be processed
      */
     @Override
     public void keyReleased(KeyEvent key) {
-        if (screen instanceof PlayOfflineScreen ) {
+        if (screen instanceof PlayOfflineScreen) {
             ((PlayOfflineScreen) screen).removeKey(key);
         } else if (screen instanceof PlayOnlineScreen) {
             ((PlayOnlineScreen) screen).removeKey(key);
@@ -226,6 +236,7 @@ public class MainClass extends JFrame implements KeyListener {
 
     /**
      * Ignored...
+     *
      * @param key the event to be processed
      */
     @Override
