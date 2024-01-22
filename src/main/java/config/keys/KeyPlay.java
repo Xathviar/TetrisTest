@@ -30,7 +30,7 @@ public enum KeyPlay {
             if (this.counter == 0) {
                 field.moveLeft();
             } else if (this.counter >= dasMS && this.counter % arrMS == 0) {
-                field.dasLeft();
+                field.moveLeft();
             }
         }
     },
@@ -43,7 +43,7 @@ public enum KeyPlay {
             if (this.counter == 0) {
                 field.moveRight();
             } else if (this.counter >= dasMS && this.counter % arrMS == 0) {
-                field.dasRight();
+                field.moveRight();
             }
         }
     },
